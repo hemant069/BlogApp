@@ -17,7 +17,7 @@ const getUserToken = (token) => {
 
     return jwt.verify(token, process.env.SCERET_KEY);
   } catch (error) {
-    console.log("Not getting user token");
+    console.log("Not getting user token", error.message);
   }
 };
 
