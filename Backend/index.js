@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Middleware  is added here
 
-// app.use(checkAuth);
+app.use(checkAuth());
 
 // Database connection function call is here
 
@@ -23,6 +23,6 @@ app.get("/", (req, res) => {
   res.send("Hello Backend");
 });
 
-app.use("/api", checkAuth, user);
+app.use("/api", user);
 
 app.listen(PORT, () => console.log("Server is connected"));

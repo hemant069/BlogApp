@@ -1,7 +1,19 @@
-const checkAuth = async (req, res, next) => {
-  const token = req.hearder;
-  console.log(token);
-  next();
+const { getUserToken } = require("../utils/auth");
+
+const checkAuth = () => {
+  return (req, res, next) => {
+    const userIdToken = req.headers["authorization"];
+
+    const token = userIdToken.split("Bearer ")[1];
+
+    if (!token) return next();
+
+    const user = getUserToken(token);
+
+    req.user = user;
+
+    next();
+  };
 };
 
 module.exports = { checkAuth };

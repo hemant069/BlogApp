@@ -45,6 +45,7 @@ const handleLogin = async (req, res) => {
       if (checkpassword) {
         // If password is true
         const token = setUserToken(exisitingUser);
+        // res.cookie("token", token);
         return res.status(202).json({ msg: "User login in success", token });
       } else {
         // password is wrong
