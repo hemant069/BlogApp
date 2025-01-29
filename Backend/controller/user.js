@@ -2,7 +2,7 @@ const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const { setUserToken, getUserToken } = require("../utils/auth");
 const Otpgenerate = require("../utils/generateOtp");
-const otpModel = require("../model/OtpModel");
+const otpModel = require("../model/otpModel");
 
 const handleSignUp = async (req, res) => {
   try {
