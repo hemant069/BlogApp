@@ -2,9 +2,9 @@ const { getUserToken } = require("../utils/auth");
 
 const checkAuth = () => {
   return (req, res, next) => {
-    const userIdToken = req.headers["authorization"];
+    const userIdToken = req?.headers["authorization"];
 
-    const token = userIdToken.split("Bearer ")[1];
+    const token = userIdToken?.split("Bearer ")[1];
 
     if (!token) return next();
 

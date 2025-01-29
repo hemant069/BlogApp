@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 import Link from "next/link";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,8 +15,16 @@ interface submitData {
 const page = () => {
   const { register, handleSubmit } = useForm<submitData>();
 
-  const handleSignup: SubmitHandler<submitData> = (data: submitData) => {
-    console.log("Hello", data);
+  const handleSignup: SubmitHandler<submitData> = async (data: submitData) => {
+    try {
+      const res = await axios.post(
+        "https://blog-app-backend-five-woad.vercel.app/api/signup",
+        data
+      );
+      console.log(res);
+    } catch (error) {
+      console.log("something went wrong with handleSignup");
+    }
   };
   return (
     <>
