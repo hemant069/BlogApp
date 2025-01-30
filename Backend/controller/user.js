@@ -1,5 +1,5 @@
 const userModel = require("../model/userModel");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { setUserToken, getUserToken } = require("../utils/auth");
 const Otpgenerate = require("../utils/generateOtp");
 const otpModel = require("../model/otpModel");
@@ -23,7 +23,7 @@ const handleSignUp = async (req, res) => {
       });
     }
   } catch (error) {
-    return res.status(401).json({
+    return res.status(500).json({
       msg: "Something went wrong with handleSignUp function",
       error: error.message,
     });
