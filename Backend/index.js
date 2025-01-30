@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
   res.send("Hello Backend");
 });
 
-app.post("/api/test", (req, res) => {
+app.post("api/test", (req, res) => {
   res.status(200).json({ message: "Test successful!" });
 });
 
