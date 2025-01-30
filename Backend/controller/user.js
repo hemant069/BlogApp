@@ -14,9 +14,7 @@ const handleSignUp = async (req, res) => {
       const hashPass = await bcrypt.hash(password, saltround);
       const newuser = new userModel({ username, password: hashPass, email });
       const savedUser = await newuser.save();
-      return res
-        .status(201)
-        .json({ msg: "user is created successfully", user: savedUser });
+      return res.status(201).json({ msg: "user is created successfully" });
     } else {
       return res.status(401).json({
         msg: "user is already existing or username is already existing",

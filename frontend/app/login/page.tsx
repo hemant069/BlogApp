@@ -13,9 +13,7 @@ interface submitData {
 const page = () => {
   const { register, handleSubmit } = useForm<submitData>();
 
-  const handleLogin: SubmitHandler<submitData> = (data: submitData) => {
-    console.log("Hello", data);
-  };
+  const handleLogin: SubmitHandler<submitData> = (data: submitData) => {};
   return (
     <div className="">
       <div className="text-center">
