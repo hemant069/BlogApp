@@ -1,20 +1,21 @@
 const express = require("express");
 const connectDB = require("./connect");
 const user = require("./router/user");
+const blog = require("./router/blog");
 const { checkAuth } = require("./middlewares/AuthMiddleware");
 const cors = require("cors");
 const app = express();
 
 const PORT = 8000;
 
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ limit: "1mb", extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
 // Middleware  is added here
 
-app.use(checkAuth());
+// app.use(checkAuth());
 
 // Database connection function call is here
 
@@ -32,5 +33,6 @@ app.post("/api/test", (req, res) => {
 });
 
 app.use("/api", user);
+app.use("api/blog", blog);
 
 app.listen(PORT, () => console.log("Server is connected"));
