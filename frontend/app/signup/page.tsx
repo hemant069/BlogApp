@@ -14,7 +14,7 @@ interface submitData {
 
 const page = () => {
   const { register, handleSubmit } = useForm<submitData>();
-
+  //  check
   const handleSignup: SubmitHandler<submitData> = async (data: submitData) => {
     try {
       const res = await axios.post(
