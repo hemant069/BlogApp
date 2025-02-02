@@ -33,6 +33,6 @@ app.post("/api/test", (req, res) => {
 });
 
 app.use("/api", user);
-app.use("api/blog", blog);
+app.use("/api/blog", blog);
 
 app.listen(PORT, () => console.log("Server is connected"));
