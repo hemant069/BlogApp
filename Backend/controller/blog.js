@@ -28,20 +28,38 @@ const handlegetblogpost = async (req, res) => {
   }
 };
 
+const handlegetoneblogpost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const getOneblogpost = await BlogModel.findOne({ _id: id });
+    return res.status(200).send({ msg: "all blog post", post: getOneblogpost });
+  } catch (error) {
+    return res.status(404).json({
+      msg: "Something went wrong wih getblogonepost",
+      error: error.message,
+    });
+  }
+};
+
 const handleupdateblogpost = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, content, coverImgUrl } = req.body;
 
-    const updatedBlog = await BlogModel.findAndUpdate(
-      { id },
+    const updatedBlog = await BlogModel.findOneAndUpdate(
+      { _id: id },
       { $set: { title, content, coverImgUrl } },
       { new: true }
     );
 
-    updatedBlog.save();
+    if (!updatedBlog) {
+      return res.status(404).json({ msg: "No blog post found with this ID" });
+    }
 
-    return res.status(201).status({ msg: "post updated successfully" });
+    return res.status(201).json({
+      msg: "Post updated successfully",
+      update: updatedBlog,
+    });
   } catch (error) {
     return res
       .status(401)
@@ -52,7 +70,7 @@ const handleupdateblogpost = async (req, res) => {
 const handledeleteblogpost = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedpost = await BlogModel.deleteOne({ id });
+    const deletedpost = await BlogModel.deleteOne({ _id: id });
     return res.status(201).json({ msg: "post delete successfully" });
   } catch (error) {
     return res
@@ -66,4 +84,5 @@ module.exports = {
   handlecreateblogpost,
   handleupdateblogpost,
   handledeleteblogpost,
+  handlegetoneblogpost,
 };
