@@ -15,7 +15,7 @@ app.use(cors());
 
 // Middleware  is added here
 
-// app.use(checkAuth());
+app.use(checkAuth());
 
 // Database connection function call is here
 
@@ -28,11 +28,10 @@ app.get("/", (req, res) => {
   res.send("Hello Backend");
 });
 
-app.post("/api/test", (req, res) => {
-  res.status(200).json({ message: "Test successful!" });
-});
+// API Router is Here
 
 app.use("/api", user);
 app.use("/api/blog", blog);
 
+// Server is Here
 app.listen(PORT, () => console.log("Server is connected"));
