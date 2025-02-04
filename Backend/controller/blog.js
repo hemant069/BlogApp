@@ -2,9 +2,16 @@ const BlogModel = require("../model/blogModel");
 
 const handlecreateblogpost = async (req, res) => {
   try {
-    const { title, content, coverImgUrl } = req.body;
+    const { title, content } = req.body;
 
-    const createdBlogpost = new BlogModel({ title, content, coverImgUrl });
+    console.log(req);
+
+    const createdBlogpost = new BlogModel({
+      title,
+      content,
+      coverImgUrl: `./uploads${req.file.filename}`,
+      createdBy: req.user._id,
+    });
     await createdBlogpost.save();
 
     return res.status(201).json({ msg: "blog created successfully" });
