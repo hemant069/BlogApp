@@ -4,8 +4,6 @@ const handlecreateblogpost = async (req, res) => {
   try {
     const { title, content } = req.body;
 
-    console.log(req);
-
     const createdBlogpost = new BlogModel({
       title,
       content,
@@ -51,11 +49,13 @@ const handlegetoneblogpost = async (req, res) => {
 const handleupdateblogpost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, coverImgUrl } = req.body;
+    const { title, content } = req.body;
 
     const updatedBlog = await BlogModel.findOneAndUpdate(
       { _id: id },
-      { $set: { title, content, coverImgUrl } },
+      {
+        $set: { title, content, coverImgUrl: `./uploads${req.file.filename}` },
+      },
       { new: true }
     );
 
