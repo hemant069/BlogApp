@@ -4,6 +4,8 @@ const checkAuth = () => {
   return (req, res, next) => {
     const userIdToken = req?.headers["authorization"];
 
+    if (!userIdToken) return next();
+
     const token = userIdToken?.split("Bearer ")[1];
 
     if (!token) return next();
