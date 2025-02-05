@@ -16,19 +16,21 @@ interface submitData {
 const page = () => {
   const { register, handleSubmit } = useForm<submitData>();
 
-  const handleLogin: SubmitHandler<submitData> = (data: submitData) => {};
+  const handleLogin: SubmitHandler<submitData> = (data: submitData) => {
+    console.log(data);
+  };
   return (
     <div className="flex flex-col justify-center items-center h-screen    ">
-      <div className="flex justify-center gap-4 flex-col shadow-2xl rounded-xl   p-24 w-[45rem] ">
+      <div className="flex justify-center gap-4 flex-col shadow-xl shadow-slate-800    rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
         <div className="flex justify-center gap-11 ">
           <Image
-            className="rounded-full "
+            className="  rounded-full "
             width={140}
             src={logingif}
             alt="login-gif"
           />
           <Image
-            className="rounded-full "
+            className=" hidden md:block rounded-full "
             width={140}
             src={typing}
             alt="typing-gif"
@@ -36,10 +38,12 @@ const page = () => {
         </div>
         <Input type="email" {...register("email")} placeholder="Enter email" />
         <Input
+          className=""
           type="password"
           {...register("password")}
           placeholder="Enter password"
         />
+
         <Button onClick={handleSubmit(handleLogin)}>Login</Button>
         <div className="flex justify-around">
           <Link href={"#"}>
