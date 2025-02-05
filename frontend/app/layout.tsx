@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Padh Lo",
-  description: "Path Lo is platfrom where people can come write there thought",
+  title: "MindVerse",
+  description:
+    "MindVerse is platfrom where people can come write there thought",
 };
 
 export default function RootLayout({
