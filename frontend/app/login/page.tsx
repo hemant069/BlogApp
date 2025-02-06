@@ -11,6 +11,7 @@ import { handleLoginFn } from "@/services/implementation";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import cookies from "js-cookie";
 
 interface submitData {
   email: string;
@@ -29,14 +30,21 @@ const page = () => {
         data
       );
 
-      // toast({ title: res.data.msg });
-
-      if (res.status == 200) {
-        toast({ title: "Login Success" });
-        router.push("/");
+      if (res.status >= 202) {
+        if (!res.data.token) {
+          toast({ title: "Invaild Creads" });
+        }
       }
-    } catch (error) {
-      console.log("Something wrong with handleLoginFn", error);
+
+      cookies.set("token", res.data.token);
+      toast({ title: "Login Success" });
+      router.push("/dashboard");
+    } catch (error: any) {
+      if (error.response) {
+        toast({ title: error?.response?.data?.msg });
+      } else if (error.request) {
+        toast({ title: "Network error. Please check your connection." });
+      }
     }
   };
   return (
