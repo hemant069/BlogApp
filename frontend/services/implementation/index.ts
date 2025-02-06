@@ -36,15 +36,5 @@ interface LoginData{
 
 
 export const handleLoginFn=async(data:LoginData)=>{
-    try {
-
-        const res=await axios.post(`${backendUrl}login`,data);
-
-        return res.data;
-        
-    } catch (error) {
-
-        console.log("Something wrong with handleLoginFn",error)
-        
-    }
+    
 }

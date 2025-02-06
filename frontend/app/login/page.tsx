@@ -8,6 +8,9 @@ import logingif from "../../public/login.gif";
 import typing from "../../public/typing.gif";
 import Image from "next/image";
 import { handleLoginFn } from "@/services/implementation";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 interface submitData {
   email: string;
@@ -15,10 +18,26 @@ interface submitData {
 }
 
 const page = () => {
+  const router = useRouter();
   const { register, handleSubmit } = useForm<submitData>();
+  const { toast } = useToast();
 
-  const handleLogin: SubmitHandler<submitData> = (data: submitData) => {
-    handleLoginFn(data);
+  const handleLogin: SubmitHandler<submitData> = async (data: submitData) => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND}login`,
+        data
+      );
+
+      // toast({ title: res.data.msg });
+
+      if (res.status == 200) {
+        toast({ title: "Login Success" });
+        router.push("/");
+      }
+    } catch (error) {
+      console.log("Something wrong with handleLoginFn", error);
+    }
   };
   return (
     <div className="flex flex-col justify-center items-center h-screen    ">
