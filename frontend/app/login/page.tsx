@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import logingif from "../../public/login.gif";
 import typing from "../../public/typing.gif";
 import Image from "next/image";
+import { handleLoginFn } from "@/services/implementation";
 
 interface submitData {
   email: string;
@@ -17,7 +18,7 @@ const page = () => {
   const { register, handleSubmit } = useForm<submitData>();
 
   const handleLogin: SubmitHandler<submitData> = (data: submitData) => {
-    console.log(data);
+    handleLoginFn(data);
   };
   return (
     <div className="flex flex-col justify-center items-center h-screen    ">

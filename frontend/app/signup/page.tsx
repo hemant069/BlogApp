@@ -8,6 +8,9 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import signup from "../../public/signup.gif";
 import typing from "../../public/typing.gif";
+import { handleSignupFn } from "@/services/implementation";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 interface submitData {
   username: string;
   email: string;
@@ -16,18 +19,24 @@ interface submitData {
 
 const page = () => {
   const { register, handleSubmit } = useForm<submitData>();
+  const router = useRouter();
+  const { toast } = useToast();
   //  check
   const handleSignup: SubmitHandler<submitData> = async (data: submitData) => {
     try {
       const res = await axios.post(
-        "https://blog-app-backend-five-woad.vercel.app/api/signup",
+        `${process.env.NEXT_PUBLIC_BACKEND}signup`,
         data
       );
-      console.log(res);
+      if (res.status == 201) {
+        toast({ title: "Sign up Successfully 😊" });
+        router.push("/login");
+      }
     } catch (error) {
       console.log("something went wrong with handleSignup");
     }
   };
+
   return (
     <div className="flex flex-col h-screen  justify-center items-center ">
       <div className="flex flex-col justify-center w-[50rem] gap-3 p-8 md:p-24 shadow-lg shadow-slate-800  ">
