@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -12,16 +12,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { usePathname, useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const userToken = Cookies.get("token");
+  const [userToken, setuserToken] = useState<string | null>();
+  const [userData, setuserData] = useState<string | null>();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  if (userToken) {
-    const decoded = jwtDecode(userToken);
-  }
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      try {
+        const user = jwtDecode(token);
+        setuserData(user);
+        setuserToken(token);
+      } catch (error: any) {
+        handleLogOut();
+        console.log("Error in token", error.message);
+      }
+    }
+  }, [pathname]);
 
   const handleLogOut = () => {
     Cookies.remove("token");
+    setuserToken(null);
+    setuserToken(null);
+    router.push("/login");
   };
 
   return (
