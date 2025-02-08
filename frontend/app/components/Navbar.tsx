@@ -28,11 +28,15 @@ const Navbar = () => {
   return (
     <div className="flex justify-between px-4 md:justify-around  border py-5 items-center ">
       <div>
-        <h1 className="text-2xl font-medium font-mono">MindVerse</h1>
+        <h1 className="text-2xl font-medium font-mono">
+          <Link href={"/"}>MindVerse</Link>
+        </h1>
       </div>
       <div className=" hidden  md:flex gap-6 font-sans items-center cursor-pointer">
         <div>Our story</div>
-        <div>Write</div>
+        <div>
+          <Link href={"/create-post"}>Write</Link>
+        </div>
         {user ? null : (
           <div>
             <Link href={"/login"}>Sign in</Link>

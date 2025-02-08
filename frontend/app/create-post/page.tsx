@@ -5,47 +5,56 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { title } from "process";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import ProtectedRoute from "../Context/ProtectedRoute";
+
+interface PostData {
+  title: string;
+  content: string;
+  coverImgUrl: string;
+}
 
 const page = () => {
   const { register, handleSubmit } = useForm();
 
-  const handleCreatePost = (data) => {
+  const handleCreatePost: SubmitHandler<PostData> = (data: PostData) => {
     console.log(data);
   };
   return (
-    <div className="flex flex-col gap-3 justify-center p-20">
-      <div>
-        <Label>Add Cover Image </Label>
-        <Input
-          placeholder="Add File"
-          className="border border-black"
-          type="file"
-          {...register("coverImgUrl")}
-        />
+    <ProtectedRoute>
+      <div className="flex flex-col gap-3 justify-center p-20">
+        <div>
+          <Label>Add Cover Image </Label>
+          <Input
+            placeholder="Add File"
+            className="border border-black"
+            type="file"
+            {...register("coverImgUrl")}
+          />
+        </div>
+        <div>
+          <Label>Write Title </Label>
+          <Input
+            placeholder="Enter Your Post Title"
+            className="border border-black"
+            {...register("title")}
+          />
+        </div>
+        <div>
+          <Label>Write Content </Label>
+          <Textarea
+            className="w-full h-[20rem] border border-black"
+            placeholder="Write Your Content Here ...."
+            {...register("content")}
+          />
+        </div>
+        <div>
+          <Button onClick={handleSubmit(handleCreatePost)} type="submit">
+            Create Post
+          </Button>
+        </div>
       </div>
-      <div>
-        <Label>Write Title </Label>
-        <Input
-          placeholder="Enter Your Post Title"
-          className="border border-black"
-          {...register("title")}
-        />
-      </div>
-      <div>
-        <Label>Write Content </Label>
-        <Textarea
-          className="w-full h-[20rem] border border-black"
-          placeholder="Write Your Content Here ...."
-          {...register("content")}
-        />
-      </div>
-      <div>
-        <Button onClick={handleSubmit(handleCreatePost)} type="submit">
-          Create Post
-        </Button>
-      </div>
-    </div>
+    </ProtectedRoute>
   );
 };
 
