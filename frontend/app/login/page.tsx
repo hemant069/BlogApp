@@ -12,7 +12,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import cookies from "js-cookie";
-import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../Context/AuthContext";
 
 interface submitData {
   email: string;

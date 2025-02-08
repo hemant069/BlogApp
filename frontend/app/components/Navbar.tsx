@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../Context/AuthContext";
 
 const Navbar = () => {
   const router = useRouter();
