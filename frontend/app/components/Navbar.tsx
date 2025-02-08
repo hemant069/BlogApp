@@ -12,32 +12,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useAuth } from "./AuthContext";
 
 const Navbar = () => {
-  const [userToken, setuserToken] = useState<string | null>();
-  const [userData, setuserData] = useState<string | null>();
   const router = useRouter();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      try {
-        const user = jwtDecode(token);
-        setuserData(user);
-        setuserToken(token);
-      } catch (error: any) {
-        handleLogOut();
-        console.log("Error in token", error.message);
-      }
-    }
-  }, [pathname]);
+  const { user, logout } = useAuth();
 
   const handleLogOut = () => {
-    Cookies.remove("token");
-    setuserToken(null);
-    setuserToken(null);
+    logout();
+
     router.push("/login");
   };
 
@@ -49,12 +33,12 @@ const Navbar = () => {
       <div className=" hidden  md:flex gap-6 font-sans items-center cursor-pointer">
         <div>Our story</div>
         <div>Write</div>
-        {userToken ? null : (
+        {user ? null : (
           <div>
             <Link href={"/login"}>Sign in</Link>
           </div>
         )}
-        {userToken ? (
+        {user ? (
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger>

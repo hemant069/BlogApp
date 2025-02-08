@@ -12,6 +12,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import cookies from "js-cookie";
+import { useAuth } from "../components/AuthContext";
 
 interface submitData {
   email: string;
@@ -22,6 +23,7 @@ const page = () => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<submitData>();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const handleLogin: SubmitHandler<submitData> = async (data: submitData) => {
     try {
@@ -36,7 +38,7 @@ const page = () => {
         }
       }
 
-      cookies.set("token", res.data.token);
+      login(res.data.token);
       toast({ title: "Login Success" });
       router.push("/dashboard");
     } catch (error: any) {
