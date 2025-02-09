@@ -7,6 +7,7 @@ import { title } from "process";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ProtectedRoute from "../Context/ProtectedRoute";
+import axios from "axios";
 
 interface PostData {
   title: string;
@@ -15,10 +16,18 @@ interface PostData {
 }
 
 const page = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<PostData>();
 
-  const handleCreatePost: SubmitHandler<PostData> = (data: PostData) => {
-    console.log(data);
+  const handleCreatePost: SubmitHandler<PostData> = async (data: PostData) => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND}blog/create-post`,
+        data
+      );
+      console.log(res);
+    } catch (error: any) {
+      console.log("Somehting went wrong with ", error.message);
+    }
   };
   return (
     <ProtectedRoute>

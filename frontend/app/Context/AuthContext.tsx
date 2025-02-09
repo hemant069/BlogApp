@@ -12,9 +12,10 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  token: string;
+  token: string | null;
   login: (token: string) => void;
   logout: () => void;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setuser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getToken = Cookies.get("token");
@@ -35,6 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         logout();
       }
     }
+    setLoading(false);
   }, []);
 
   const login = (token: string) => {
@@ -51,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ login, logout, user, token }}>
+    <AuthContext.Provider value={{ login, logout, user, token, loading }}>
       {children}
     </AuthContext.Provider>
   );
