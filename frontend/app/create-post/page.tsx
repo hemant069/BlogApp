@@ -21,7 +21,7 @@ const page = () => {
   const handleCreatePost: SubmitHandler<PostData> = async (data: PostData) => {
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND}blog/create-post`,
+        `${process.env.NEXT_LOCAL_BACKEND}blog/create-post`,
         data
       );
       console.log(res);
