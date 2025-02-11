@@ -12,17 +12,22 @@ import axios from "axios";
 interface PostData {
   title: string;
   content: string;
-  coverImgUrl: string;
+  coverImgUrl: FileList;
 }
 
 const page = () => {
   const { register, handleSubmit } = useForm<PostData>();
 
   const handleCreatePost: SubmitHandler<PostData> = async (data: PostData) => {
+    const formData = new FormData();
+    formData.append("coverImage", data.coverImgUrl[0]); // Extract first file
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+
     try {
       const res = await axios.post(
-        `${process.env.NEXT_LOCAL_BACKEND}blog/create-post`,
-        data
+        `http://localhost:8000/api/blog/create-post`,
+        formData
       );
       console.log(res);
     } catch (error: any) {

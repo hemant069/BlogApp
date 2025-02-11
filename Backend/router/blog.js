@@ -1,6 +1,9 @@
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
+const firebase_admin = require("firebase-admin");
+const dotenv = require("dotenv");
+dotenv.config();
 const {
   handlegetblogpost,
   handlecreateblogpost,
@@ -11,16 +14,18 @@ const {
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve("./public/uploads"));
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-` + file.originalname);
-  },
+firebase_admin.initializeApp({
+  credential: firebase_admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY,
+  }),
+  storageBucket: "blogapp-a2b03.appspot.com",
 });
 
-const upload = multer({ storage: storage });
+const bucket = firebase_admin.storage().bucket();
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/", handlegetblogpost);
 router.get("/:id", handlegetoneblogpost);

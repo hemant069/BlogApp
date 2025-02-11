@@ -8,7 +8,7 @@ const handlecreateblogpost = async (req, res) => {
       title,
       content,
       coverImgUrl: `./uploads${req.file.filename}`,
-      createdBy: req.user._id,
+      // createdBy: req.user._id,
     });
     await createdBlogpost.save();
 
