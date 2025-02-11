@@ -8,6 +8,8 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ProtectedRoute from "../Context/ProtectedRoute";
 import axios from "axios";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface PostData {
   title: string;
@@ -17,7 +19,7 @@ interface PostData {
 
 const page = () => {
   const { register, handleSubmit } = useForm<PostData>();
-
+  const router = useRouter();
   const handleCreatePost: SubmitHandler<PostData> = async (data: PostData) => {
     const formData = new FormData();
     formData.append("coverImage", data.coverImgUrl[0]); // Extract first file
@@ -29,7 +31,8 @@ const page = () => {
         `${process.env.NEXT_PUBLIC_BACKEND}blog/create-post`,
         formData
       );
-      console.log(res);
+      toast({ title: res.data?.msg });
+      router.push("/dashboard");
     } catch (error: any) {
       console.log("Somehting went wrong with ", error.message);
     }

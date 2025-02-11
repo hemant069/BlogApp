@@ -7,11 +7,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import logingif from "../../public/login.gif";
 import typing from "../../public/typing.gif";
 import Image from "next/image";
-import { handleLoginFn } from "@/services/implementation";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import cookies from "js-cookie";
 import { useAuth } from "../Context/AuthContext";
 
 interface submitData {
