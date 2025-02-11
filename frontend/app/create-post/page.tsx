@@ -26,7 +26,7 @@ const page = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/blog/create-post`,
+        `${process.env.NEXT_PUBLIC_BACKEND}blog/create-post`,
         formData
       );
       console.log(res);
