@@ -7,7 +7,7 @@ const handlecreateblogpost = async (req, res) => {
     const createdBlogpost = new BlogModel({
       title,
       content,
-      coverImgUrl: `./uploads${req.file.filename}`,
+      coverImgUrl: `./uploads/${req.file.originalname}`,
       // createdBy: req.user._id,
     });
     await createdBlogpost.save();
