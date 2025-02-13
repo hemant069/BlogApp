@@ -1,5 +1,6 @@
+"use client";
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface BlogContextType {
   handleBlogData: () => void;
@@ -14,7 +15,7 @@ interface BlogData {
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
-const BlogProvider = ({ children }: { children: React.ReactNode }) => {
+export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
   const [data, setData] = useState<BlogData[]>([]);
 
   const handleBlogData = async () => {
@@ -34,4 +35,14 @@ const BlogProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <BlogContext.Provider value={{ data }}>{children}</BlogContext.Provider>
   );
+};
+
+export const useBlog = () => {
+  const Blog = useContext(BlogContext);
+
+  if (!Blog) {
+    console.log("Something went wrong with use Blog");
+  }
+
+  return Blog;
 };
