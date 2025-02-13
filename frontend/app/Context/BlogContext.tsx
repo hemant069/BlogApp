@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 interface BlogContextType {
   handleBlogData: () => void;
@@ -26,6 +26,10 @@ const BlogProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Something wrong with", error.message);
     }
   };
+
+  useEffect(() => {
+    handleBlogData();
+  }, []);
 
   return (
     <BlogContext.Provider value={{ data }}>{children}</BlogContext.Provider>
