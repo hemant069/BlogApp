@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 import eg from "../../public/banner.jpg";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-
+//comment
 const Blogs = () => {
   return (
     <div className="flex  justify-around">
