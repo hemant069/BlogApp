@@ -7,6 +7,8 @@ const {
   handleresetPassword,
 } = require("../controller/user");
 
+// router for the user
+
 const router = express.Router();
 
 router.post("/signup", handleSignUp);
