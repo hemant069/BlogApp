@@ -7,7 +7,7 @@ const {
   handleresetPassword,
 } = require("../controller/user");
 
-// router for the user
+// router
 
 const router = express.Router();
 
