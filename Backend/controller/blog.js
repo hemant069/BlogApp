@@ -1,50 +1,35 @@
 const BlogModel = require("../model/blogModel");
-const { bucket } = require("../utils/firebase");
+const cloudnary = require(".././utils/cloudnary");
 const handlecreateblogpost = async (req, res) => {
   try {
     if (!req.file) {
       return res.json({ msg: "Please Upload image" });
     }
 
-    const file = bucket.file(
-      `blog-images/${Date.now()}-${req.file.originalname}`
-    );
-    const stream = file.createWriteStream({
-      metadata: {
-        contentType: req.file.mimetype,
-      },
-    });
+    const { title, content } = req.body;
 
-    stream.on("error", (err) => {
-      console.error(err);
-      return res.json({ msg: err.message });
-    });
+    const result = await cloudnary.uploader
+      .upload_stream(async (result, error) => {
+        if (error) {
+          return res.json({ msg: "somthing went wrong with clounary" });
+        }
 
-    stream.on("finish", async () => {
-      await file.makePublic();
+        const createdBlogpost = new BlogModel({
+          title,
+          content,
+          coverImgUrl: result.secure_url,
+          // createdBy: req.user._id,
+        });
+        await createdBlogpost.save();
+        return res
+          .status(201)
+          .json({ msg: "blog created successfully", data: createdBlogpost });
+      })
+      .end(req.file.buffer);
 
-      const imageUrl = `https://storage.googleapis.com/${bucket.name}/${file.name}`;
-      const { title, content } = req.body;
-
-      console.log(req.file);
-
-      const createdBlogpost = new BlogModel({
-        title,
-        content,
-        coverImage: imageUrl,
-        // createdBy: req.user._id,
-      });
-      await createdBlogpost.save();
-      return res
-        .status(201)
-        .json({ msg: "blog created successfully", data: createdBlogpost });
-    });
-    stream.end(req.file.buffer);
-  } catch (error) {
-    return res.status(404).json({
-      msg: "Something went wrong wih createblogpost",
-      error: error.message,
-    });
+    return result;
+  } catch (err) {
+    return res.json({ msg: "something went wrong" });
   }
 };
 
