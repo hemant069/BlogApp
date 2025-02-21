@@ -34,7 +34,10 @@ const Navbar = () => {
       </div>
       <div className=" hidden  md:flex gap-6 font-sans items-center cursor-pointer">
         <div>
-          <Link href={"/our-story"}>our story</Link>
+          <Link href={"/our-story"}>Our Story</Link>
+        </div>
+        <div>
+          <Link href={"/dashboard"}>Dashboard</Link>
         </div>
         <div>
           <Link href={"/create-post"}>Write</Link>
