@@ -2,8 +2,13 @@ import Image from "next/image";
 import React from "react";
 import eg from "../../public/banner.jpg";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-//comment
-const Blogs = () => {
+
+interface BlogProps {
+  image: string;
+  content: string;
+  title: string;
+}
+const Blogs = ({ title, image, content }: BlogProps) => {
   return (
     <div className="flex  justify-around">
       <div>
@@ -17,16 +22,18 @@ const Blogs = () => {
           </Avatar>
           <p className="font-mono">Hemant Prajapati</p>
         </div>
-        <h1 className="text-3xl font-semibold font-sans">My First Blog </h1>
-        <p className=" w-[30rem] line-clamp-2">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos deleniti
-          ullam quidem explicabo facilis perspiciatis illo fuga laborum ea alias
-          reprehenderit nihil necessitatibus debitis nobis ex, consequuntur
-          asperiores similique repellat.
-        </p>
+        <h1 className="text-3xl font-semibold font-sans">{title} </h1>
+        <p className=" w-[30rem] line-clamp-2">{content}</p>
       </div>
       <div>
-        <Image src={eg} alt="eg" width={200} />
+        <Image
+          src={image}
+          priority={true}
+          alt={image}
+          width={200}
+          height={200}
+          style={{ width: "auto", height: "auto" }}
+        />
       </div>
     </div>
   );

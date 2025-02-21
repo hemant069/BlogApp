@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface BlogContextType {
   handleBlogData: () => void;
-  data: BlogData[];
+  data: BlogData[] | null;
 }
 
 interface BlogData {
@@ -16,12 +16,12 @@ interface BlogData {
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
 export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
-  const [data, setData] = useState<BlogData[]>([]);
+  const [data, setData] = useState<BlogData[] | null>([]);
 
   const handleBlogData = async () => {
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND}blog`);
-      const data = res.data;
+      const data = res.data.post;
       setData(data);
     } catch (error: any) {
       console.log("Something wrong with", error.message);
