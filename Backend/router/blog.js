@@ -8,14 +8,20 @@ const {
   handleupdateblogpost,
   handledeleteblogpost,
 } = require("../controller/blog");
+const { checkAuth } = require("../middlewares/AuthMiddleware");
 
 const router = express.Router();
-
+// upload for the multer storage
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/", handlegetblogpost);
 router.get("/:id", handlegetoneblogpost);
-router.post("/create-post", upload.single("coverImage"), handlecreateblogpost);
+router.post(
+  "/create-post",
+
+  upload.single("coverImage"),
+  handlecreateblogpost
+);
 router.put(
   "/update-post/:id",
   upload.single("coverImage"),

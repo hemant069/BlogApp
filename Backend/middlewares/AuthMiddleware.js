@@ -4,17 +4,21 @@ const checkAuth = () => {
   return (req, res, next) => {
     const userIdToken = req?.headers["authorization"];
 
-    if (!userIdToken) return next();
+    if (!userIdToken) return res.status(401).json({ msg: "Unauthorized" });
 
     const token = userIdToken?.split("Bearer ")[1];
 
-    if (!token) return next();
+    if (!token) return res.status(401).json({ msg: "Unauthorized" });
 
-    const user = getUserToken(token);
+    try {
+      const user = getUserToken(token);
+      console.log(user);
+      req.user = user;
 
-    req.user = user;
-
-    next();
+      next();
+    } catch (error) {
+      return res.status(401).json({ msg: "something went wrong auth" });
+    }
   };
 };
 
