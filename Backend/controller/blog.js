@@ -18,7 +18,7 @@ const handlecreateblogpost = async (req, res) => {
           title,
           content,
           coverImgUrl: result.secure_url,
-          createdBy: req.user._id,
+          createdBy: req.user.id,
         });
         await createdBlogpost.save();
         return res

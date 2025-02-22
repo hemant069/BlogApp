@@ -32,7 +32,7 @@ const Blogs = ({ title, image, content }: BlogProps) => {
           alt={image}
           width={200}
           height={200}
-          style={{ width: "auto", height: "auto" }}
+          style={{ width: "200px", height: "200px" }}
         />
       </div>
     </div>
