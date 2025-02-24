@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import eg from "../../public/banner.jpg";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import { useRouter } from "next/navigation";
 
 interface BlogProps {
   image: string;
@@ -9,6 +10,11 @@ interface BlogProps {
   title: string;
 }
 const Blogs = ({ title, image, content }: BlogProps) => {
+  const router = useRouter();
+
+  const handleFullBlog = () => {
+    router.push("/blog");
+  };
   return (
     <div className="flex  justify-around">
       <div>
@@ -24,6 +30,7 @@ const Blogs = ({ title, image, content }: BlogProps) => {
         </div>
         <h1 className="text-3xl font-semibold font-sans">{title} </h1>
         <p className=" w-[30rem] line-clamp-2">{content}</p>
+        <div onClick={() => handleFullBlog()}>Read More</div>
       </div>
       <div>
         <Image
