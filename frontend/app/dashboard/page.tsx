@@ -18,7 +18,8 @@ const page = () => {
     <div>
       {data.map((item: BlogData, i) => (
         <Blogs
-          key={item._id}
+          key={i}
+          newid={item._id}
           title={item.title}
           content={item.content}
           image={item.coverImgUrl}

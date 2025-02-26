@@ -8,13 +8,13 @@ interface BlogProps {
   image: string;
   content: string;
   title: string;
-  key: string;
+  newid: string;
 }
-const Blogs = ({ title, image, content, key }: BlogProps) => {
+const Blogs = ({ title, image, content, newid }: BlogProps) => {
   const router = useRouter();
 
-  const handleFullBlog = (key: string) => {
-    router.push(`/blog/${key}`);
+  const handleFullBlog = (newid: string) => {
+    router.push(`/blog/${newid}`);
   };
   return (
     <div className="flex  justify-around">
@@ -31,7 +31,9 @@ const Blogs = ({ title, image, content, key }: BlogProps) => {
         </div>
         <h1 className="text-3xl font-semibold font-sans">{title} </h1>
         <p className=" w-[30rem] line-clamp-2">{content}</p>
-        <div onClick={() => handleFullBlog(key)}>Read More</div>
+        <div className="cursor-pointer" onClick={() => handleFullBlog(newid)}>
+          Read More
+        </div>
       </div>
       <div>
         <Image
