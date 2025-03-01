@@ -14,7 +14,7 @@ const page = () => {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
 
-  const [blog, setBlog] = useState<BlogType | undefined>();
+  const [blog, setBlog] = useState<BlogType | null>();
 
   const token = Cookies.get("token");
 
