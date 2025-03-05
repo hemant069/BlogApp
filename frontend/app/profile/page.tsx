@@ -4,7 +4,7 @@ import React from "react";
 const page = () => {
   return (
     <div>
-      <div>Name</div>
+      <div>Name of User will Appear here</div>
     </div>
   );
 };
