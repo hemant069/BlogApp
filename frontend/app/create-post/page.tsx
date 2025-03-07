@@ -17,7 +17,7 @@ interface PostData {
   content: string;
   coverImgUrl: FileList;
 }
-
+//comment
 const page = () => {
   const { register, handleSubmit } = useForm<PostData>();
   const router = useRouter();
