@@ -41,18 +41,21 @@ const page = () => {
 
   // console.log(blog);
 
+  if (!blog) return <h1>Loading</h1>;
+
   return (
-    <div className="flex justify-center flex-col">
+    <div className="flex justify-center flex-col items-center mt-10 gap-3">
       <div>
         <Image
-          src={blog?.coverImgUrl}
-          width={200}
+          src={blog?.coverImgUrl || "/blog.png"}
+          width={400}
           height={200}
-          alt={blog?.coverImgUrl}
+          alt={blog?.coverImgUrl || "blog image"}
+          priority={true}
         />
       </div>
       <div>
-        <p>{blog?.title}</p>
+        <p className="text-5xl ">{blog?.title}</p>
       </div>
       <div>
         <p>{blog?.content}</p>
