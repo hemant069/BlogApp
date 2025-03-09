@@ -12,6 +12,7 @@ const checkAuth = () => {
 
     try {
       const user = getUserToken(token);
+      console.log(user, "token");
       req.user = user;
 
       next();

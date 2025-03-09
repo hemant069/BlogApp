@@ -54,6 +54,7 @@ const page = () => {
             className="border border-black"
             type="file"
             {...register("coverImgUrl")}
+            accept=".png"
           />
         </div>
         <div>

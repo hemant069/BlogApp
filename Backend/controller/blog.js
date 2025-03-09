@@ -6,6 +6,8 @@ const handlecreateblogpost = async (req, res) => {
       return res.json({ msg: "Please Upload image" });
     }
 
+    console.log("Hey How are you", req.user);
+
     const { title, content } = req.body;
 
     const result = await cloudnary.uploader

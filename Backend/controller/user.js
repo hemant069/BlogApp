@@ -33,6 +33,7 @@ const handleLogin = async (req, res) => {
     const { email, password } = req.body;
 
     const exisitingUser = await userModel.findOne({ email });
+    console.log(exisitingUser);
 
     if (exisitingUser) {
       // TODO
