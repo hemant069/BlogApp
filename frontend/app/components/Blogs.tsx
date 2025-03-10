@@ -17,7 +17,7 @@ const Blogs = ({ title, image, content, newid }: BlogProps) => {
     router.push(`/blog/${newid}`);
   };
   return (
-    <div className="flex  justify-around">
+    <div className="flex  justify-around ">
       <div>
         <div className="flex items-center gap-2">
           <Avatar>
