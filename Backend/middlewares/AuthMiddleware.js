@@ -11,8 +11,9 @@ const checkAuth = () => {
     if (!token) return res.status(401).json({ msg: "Unauthorized" });
 
     try {
+      console.log("token baby", token);
       const user = getUserToken(token);
-      console.log(user, "token");
+      console.log("Check AUth", user);
       req.user = user;
 
       next();
