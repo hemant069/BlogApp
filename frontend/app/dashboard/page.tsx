@@ -15,10 +15,10 @@ const page = () => {
   console.log(data);
 
   return (
-    <div>
-      {data.map((item: BlogData, i) => (
+    <div className="flex flex-col gap-3 ">
+      {data.map((item: BlogData) => (
         <Blogs
-          key={i}
+          key={item._id}
           newid={item._id}
           title={item.title}
           content={item.content}
