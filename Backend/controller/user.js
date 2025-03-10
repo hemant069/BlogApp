@@ -150,6 +150,18 @@ const handleresetPassword = async (req, res) => {
   }
 };
 
+// Profile Image Upload
+
+const handleProfileImageUpload = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.json({ msg: "Image is not uploaded" });
+    }
+  } catch (error) {
+    return res.json({ msg: "Something went wrong with handleProfile" });
+  }
+};
+
 module.exports = {
   handleSignUp,
   handleLogin,
