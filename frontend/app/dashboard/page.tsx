@@ -15,7 +15,7 @@ const page = () => {
   console.log(data);
 
   return (
-    <div className="flex flex-col gap-3 ">
+    <div className="flex flex-col gap-10 hover:scale-100 ">
       {data.map((item: BlogData) => (
         <Blogs
           key={item._id}

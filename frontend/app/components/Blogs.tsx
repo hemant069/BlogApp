@@ -17,7 +17,10 @@ const Blogs = ({ title, image, content, newid }: BlogProps) => {
     router.push(`/blog/${newid}`);
   };
   return (
-    <div className="flex  justify-around ">
+    <div
+      onClick={() => handleFullBlog(newid)}
+      className="flex  cursor-pointer justify-around bg-neutral-300 w-[50rem] shadow-md  "
+    >
       <div>
         <div className="flex items-center gap-2">
           <Avatar>
@@ -31,9 +34,7 @@ const Blogs = ({ title, image, content, newid }: BlogProps) => {
         </div>
         <h1 className="text-3xl font-semibold font-sans">{title} </h1>
         <p className=" w-[30rem] line-clamp-2">{content}</p>
-        <div className="cursor-pointer" onClick={() => handleFullBlog(newid)}>
-          Read More
-        </div>
+        <div className="cursor-pointer">Read More</div>
       </div>
       <div>
         <Image
