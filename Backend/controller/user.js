@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const { setUserToken, getUserToken } = require("../utils/auth");
 const Otpgenerate = require("../utils/generateOtp");
 const otpModel = require("../model/otpModel");
-// Normal commit
+
 const handleSignUp = async (req, res) => {
   try {
     const { username, email, password } = req.body;
