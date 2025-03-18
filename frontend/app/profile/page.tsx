@@ -1,48 +1,67 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import profileimag from "../../public/robot.jpeg";
 
-const page = () => {
-  // Here i have to add the user profile name
+const Page = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const [isImage, setIsImage] = useState(false);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      // You can add upload logic here or keep it separate
+      console.log("File selected:", file);
+    }
+  };
+
   return (
     <div>
       <Card>
         <CardContent>
-          <div className="flex flex-col justify-center items-center gap-2">
-            {isImage ? (
+          <div className="flex flex-col justify-center items-center gap-4 pt-6">
+            <div className="relative border border-black p-5 rounded-full group">
               <Image
-                width={20}
-                height={20}
+                width={100}
+                height={100}
+                className="w-full rounded-full"
                 alt="profile"
-                src={"https://github.com/shadcn.png"}
+                src={profileimag}
               />
-            ) : (
-              <Avatar className="w-[10rem] h-[10rem]">
-                <AvatarImage src="https://github.com/shadcn.png" />
-              </Avatar>
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <label
+                  htmlFor="file-upload"
+                  className="bg-black/50 text-white px-4 py-2 rounded-full cursor-pointer hover:bg-black/70"
+                >
+                  Upload
+                </label>
+                <input
+                  id="file-upload"
+                  className="hidden"
+                  type="file"
+                  accept=".png,.jpg,.jpeg"
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
+
+            {selectedFile && (
+              <p className="text-sm text-neutral-500">
+                Selected: {selectedFile.name}
+              </p>
             )}
-            <Button>Upload</Button>
-            <div>
+
+            <div className="text-center">
               <p className="text-lg text-neutral-500">
-                Username <span className="text-black"> Hemant069</span>{" "}
+                Username <span className="text-black">Hemant069</span>
               </p>
               <p className="text-lg text-neutral-500">
                 Email{" "}
                 <span className="text-black">
                   hemantprajapati7860@gmail.com
-                </span>{" "}
+                </span>
               </p>
             </div>
           </div>
@@ -52,4 +71,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
