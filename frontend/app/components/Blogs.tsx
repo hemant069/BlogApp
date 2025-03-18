@@ -19,7 +19,7 @@ const Blogs = ({ title, image, content, newid }: BlogProps) => {
   return (
     <div
       onClick={() => handleFullBlog(newid)}
-      className="flex  cursor-pointer justify-around bg-neutral-300 w-[50rem] shadow-md  "
+      className="flex  cursor-pointer justify-around p-5 rounded-md w-[50rem] shadow-md  "
     >
       <div>
         <div className="flex items-center gap-2">
@@ -33,7 +33,7 @@ const Blogs = ({ title, image, content, newid }: BlogProps) => {
           <p className="font-mono">Hemant Prajapati</p>
         </div>
         <h1 className="text-3xl font-semibold font-sans">{title} </h1>
-        <p className=" w-[30rem] line-clamp-2">{content}</p>
+        <p className=" w-[30rem] line-clamp-2 text-neutral-500">{content}</p>
         <div className="cursor-pointer">Read More</div>
       </div>
       <div>
@@ -43,7 +43,7 @@ const Blogs = ({ title, image, content, newid }: BlogProps) => {
           alt={image}
           width={200}
           height={200}
-          style={{ width: "200px", height: "150px" }}
+          className="w-[15rem]"
         />
       </div>
     </div>
