@@ -1,12 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import profileimag from "../../public/robot.jpeg";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+
+interface User {
+  username: String;
+  email: String;
+  iat: Number;
+}
 
 const Page = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [userDetails, setuserDetails] = useState<User | null | undefined>();
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -16,6 +25,12 @@ const Page = () => {
       console.log("File selected:", file);
     }
   };
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    const decode = jwtDecode(token);
+    setuserDetails(decode);
+  }, []);
 
   return (
     <div>
@@ -58,10 +73,7 @@ const Page = () => {
                 Username <span className="text-black">Hemant069</span>
               </p>
               <p className="text-lg text-neutral-500">
-                Email{" "}
-                <span className="text-black">
-                  hemantprajapati7860@gmail.com
-                </span>
+                Email <span className="text-black">{userDetails?.email}</span>
               </p>
             </div>
           </div>
