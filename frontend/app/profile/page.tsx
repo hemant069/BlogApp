@@ -70,7 +70,10 @@ const Page = () => {
 
             <div className="text-center">
               <p className="text-lg text-neutral-500">
-                Username <span className="text-black">Hemant069</span>
+                Username{" "}
+                <span className="text-black">
+                  {userDetails?.username || "username is not found"}
+                </span>
               </p>
               <p className="text-lg text-neutral-500">
                 Email <span className="text-black">{userDetails?.email}</span>

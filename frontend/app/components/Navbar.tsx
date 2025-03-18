@@ -74,7 +74,7 @@ const Navbar = () => {
         )}
       </div>
       {user ? (
-        <div>
+        <div className="md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar>
