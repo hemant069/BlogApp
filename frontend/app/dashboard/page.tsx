@@ -9,6 +9,7 @@ interface BlogData {
   coverImgUrl: string;
   _id: string;
   createdBy: string;
+  user: String;
 }
 const page = () => {
   const { data }: BlogData[] = useBlog();
@@ -25,6 +26,7 @@ const page = () => {
           content={item.content}
           image={item.coverImgUrl}
           createdBy={item.createdBy}
+          user={item.user}
         />
       ))}
     </div>
