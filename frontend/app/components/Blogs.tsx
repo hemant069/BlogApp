@@ -9,8 +9,9 @@ interface BlogProps {
   content: string;
   title: string;
   newid: string;
+  createdBy: string;
 }
-const Blogs = ({ title, image, content, newid }: BlogProps) => {
+const Blogs = ({ title, image, content, newid, createdBy }: BlogProps) => {
   const router = useRouter();
 
   const handleFullBlog = (newid: string) => {
@@ -30,7 +31,7 @@ const Blogs = ({ title, image, content, newid }: BlogProps) => {
               src="https://github.com/shadcn.png"
             />
           </Avatar>
-          <p className="font-mono">Hemant Prajapati</p>
+          <p className="font-mono">{createdBy}</p>
         </div>
         <h1 className="text-3xl font-semibold font-sans">{title} </h1>
         <p className=" w-[30rem] line-clamp-2 text-neutral-500">{content}</p>
