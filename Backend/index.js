@@ -2,6 +2,7 @@ const express = require("express");
 const connectDB = require("./connect");
 const user = require("./router/user");
 const blog = require("./router/blog");
+const comment = require("./router/comment");
 const { checkAuth } = require("./middlewares/AuthMiddleware");
 const cors = require("cors");
 const app = express();
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", user);
 app.use("/api/blog", checkAuth(), blog);
+app.use("/api/comment", checkAuth(), comment);
 
 // Server is Here
 app.listen(PORT, () => console.log("Server is connected"));
