@@ -1,8 +1,11 @@
 const express = require("express");
 const connectDB = require("./connect");
+
+// All required router is start from
 const user = require("./router/user");
 const blog = require("./router/blog");
 const comment = require("./router/comment");
+const reaction = require("./router/reactions");
 const { checkAuth } = require("./middlewares/AuthMiddleware");
 const cors = require("cors");
 const app = express();
@@ -34,6 +37,7 @@ app.get("/", (req, res) => {
 app.use("/api", user);
 app.use("/api/blog", checkAuth(), blog);
 app.use("/api/comment", checkAuth(), comment);
+app.use("/api/reaction", checkAuth(), reaction);
 
 // Server is Here
 app.listen(PORT, () => console.log("Server is connected"));
