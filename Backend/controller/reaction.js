@@ -17,4 +17,22 @@ const handleReaction = async (req, res) => {
   }
 };
 
-module.exports = { handleReaction };
+const handlegetReactions = async () => {
+  try {
+    const like = await ReactionModel.countDocuments({ type: "like" });
+
+    const dislike = await ReactionModel.countDocuments({ type: "dislike" });
+
+    return res.json({
+      msg: "reactions get successfully",
+      data: { like, dislike },
+    });
+  } catch (error) {
+    return res.josn({
+      msg: "something went wrong with handlegetreactions",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { handleReaction, handlegetReactions };
