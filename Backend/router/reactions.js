@@ -6,7 +6,7 @@ const {
 
 const router = express.Router();
 
-router.post("/reaction", handleReaction);
-router.get("/reaction", handlegetReactions);
+router.post("/", handleReaction);
+router.get("/", handlegetReactions);
 
-module.exports = { router };
+module.exports = router;

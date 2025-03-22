@@ -17,7 +17,7 @@ const handleReaction = async (req, res) => {
   }
 };
 
-const handlegetReactions = async () => {
+const handlegetReactions = async (req, res) => {
   try {
     const like = await ReactionModel.countDocuments({ type: "like" });
 
