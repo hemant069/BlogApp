@@ -39,8 +39,6 @@ const handleGetComment = async (req, res) => {
       .populate({ path: "user" })
       .populate({ path: "replies" });
 
-    console.log(comments);
-
     return res.json({ msg: "comment data successfully", data: comments });
   } catch (error) {
     return res.json({ msg: "something went wrong", error: error.message });
