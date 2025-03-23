@@ -4,11 +4,17 @@ const handleSaveBlogs = async (req, res) => {
   try {
     const { userId, blogId } = req.body;
 
-    const saveblogs = new SaveModel({ userId, blogId });
+    const existingBlogId = SaveModel.findOne({ blogId });
 
-    await saveblogs.save();
+    if (!blogId) {
+      const saveblogs = new SaveModel({ userId, blogId });
 
-    return res.json({ msg: "blog saved successfully", data: saveblogs });
+      await saveblogs.save();
+
+      return res.json({ msg: "blog saved successfully", data: saveblogs });
+    } else {
+      return res.json({ msg: "Already Saved blog" });
+    }
   } catch (error) {
     return res.json({
       msg: "something went wrong with handleSaveBlogs",
@@ -30,4 +36,19 @@ const handleGetSaveBlogs = async (req, res) => {
   }
 };
 
-module.exports = { handleSaveBlogs, handleGetSaveBlogs };
+const handleRemoveSaveBlogs = async (req, res) => {
+  try {
+    const { blogId } = req.body;
+
+    const blog = await SaveModel.findOneAndDelete({ blogId });
+
+    return res.json({ msg: "blog removed successfully" });
+  } catch (error) {
+    return res.json({
+      msg: "something went wrong with handleremovesaveblog",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { handleSaveBlogs, handleGetSaveBlogs, handleRemoveSaveBlogs };
