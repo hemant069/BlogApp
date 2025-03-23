@@ -19,7 +19,6 @@ const handlecreateblogpost = async (req, res) => {
           content,
           coverImgUrl: result.secure_url,
           createdBy: req.user.id,
-          user: req.user.username,
         });
         await createdBlogpost.save();
         return res
@@ -37,7 +36,10 @@ const handlecreateblogpost = async (req, res) => {
 const handlegetblogpost = async (req, res) => {
   try {
     const getAllblogpost = await BlogModel.find({});
-    return res.status(200).send({ msg: "all blog post", post: getAllblogpost });
+    return res
+      .status(200)
+      .send({ msg: "all blog post", post: getAllblogpost })
+      .populate("createdBy");
   } catch (error) {
     return res.status(404).json({
       msg: "Something went wrong wih getblogpost",
