@@ -6,6 +6,7 @@ const user = require("./router/user");
 const blog = require("./router/blog");
 const comment = require("./router/comment");
 const reaction = require("./router/reactions");
+const saveblogs = require("./router/saveblogs");
 const { checkAuth } = require("./middlewares/AuthMiddleware");
 const cors = require("cors");
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api", user);
 app.use("/api/blog", checkAuth(), blog);
 app.use("/api/comment", checkAuth(), comment);
 app.use("/api/reaction", checkAuth(), reaction);
+app.use("/api/saveblogs", checkAuth(), saveblogs);
 
 // Server is Here
 app.listen(PORT, () => console.log("Server is connected"));
