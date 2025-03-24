@@ -207,6 +207,8 @@ const handleToggleFollow = async (req, res) => {
       { $pull: { followers: userId } },
       { new: true }
     );
+
+    return res.json({ msg: "user unfollowed " });
   } catch (error) {
     return res.json({
       msg: "something went wrong with togglefollow",
