@@ -36,14 +36,17 @@ const handlecreateblogpost = async (req, res) => {
 
 const handlegetblogpost = async (req, res) => {
   try {
-    const getAllblogpost = await BlogModel.find({});
+    const getAllblogpost = await BlogModel.find({}).populate(
+      "createdBy",
+      "username email profileImg"
+    ); // Fetch only required fields
+
     return res
       .status(200)
-      .send({ msg: "all blog post", post: getAllblogpost })
-      .populate("createdBy");
+      .json({ msg: "All blog posts", data: getAllblogpost });
   } catch (error) {
-    return res.status(404).json({
-      msg: "Something went wrong wih getblogpost",
+    return res.status(500).json({
+      msg: "Something went wrong with getblogpost",
       error: error.message,
     });
   }
@@ -53,7 +56,7 @@ const handlegetoneblogpost = async (req, res) => {
   try {
     const { id } = req.params;
     const getOneblogpost = await BlogModel.findOne({ _id: id });
-    return res.status(200).send({ msg: "all blog post", post: getOneblogpost });
+    return res.status(200).send({ msg: "all blog post", data: getOneblogpost });
   } catch (error) {
     return res.status(404).json({
       msg: "Something went wrong wih getblogonepost",
