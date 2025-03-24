@@ -8,6 +8,8 @@ const handlecreateblogpost = async (req, res) => {
 
     const { title, content, tag } = req.body;
 
+    const tagArray = tag.split(",");
+
     const result = await cloudnary.uploader
       .upload_stream(async (result, error) => {
         if (error) {
@@ -19,7 +21,7 @@ const handlecreateblogpost = async (req, res) => {
           content,
           coverImgUrl: result.secure_url,
           createdBy: req.user.id,
-          tag,
+          tag: tagArray,
         });
         await createdBlogpost.save();
         return res
@@ -56,7 +58,9 @@ const handlegetoneblogpost = async (req, res) => {
   try {
     const { id } = req.params;
     const getOneblogpost = await BlogModel.findOne({ _id: id });
-    return res.status(200).send({ msg: "all blog post", data: getOneblogpost });
+    return res
+      .status(200)
+      .send({ msg: "blog post get successfully", data: getOneblogpost });
   } catch (error) {
     return res.status(404).json({
       msg: "Something went wrong wih getblogonepost",
