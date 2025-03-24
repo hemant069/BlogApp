@@ -11,7 +11,7 @@ const BlogSchema = Schema(
     },
     tag: [{ type: String }],
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 const BlogModel = new model("blog", BlogSchema);

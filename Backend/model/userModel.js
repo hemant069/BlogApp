@@ -7,6 +7,8 @@ const userSchema = mongoose.Schema(
     password: { type: String, required: true },
     profileImg: { type: String, default: "./images/default.png" },
     role: { type: String, enum: ["USER", "ADMIN"], default: "USER" },
+    following: [{ type: mongoose.Types.ObjectId, ref: "user" }],
+    followers: [{ type: mongoose.Types.ObjectId, ref: "user" }],
   },
   { timestamps: true }
 );

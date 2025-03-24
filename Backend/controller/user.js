@@ -162,10 +162,64 @@ const handleProfileImageUpload = async (req, res) => {
   }
 };
 
+const handleToggleFollow = async (req, res) => {
+  try {
+    const { userId, targetuserId } = req.body;
+
+    const existinguserId = await userModel.findById(userId);
+    const targeteduserId = await userModel.findById(targetuserId);
+
+    if (existinguserId === targeteduserId) {
+      return res.json({ msg: "You cannot follow yourself" });
+    }
+
+    if (!existinguserId || !targeteduserId) {
+      return res.json({ msg: "user is not found" });
+    }
+    const userfollowing = existinguserId.following.includes(targetuserId);
+
+    if (!userfollowing) {
+      await userModel.findByIdAndUpdate(
+        userId,
+        {
+          $push: { following: targetuserId },
+        },
+        { new: true }
+      );
+
+      await userModel.findByIdAndUpdate(
+        targetuserId,
+        { $push: { followers: userId } },
+        { new: true }
+      );
+
+      return res.json({ msg: "user started following" });
+    }
+
+    await userModel.findByIdAndUpdate(
+      userId,
+      { $pull: { following: targetuserId } },
+      { new: true }
+    );
+
+    await userModel.findByIdAndUpdate(
+      targetuserId,
+      { $pull: { followers: userId } },
+      { new: true }
+    );
+  } catch (error) {
+    return res.json({
+      msg: "something went wrong with togglefollow",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   handleSignUp,
   handleLogin,
   handleForgetPassword,
   handleverifyOtp,
   handleresetPassword,
+  handleToggleFollow,
 };

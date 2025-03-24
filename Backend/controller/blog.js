@@ -6,7 +6,7 @@ const handlecreateblogpost = async (req, res) => {
       return res.json({ msg: "Please Upload image" });
     }
 
-    const { title, content } = req.body;
+    const { title, content, tag } = req.body;
 
     const result = await cloudnary.uploader
       .upload_stream(async (result, error) => {
@@ -19,6 +19,7 @@ const handlecreateblogpost = async (req, res) => {
           content,
           coverImgUrl: result.secure_url,
           createdBy: req.user.id,
+          tag,
         });
         await createdBlogpost.save();
         return res
