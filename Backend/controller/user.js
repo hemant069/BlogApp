@@ -162,6 +162,8 @@ const handleProfileImageUpload = async (req, res) => {
   }
 };
 
+// Follow Handle start from here
+
 const handleToggleFollow = async (req, res) => {
   try {
     const { userId, targetuserId } = req.body;
