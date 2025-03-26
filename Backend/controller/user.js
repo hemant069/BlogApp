@@ -123,6 +123,8 @@ const handleverifyOtp = async (req, res) => {
   }
 };
 
+// Password reset function start from here
+
 const handleresetPassword = async (req, res) => {
   try {
     const { userId, password } = req.body;
