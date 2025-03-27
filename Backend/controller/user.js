@@ -89,6 +89,8 @@ const handleForgetPassword = async (req, res) => {
   }
 };
 
+// Verify Otp function is here
+
 const handleverifyOtp = async (req, res) => {
   try {
     const { otp, email } = req.body;
