@@ -4,13 +4,13 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import logingif from "../../public/login.gif";
-import typing from "../../public/typing.gif";
+import logingif from "../../../public/login.gif";
+import typing from "../../../public/typing.gif";
 import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "../../Context/AuthContext";
 
 interface submitData {
   email: string;
