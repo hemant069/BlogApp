@@ -16,7 +16,7 @@ interface submitData {
   email: string;
   password: string;
 }
-
+// commmit added 
 const page = () => {
   const { register, handleSubmit } = useForm<submitData>();
   const router = useRouter();
