@@ -2,6 +2,7 @@
 
 import Blogs from "../components/Blogs";
 import { useBlog } from "../Context/BlogContext";
+import { blogs } from "../types/blog";
 
 interface BlogData {
   title: string;
@@ -12,13 +13,13 @@ interface BlogData {
   user: String;
 }
 const page = () => {
-  const { data }: BlogData[] = useBlog();
+  const { data }: blogs[] = useBlog();
 
   console.log(data);
 
   return (
-    <div className="flex flex-col gap-10 hover:scale-100 ">
-      {data.map((item: BlogData) => (
+    <div className="flex flex-col gap-10 justify-center items-center ">
+      {data.map((item: blogs) => (
         <Blogs
           key={item._id}
           newid={item._id}
