@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Image from "next/image";
+import { getsingleBlog } from "@/app/api/lib/api";
 
 interface BlogType {
   title: string;
@@ -16,19 +17,10 @@ const page = () => {
 
   const [blog, setBlog] = useState<BlogType | null>();
 
-  const token = Cookies.get("token");
-
   const handleBlog = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND}blog/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = res?.data?.post;
+      const res = await getsingleBlog(id);
+      const data = res.data;
       setBlog(data);
     } catch (error) {
       console.log(error);

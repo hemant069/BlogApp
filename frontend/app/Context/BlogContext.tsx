@@ -30,7 +30,6 @@ export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
   const handleBlogData = async () => {
     try {
       const res = await getallBlogs();
-      console.log(res);
       const data = res.data;
       setData(data);
     } catch (error: any) {

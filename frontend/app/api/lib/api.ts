@@ -26,5 +26,24 @@ export const getallBlogs=async()=>{
 }
 
 
+export const getsingleBlog=async(id:string)=>{
+    try {
+        
+        const res= await axios.get(`${baseUrl}/blog/${id}`);
+
+        if(!res.ok){
+            console.log("something wrong with get single blog");
+        }
+
+        return res.data;
+
+
+    } catch (error) {
+
+        console.log(error.message);
+        
+    }
+}
+
 
 
