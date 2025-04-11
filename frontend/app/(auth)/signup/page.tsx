@@ -11,23 +11,19 @@ import typing from "../../../public/typing.gif";
 import { handleSignupFn } from "@/services/implementation";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-interface submitData {
-  username: string;
-  email: string;
-  password: string;
-}
+import { CREATE_USER } from "@/app/types/user";
+import { signupFn } from "@/app/api/lib/api";
 
 const page = () => {
-  const { register, handleSubmit } = useForm<submitData>();
+  const { register, handleSubmit } = useForm<CREATE_USER>();
   const router = useRouter();
   const { toast } = useToast();
   //  check
-  const handleSignup: SubmitHandler<submitData> = async (data: submitData) => {
+  const handleSignup: SubmitHandler<CREATE_USER> = async (
+    data: CREATE_USER
+  ) => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND}signup`,
-        data
-      );
+      const res = await signupFn(data);
       if (res.status == 201) {
         toast({ title: "Sign up Successfully 😊" });
         router.push("/login");

@@ -10,7 +10,7 @@ export interface blogs{
   }
 
 export interface author{
-
+_id:string,
     email:string,
     profileImg:string,
     username:string,

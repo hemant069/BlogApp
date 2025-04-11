@@ -11,24 +11,18 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "../../Context/AuthContext";
-
-interface submitData {
-  email: string;
-  password: string;
-}
+import { loginFn } from "@/app/api/lib/api";
+import { LOGIN_USER } from "@/app/types/user";
 
 const page = () => {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<submitData>();
+  const { register, handleSubmit } = useForm<LOGIN_USER>();
   const { toast } = useToast();
   const { login } = useAuth();
 
-  const handleLogin: SubmitHandler<submitData> = async (data: submitData) => {
+  const handleLogin: SubmitHandler<LOGIN_USER> = async (data: LOGIN_USER) => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND}login`,
-        data
-      );
+      const res = await loginFn(data);
 
       if (res.status >= 202) {
         if (!res.data.token) {

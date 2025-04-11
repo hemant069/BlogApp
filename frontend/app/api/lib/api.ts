@@ -1,3 +1,4 @@
+import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -8,6 +9,44 @@ const token=Cookies.get('token')
 axios.defaults.headers.common["Authorization"]=`Bearer ${token}`;
 
 
+export const signupFn=async(data:CREATE_USER)=>{
+    try {
+        
+        const res=await axios.post(`${baseUrl}/signup`,data);
+
+        if(!res.ok){
+            console.log("something went wrong with signup");
+        }
+
+        return res;
+
+
+    } catch (error) {
+        
+    }
+}
+
+
+export const loginFn=async(data:LOGIN_USER)=>{
+
+    try {
+        
+        const res= await axios.post(`${baseUrl}/login`,data);
+
+        if(!res.ok){
+        console.log("something went wrong")
+        }
+        return res;
+
+    } catch (error) {
+
+        return error;
+        
+    }
+}
+
+
+// All Blogs related api start from Here
 export const getallBlogs=async()=>{
 
     try {
@@ -44,6 +83,8 @@ export const getsingleBlog=async(id:string)=>{
         
     }
 }
+
+
 
 
 
