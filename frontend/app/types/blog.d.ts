@@ -15,3 +15,10 @@ _id:string,
     profileImg:string,
     username:string,
 }
+
+
+export interface CREATE_BLOG{
+    title:string,
+    content:string,
+    coverImgUrl:FileList
+}

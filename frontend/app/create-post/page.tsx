@@ -11,33 +11,23 @@ import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { CREATE_BLOG } from "../types/blog";
+import { createBlogPost } from "../api/lib/api";
 
-interface PostData {
-  title: string;
-  content: string;
-  coverImgUrl: FileList;
-}
 //comment
 const page = () => {
-  const { register, handleSubmit } = useForm<PostData>();
+  const { register, handleSubmit } = useForm<CREATE_BLOG>();
   const router = useRouter();
-  const handleCreatePost: SubmitHandler<PostData> = async (data: PostData) => {
+  const handleCreatePost: SubmitHandler<CREATE_BLOG> = async (
+    data: CREATE_BLOG
+  ) => {
     const formData = new FormData();
-    const getCookie = Cookies.get("token");
     formData.append("coverImage", data.coverImgUrl[0]); // Extract first file
     formData.append("title", data.title);
     formData.append("content", data.content);
 
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND}blog/create-post`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie}`,
-          },
-        }
-      );
+      const res = await createBlogPost(formData);
       toast({ title: res.data?.msg });
       router.push("/dashboard");
     } catch (error: any) {

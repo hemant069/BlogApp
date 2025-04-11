@@ -8,7 +8,6 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import signup from "../../../public/signup.gif";
 import typing from "../../../public/typing.gif";
-import { handleSignupFn } from "@/services/implementation";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { CREATE_USER } from "@/app/types/user";

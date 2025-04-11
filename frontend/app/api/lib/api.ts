@@ -1,3 +1,4 @@
+import { CREATE_BLOG } from "@/app/types/blog";
 import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -84,7 +85,23 @@ export const getsingleBlog=async(id:string)=>{
     }
 }
 
+export const createBlogPost=async(data)=>{
+    try {
+        
+        const res= await axios.post(`${baseUrl}/blog/create-post`,data)
 
+        if(!res.ok){
+            return  new Error("Something went wrong with createBlog");
+            
+        }
+        return res.data;
+
+    } catch (error) {
+
+        console.log(error.message);
+        
+    }
+}
 
 
 
