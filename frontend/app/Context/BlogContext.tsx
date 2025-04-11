@@ -2,15 +2,24 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { getallBlogs } from "../api/lib/api";
 interface BlogContextType {
   handleBlogData: () => void;
   data: BlogData[] | null;
 }
 
+interface author {
+  email: string;
+  profileImg: string;
+  username: string;
+  _id: string;
+}
 interface BlogData {
   title: string;
   content: string;
   coverImgUrl: string;
+  createdBy?: author;
+  tag?: string[];
 }
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
@@ -20,14 +29,9 @@ export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleBlogData = async () => {
     try {
-      const getCookie = Cookies.get("token");
-
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND}blog`, {
-        headers: {
-          Authorization: `Bearer ${getCookie}`,
-        },
-      });
-      const data = res.data.post;
+      const res = await getallBlogs();
+      console.log(res);
+      const data = res.data;
       setData(data);
     } catch (error: any) {
       console.log("Something wrong with", error.message);

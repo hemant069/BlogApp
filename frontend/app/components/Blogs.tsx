@@ -4,12 +4,18 @@ import eg from "../../public/banner.jpg";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useRouter } from "next/navigation";
 
+interface author {
+  email: string;
+  profileImg: string;
+  username: string;
+  _id: string;
+}
 interface BlogProps {
   image: string;
   content: string;
   title: string;
   newid: string;
-  createdBy: string;
+  createdBy: author;
   user: string;
 }
 const Blogs = ({
@@ -39,7 +45,7 @@ const Blogs = ({
               src="https://github.com/shadcn.png"
             />
           </Avatar>
-          <p className="font-mono">{user || createdBy}</p>
+          <p className="font-mono">{user || createdBy.username}</p>
         </div>
         <h1 className="text-3xl font-semibold font-sans">{title} </h1>
         <p className=" w-[30rem] line-clamp-2 text-neutral-500">{content}</p>
