@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(getToken);
         setuser(decode);
       } catch (error) {
+        console.log(error);
         logout();
       }
     }

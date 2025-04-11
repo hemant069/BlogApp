@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -13,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CREATE_USER } from "@/app/types/user";
 import { signupFn } from "@/app/api/lib/api";
 
-const page = () => {
+const Page = () => {
   const { register, handleSubmit } = useForm<CREATE_USER>();
   const router = useRouter();
   const { toast } = useToast();
@@ -23,12 +22,12 @@ const page = () => {
   ) => {
     try {
       const res = await signupFn(data);
-      if (res.status == 201) {
+      if (res?.status == 201) {
         toast({ title: "Sign up Successfully 😊" });
         router.push("/login");
       }
     } catch (error) {
-      console.log("something went wrong with handleSignup");
+      console.log("something went wrong with handleSignup", error);
     }
   };
 
@@ -65,4 +64,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

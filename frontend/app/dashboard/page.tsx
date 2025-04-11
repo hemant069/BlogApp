@@ -4,14 +4,6 @@ import Blogs from "../components/Blogs";
 import { useBlog } from "../Context/BlogContext";
 import { blogs } from "../types/blog";
 
-interface BlogData {
-  title: string;
-  content: string;
-  coverImgUrl: string;
-  _id: string;
-  createdBy: string;
-  user: String;
-}
 const page = () => {
   const { data }: blogs[] = useBlog();
 

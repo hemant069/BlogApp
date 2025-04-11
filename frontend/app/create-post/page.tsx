@@ -3,19 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { title } from "process";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ProtectedRoute from "../Context/ProtectedRoute";
-import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { CREATE_BLOG } from "../types/blog";
 import { createBlogPost } from "../api/lib/api";
 
 //comment
-const page = () => {
+const Page = () => {
   const { register, handleSubmit } = useForm<CREATE_BLOG>();
   const router = useRouter();
   const handleCreatePost: SubmitHandler<CREATE_BLOG> = async (
@@ -73,4 +70,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

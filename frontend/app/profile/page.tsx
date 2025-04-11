@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import profileimag from "../../public/robot.jpeg";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -17,7 +16,7 @@ const Page = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [userDetails, setuserDetails] = useState<User | null | undefined>();
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);

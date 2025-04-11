@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 import about from "../../public/robot.jpeg";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <p>
@@ -36,4 +36,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -7,14 +7,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import logingif from "../../../public/login.gif";
 import typing from "../../../public/typing.gif";
 import Image from "next/image";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "../../Context/AuthContext";
 import { loginFn } from "@/app/api/lib/api";
 import { LOGIN_USER } from "@/app/types/user";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<LOGIN_USER>();
   const { toast } = useToast();
@@ -24,13 +23,13 @@ const page = () => {
     try {
       const res = await loginFn(data);
 
-      if (res.status >= 202) {
-        if (!res.data.token) {
+      if (res?.status >= 202) {
+        if (!res?.data?.token) {
           toast({ title: "Invaild Creads" });
         }
       }
 
-      login(res.data.token);
+      login(res?.data.token);
       toast({ title: "Login Success" });
       router.push("/dashboard");
     } catch (error: any) {
@@ -80,4 +79,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

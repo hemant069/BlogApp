@@ -11,7 +11,7 @@ interface BlogType {
   content: string;
   coverImgUrl: string;
 }
-const page = () => {
+const Page = () => {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
 
@@ -56,4 +56,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

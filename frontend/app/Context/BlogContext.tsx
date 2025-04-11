@@ -1,7 +1,5 @@
 "use client";
-import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import { getallBlogs } from "../api/lib/api";
 interface BlogContextType {
   handleBlogData: () => void;
@@ -32,8 +30,9 @@ export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await getallBlogs();
       const data = res.data;
       setData(data);
-    } catch (error: any) {
-      console.log("Something wrong with", error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.log("Something wrong with", error.message);
     }
   };
 
