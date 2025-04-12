@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "../../Context/AuthContext";
 import { loginFn } from "@/app/api/lib/api";
 import { LOGIN_USER } from "@/app/types/user";
+import axios, { AxiosResponse } from "axios";
 
 const Page = () => {
   const router = useRouter();
@@ -19,10 +20,14 @@ const Page = () => {
   const { toast } = useToast();
   const { login } = useAuth();
 
+  interface Res {
+    msg: string;
+    token: string;
+  }
   const handleLogin: SubmitHandler<LOGIN_USER> = async (data: LOGIN_USER) => {
     try {
-      const res = await loginFn(data);
-
+      const res: AxiosResponse<Res> = await loginFn(data);
+      console.log(res);
       if (res?.status >= 202) {
         if (!res?.data?.token) {
           toast({ title: "Invaild Creads" });
@@ -33,9 +38,9 @@ const Page = () => {
       toast({ title: "Login Success" });
       router.push("/dashboard");
     } catch (error: unknown) {
-      if (error.response) {
+      if (axios.isAxiosError(error)) {
         toast({ title: error?.response?.data?.msg });
-      } else if (error.request) {
+      } else if (axios.isAxiosError(error)) {
         toast({ title: "Network error. Please check your connection." });
       }
     }

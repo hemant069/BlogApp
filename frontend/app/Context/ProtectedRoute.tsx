@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { useRouter } from "next/navigation";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   const router = useRouter();
 

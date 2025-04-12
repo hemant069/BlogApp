@@ -41,7 +41,9 @@ export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <BlogContext.Provider value={{ data }}>{children}</BlogContext.Provider>
+    <BlogContext.Provider value={{ data, handleBlogData }}>
+      {children}
+    </BlogContext.Provider>
   );
 };
 

@@ -1,8 +1,6 @@
 "use client";
-import axios from "axios";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import Image from "next/image";
 import { getsingleBlog } from "@/app/api/lib/api";
 
