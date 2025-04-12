@@ -7,17 +7,17 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
 interface User {
-  username: String;
-  email: String;
-  iat: Number;
+  username: string;
+  email: string;
+  iat: number;
 }
 
 const Page = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [userDetails, setuserDetails] = useState<User | null | undefined>();
 
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event?.target?.files?.[0];
     if (file) {
       setSelectedFile(file);
       // You can add upload logic here or keep it separate

@@ -27,8 +27,9 @@ const Page = () => {
       const res = await createBlogPost(formData);
       toast({ title: res.data?.msg });
       router.push("/dashboard");
-    } catch (error: any) {
-      console.log("Somehting went wrong with ", error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.log("Somehting went wrong with ", error.message);
     }
   };
   return (

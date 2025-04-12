@@ -4,7 +4,7 @@ import Blogs from "../components/Blogs";
 import { useBlog } from "../Context/BlogContext";
 import { blogs } from "../types/blog";
 
-const page = () => {
+const Page = () => {
   const { data }: blogs[] = useBlog();
 
   console.log(data);
@@ -26,4 +26,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

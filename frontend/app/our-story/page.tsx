@@ -27,7 +27,7 @@ const Page = () => {
         As someone who enjoyed reading blogs and exploring different
         perspectives, I realized that many platforms lacked a true sense of
         community. Some were cluttered with advertisements, while others
-        restricted users' creative freedom. I wanted to bridge that gap—a
+        restricted users creative freedom. I wanted to bridge that gap—a
         platform where people could not only write but also truly connect with
         one another. A digital space where words were more than just text on a
         screen—they were voices shaping narratives.

@@ -32,7 +32,7 @@ const Page = () => {
       login(res?.data.token);
       toast({ title: "Login Success" });
       router.push("/dashboard");
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error.response) {
         toast({ title: error?.response?.data?.msg });
       } else if (error.request) {

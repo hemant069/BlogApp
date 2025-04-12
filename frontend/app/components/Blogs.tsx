@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import eg from "../../public/banner.jpg";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useRouter } from "next/navigation";
 

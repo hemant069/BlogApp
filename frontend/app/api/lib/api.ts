@@ -1,4 +1,3 @@
-import { CREATE_BLOG } from "@/app/types/blog";
 import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -22,7 +21,8 @@ export const signupFn=async(data:CREATE_USER)=>{
         return res;
 
 
-    } catch (error) {
+    } catch (error:unknown) {
+        console.log(error)
         
     }
 }
@@ -39,7 +39,7 @@ export const loginFn=async(data:LOGIN_USER)=>{
         }
         return res;
 
-    } catch (error) {
+    } catch (error:unknown) {
 
         return error;
         
@@ -58,7 +58,9 @@ export const getallBlogs=async()=>{
         }
         return res.data;
 
-    } catch (error) {
+    } catch (error:unknown) {
+
+        if(error instanceof Error)
 
         console.log(error.message)
         
@@ -78,7 +80,9 @@ export const getsingleBlog=async(id:string)=>{
         return res.data;
 
 
-    } catch (error) {
+    } catch (error:unknown) {
+
+        if(error instanceof Error)
 
         console.log(error.message);
         
@@ -96,8 +100,9 @@ export const createBlogPost=async(data)=>{
         }
         return res.data;
 
-    } catch (error) {
+    } catch (error:unknown) {
 
+        if(error instanceof Error)
         console.log(error.message);
         
     }

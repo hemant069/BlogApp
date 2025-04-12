@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
+import React from "react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
