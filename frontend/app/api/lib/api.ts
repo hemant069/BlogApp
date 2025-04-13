@@ -1,4 +1,3 @@
-import { CREATE_BLOG } from "@/app/types/blog";
 import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
@@ -34,7 +33,7 @@ interface LOGIN_RESPONSE{
 }
 
 
-export const loginFn=async(data:LOGIN_USER): Promise<AxiosResponse<LOGIN_RESPONSE>>=>{
+export const loginFn=async(data:LOGIN_USER): Promise<AxiosResponse<LOGIN_RESPONSE>|undefined>=>{
 
     try {
         
@@ -95,7 +94,7 @@ export const getsingleBlog=async(id:string)=>{
     }
 }
 
-export const createBlogPost=async(data:CREATE_BLOG)=>{
+export const createBlogPost=async(data:FormData)=>{
     try {
         
         const res= await axios.post(`${baseUrl}/blog/create-post`,data)

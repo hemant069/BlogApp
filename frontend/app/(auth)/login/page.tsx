@@ -28,6 +28,9 @@ const Page = () => {
     try {
       const res: AxiosResponse<Res> = await loginFn(data);
       console.log(res);
+      if (!res) {
+        console.log("Login failed");
+      }
       if (res?.status >= 202) {
         if (!res?.data?.token) {
           toast({ title: "Invaild Creads" });
