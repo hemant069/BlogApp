@@ -7,6 +7,7 @@ export interface blogs{
     _id: string;
     createdBy: author;
     user: string;
+    tag?:string[]
   }
 
 export interface author{

@@ -1,13 +1,11 @@
 "use client";
 
 import Blogs from "../components/Blogs";
-import { useBlog } from "../Context/BlogContext";
+import { BlogContextType, useBlog } from "../Context/BlogContext";
 import { blogs } from "../types/blog";
 
 const Page = () => {
   const { data }: blogs[] = useBlog();
-
-  console.log(data);
 
   return (
     <div className="flex flex-col gap-10 justify-center items-center ">

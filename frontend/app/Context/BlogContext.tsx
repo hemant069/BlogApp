@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { getallBlogs } from "../api/lib/api";
-interface BlogContextType {
+export interface BlogContextType {
   handleBlogData: () => void;
   data: BlogData[] | null;
 }
@@ -18,6 +18,8 @@ interface BlogData {
   coverImgUrl: string;
   createdBy?: author;
   tag?: string[];
+  _id: string;
+  user: string;
 }
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
@@ -51,7 +53,7 @@ export const useBlog = () => {
   const Blog = useContext(BlogContext);
 
   if (!Blog) {
-    console.log("Something went wrong with use Blog");
+    throw new Error("use blog must ");
   }
 
   return Blog;

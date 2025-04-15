@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 
-const baseUrl:string|null=process.env.NEXT_PUBLIC_BACKEND||"http://localhost:8000/api" ;
+const baseUrl:string|null="http://localhost:8000/api" ;
 
 const token=Cookies.get('token')
 axios.defaults.headers.common["Authorization"]=`Bearer ${token}`;

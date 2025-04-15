@@ -26,12 +26,13 @@ const Page = () => {
   }
   const handleLogin: SubmitHandler<LOGIN_USER> = async (data: LOGIN_USER) => {
     try {
-      const res: AxiosResponse<Res> = await loginFn(data);
+      const res: AxiosResponse<Res> | undefined = await loginFn(data);
       console.log(res);
       if (!res) {
         console.log("Login failed");
+        return;
       }
-      if (res?.status >= 202) {
+      if (res.status >= 202) {
         if (!res?.data?.token) {
           toast({ title: "Invaild Creads" });
         }
