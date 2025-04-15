@@ -5,11 +5,11 @@ import { BlogContextType, useBlog } from "../Context/BlogContext";
 import { blogs } from "../types/blog";
 
 const Page = () => {
-  const { data }: blogs[] = useBlog();
+  const { data }: BlogContextType = useBlog();
 
   return (
     <div className="flex flex-col gap-10 justify-center items-center ">
-      {data.map((item: blogs) => (
+      {data?.map((item) => (
         <Blogs
           key={item._id}
           newid={item._id}

@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { getallBlogs } from "../api/lib/api";
 export interface BlogContextType {
   handleBlogData: () => void;
-  data: BlogData[] | null;
+  data: BlogData[];
 }
 
 interface author {
@@ -16,7 +16,7 @@ interface BlogData {
   title: string;
   content: string;
   coverImgUrl: string;
-  createdBy?: author;
+  createdBy: author;
   tag?: string[];
   _id: string;
   user: string;
@@ -25,7 +25,7 @@ interface BlogData {
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
 export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
-  const [data, setData] = useState<BlogData[] | null>([]);
+  const [data, setData] = useState<BlogData[]>([]);
 
   const handleBlogData = async () => {
     try {
