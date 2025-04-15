@@ -27,8 +27,10 @@ const Page = () => {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    const decode = jwtDecode(token);
-    setuserDetails(decode);
+    if (token) {
+      const decode = jwtDecode<User>(token);
+      setuserDetails(decode);
+    }
   }, []);
 
   return (

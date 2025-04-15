@@ -2,7 +2,6 @@
 
 import Blogs from "../components/Blogs";
 import { BlogContextType, useBlog } from "../Context/BlogContext";
-import { blogs } from "../types/blog";
 
 const Page = () => {
   const { data }: BlogContextType = useBlog();
