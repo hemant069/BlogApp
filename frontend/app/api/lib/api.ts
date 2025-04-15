@@ -3,7 +3,8 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 
-const baseUrl:string|null=process.env.NEXT_PUBLIC_BACKEND||"http://localhost:8000/api";
+//const baseUrl:string|null=process.env.NEXT_PUBLIC_BACKEND||"http://localhost:8000/api";
+const baseUrl:string|null="http://localhost:8000/api";
 
 const token=Cookies.get('token')
 axios.defaults.headers.common["Authorization"]=`Bearer ${token}`;
@@ -112,6 +113,64 @@ export const createBlogPost=async(data:FormData)=>{
         
     }
 }
+
+// Add Commment on Post
+
+
+export const addCommentOnPost=async(data:string)=>{
+
+    try {
+        const res= await axios.post(`${baseUrl}/comment`,data)
+        return res.data;
+    } catch (error) {
+
+        if(error instanceof Error){
+
+            console.log(error.message);
+        }
+        
+    }
+}
+
+
+// Add Reaction On Post
+
+
+export const addReactionOnPost=async(data)=>{
+
+    try {
+        
+        const res= await axios.post(`${baseUrl}/reaction`,data)
+        
+        return res.data;
+
+    } catch (error) {
+
+        if(error instanceof Error){
+
+            console.log(error.message)
+        }
+        
+    }
+}
+
+
+export const getReactionOnPost=async()=>{
+
+  try {
+    const res= await axios.get(`${baseUrl}/reaction`);
+    return res.data;
+  } catch (error) {
+
+    if(error instanceof Error){
+
+        console.log(error.message)
+    }
+    
+  }
+}
+
+
 
 
 
