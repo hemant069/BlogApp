@@ -2,7 +2,12 @@
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { getsingleBlog } from "@/app/api/lib/api";
+import { addCommentOnPost, getsingleBlog } from "@/app/api/lib/api";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 interface BlogType {
   title: string;
@@ -12,6 +17,7 @@ interface BlogType {
 const Page = () => {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
+  const { handleSubmit, register } = useForm();
 
   const [blog, setBlog] = useState<BlogType | null>();
 
@@ -22,6 +28,35 @@ const Page = () => {
       setBlog(data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const addComment = async (comment: { content: string }) => {
+    //content, userId, blogId, parentcommentId
+    // content:string,
+    // user:string,
+    // blog:string,
+    // parentComment?:string
+    const token = Cookies.get("token");
+    let tokenId;
+    if (token) {
+      const userId: { id: string } = jwtDecode(token);
+      tokenId = userId.id;
+    }
+
+    const data = {
+      ...comment,
+      userId: tokenId,
+      blogId: id,
+    };
+
+    try {
+      const res = await addCommentOnPost(data);
+      console.log(res);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     }
   };
 
@@ -49,6 +84,10 @@ const Page = () => {
       </div>
       <div>
         <p>{blog?.content}</p>
+      </div>
+      <div className="flex gap-2 items-center">
+        <Input type="text" {...register("content")} />
+        <Button onClick={handleSubmit(addComment)}>Add</Button>
       </div>
     </div>
   );

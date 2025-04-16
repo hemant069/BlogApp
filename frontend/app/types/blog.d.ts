@@ -23,3 +23,10 @@ export interface CREATE_BLOG{
     content:string,
     coverImgUrl:FileList
 }
+
+export interface ADD_COMMENT{
+    content:string,
+    user:string,
+    blog:string,
+    parentComment?:string
+}

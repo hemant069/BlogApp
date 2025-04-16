@@ -1,3 +1,4 @@
+import { ADD_COMMENT } from "@/app/types/blog";
 import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
@@ -117,7 +118,8 @@ export const createBlogPost=async(data:FormData)=>{
 // Add Commment on Post
 
 
-export const addCommentOnPost=async(data:string)=>{
+
+export const addCommentOnPost=async(data:ADD_COMMENT)=>{
 
     try {
         const res= await axios.post(`${baseUrl}/comment`,data)
@@ -136,7 +138,7 @@ export const addCommentOnPost=async(data:string)=>{
 // Add Reaction On Post
 
 
-export const addReactionOnPost=async(data)=>{
+export const addReactionOnPost=async(data:string)=>{
 
     try {
         
