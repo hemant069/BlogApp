@@ -30,3 +30,8 @@ export interface ADD_COMMENT{
     blog:string,
     parentComment?:string
 }
+
+// Comment Parameter 
+ export interface COMMENT {
+    content: string;
+  }

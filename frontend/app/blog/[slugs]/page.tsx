@@ -3,11 +3,13 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { addCommentOnPost, getsingleBlog } from "@/app/api/lib/api";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { COMMENT } from "@/app/types/blog";
+import { useAuth } from "@/app/Context/AuthContext";
 
 interface BlogType {
   title: string;
@@ -17,7 +19,9 @@ interface BlogType {
 const Page = () => {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
-  const { handleSubmit, register } = useForm();
+  const { user } = useAuth();
+  console.log(user);
+  const { handleSubmit, register } = useForm<COMMENT>();
 
   const [blog, setBlog] = useState<BlogType | null>();
 
@@ -31,7 +35,7 @@ const Page = () => {
     }
   };
 
-  const addComment = async (comment: { content: string }) => {
+  const addComment: SubmitHandler<COMMENT> = async (comment: COMMENT) => {
     //content, userId, blogId, parentcommentId
     // content:string,
     // user:string,
@@ -40,7 +44,7 @@ const Page = () => {
     const token = Cookies.get("token");
     let tokenId;
     if (token) {
-      const userId: { id: string } = jwtDecode(token);
+      const userId = jwtDecode(token);
       tokenId = userId.id;
     }
 
