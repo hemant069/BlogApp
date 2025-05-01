@@ -20,7 +20,6 @@ const Page = () => {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const { user } = useAuth();
-  console.log(user);
   const { handleSubmit, register } = useForm<COMMENT>();
 
   const [blog, setBlog] = useState<BlogType | null>();
