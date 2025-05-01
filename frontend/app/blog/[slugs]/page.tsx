@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { COMMENT } from "@/app/types/blog";
+import { COMMENT, GET_COMMENT } from "@/app/types/blog";
 import { useAuth } from "@/app/Context/AuthContext";
 import { User } from "@/app/types/user";
 import { Heart, MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
@@ -28,6 +28,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar } from "@/components/ui/avatar";
 
 interface BlogType {
   title: string;
@@ -38,10 +39,10 @@ const Page = () => {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const { user } = useAuth();
-  const { handleSubmit, register } = useForm<COMMENT>();
+  const { handleSubmit, register, setValue } = useForm<COMMENT>();
 
   const [blog, setBlog] = useState<BlogType | null>();
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<GET_COMMENT[]>([]);
 
   const handleBlog = async () => {
     try {
@@ -57,7 +58,7 @@ const Page = () => {
     try {
       const res = await getCommentOnPost(id);
 
-      console.log(res);
+      setComments(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -82,6 +83,8 @@ const Page = () => {
       try {
         const res = await addCommentOnPost(data);
         console.log(res);
+        handlegetComment();
+        setValue("content", "");
       } catch (error) {
         if (error instanceof Error) {
           console.log(error.message);
@@ -141,7 +144,16 @@ const Page = () => {
                       <Button onClick={handleSubmit(addComment)}>Submit</Button>
                     </div>
                   </DrawerHeader>
-                  <DrawerFooter></DrawerFooter>
+                  <DrawerFooter className=" overflow-y-scroll">
+                    {comments.map((el, ind) => (
+                      <div className="flex gap-2  ">
+                        <div className="">
+                          <div>{el.user.username}</div>
+                          <div>{el.content}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </DrawerFooter>
                 </DrawerContent>
               </Drawer>
             </div>

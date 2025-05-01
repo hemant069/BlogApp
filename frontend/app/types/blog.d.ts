@@ -1,3 +1,4 @@
+import { User } from "./user";
 
 
 export interface blogs{
@@ -34,4 +35,13 @@ export interface ADD_COMMENT{
 // Comment Parameter 
  export interface COMMENT {
     content: string;
+  }
+
+
+  export interface GET_COMMENT{
+    content:string,
+    userId:string,
+    blogId:string,
+    user:User,
+    parentComment:string,
   }
