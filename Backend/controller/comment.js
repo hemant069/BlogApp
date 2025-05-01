@@ -35,7 +35,9 @@ const handleComment = async (req, res) => {
 
 const handleGetComment = async (req, res) => {
   try {
-    const comments = await CommentModel.find({})
+    const { id } = req.params;
+
+    const comments = await CommentModel.find({ blog: id })
       .populate({ path: "user" })
       .populate({ path: "replies" });
 

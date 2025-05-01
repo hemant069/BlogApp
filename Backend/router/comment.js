@@ -4,6 +4,6 @@ const { handleComment, handleGetComment } = require("../controller/comment");
 const router = express.Router();
 
 router.post("/", handleComment);
-router.get("/", handleGetComment);
+router.get("/:id", handleGetComment);
 
 module.exports = router;

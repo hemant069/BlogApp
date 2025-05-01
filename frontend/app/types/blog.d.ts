@@ -26,9 +26,9 @@ export interface CREATE_BLOG{
 
 export interface ADD_COMMENT{
     content:string,
-    user:string,
-    blog:string,
-    parentComment?:string
+    userId:string,
+    blogId:string,
+    parentCommentId?:string
 }
 
 // Comment Parameter 

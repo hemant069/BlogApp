@@ -2,13 +2,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { User } from "../types/user";
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  avatar?: string;
-}
+// interface User {
+//   id: string;
+//   username: string;
+//   email: string;
+//   avatar?: string;
+// }
 
 interface AuthContextType {
   user: User | null;

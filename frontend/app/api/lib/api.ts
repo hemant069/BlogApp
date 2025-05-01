@@ -134,6 +134,26 @@ export const addCommentOnPost=async(data:ADD_COMMENT)=>{
     }
 }
 
+export interface COMMENT_ID{
+    postId:string
+}
+
+export const getCommentOnPost=async(id:string)=>{
+    try {
+        
+        const res= await axios.get(`${baseUrl}/comment/${id}`,);
+
+        return res.data;
+
+    } catch (error) {
+
+        if(error instanceof Error){
+            console.log(error.message)
+        }
+        
+    }
+}
+
 
 // Add Reaction On Post
 
