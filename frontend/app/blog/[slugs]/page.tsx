@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   addCommentOnPost,
-  COMMENT_ID,
   getCommentOnPost,
   getsingleBlog,
 } from "@/app/api/lib/api";
@@ -16,12 +15,10 @@ import { jwtDecode } from "jwt-decode";
 import { COMMENT, GET_COMMENT } from "@/app/types/blog";
 import { useAuth } from "@/app/Context/AuthContext";
 import { User } from "@/app/types/user";
-import { Heart, MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
+import { MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -43,8 +40,7 @@ const Page = () => {
 
   const [blog, setBlog] = useState<BlogType | null>();
   const [comments, setComments] = useState<GET_COMMENT[]>([]);
-  const [isReply, setisReply] = useState<Boolean>(false);
-  const [replyId, setreplyId] = useState<String>();
+  const [replyId, setreplyId] = useState<string>("");
 
   const handleBlog = async () => {
     try {
@@ -76,10 +72,19 @@ const Page = () => {
 
     if (token) {
       const userId: User = jwtDecode(token);
-      const data = {
+      let data;
+      if (!replyId) {
+        data = {
+          content: comment.content,
+          userId: userId.id,
+          blogId: id,
+        };
+      }
+      data = {
         content: comment.content,
         userId: userId.id,
         blogId: id,
+        parentcommentId: replyId,
       };
 
       try {
@@ -101,11 +106,6 @@ const Page = () => {
     // My Parent comment Id
     console.log(id);
     setreplyId(id);
-  };
-
-  const handleReplyInComment = async () => {
-    try {
-    } catch (error) {}
   };
 
   useEffect(() => {
@@ -176,8 +176,13 @@ const Page = () => {
                           </div>
                           {el._id === replyId && (
                             <div className="flex  gap-2">
-                              <Input />
-                              <Button variant={"secondary"}>Reply</Button>
+                              <Input {...register("content")} />
+                              <Button
+                                onClick={handleSubmit(addComment)}
+                                variant={"secondary"}
+                              >
+                                Reply
+                              </Button>
                             </div>
                           )}
                         </div>

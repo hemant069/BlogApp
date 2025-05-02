@@ -29,7 +29,7 @@ export interface ADD_COMMENT{
     content:string,
     userId:string,
     blogId:string,
-    parentCommentId?:string
+    parentcommentId?:string|null
 }
 
 // Comment Parameter 
