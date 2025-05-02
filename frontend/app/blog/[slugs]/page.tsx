@@ -43,6 +43,8 @@ const Page = () => {
 
   const [blog, setBlog] = useState<BlogType | null>();
   const [comments, setComments] = useState<GET_COMMENT[]>([]);
+  const [isReply, setisReply] = useState<Boolean>(false);
+  const [replyId, setreplyId] = useState<String>();
 
   const handleBlog = async () => {
     try {
@@ -91,6 +93,19 @@ const Page = () => {
         }
       }
     }
+  };
+
+  // Reply in Comments
+
+  const handleReply = (id: string) => {
+    // My Parent comment Id
+    console.log(id);
+    setreplyId(id);
+  };
+
+  const handleReplyInComment = async () => {
+    try {
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -146,10 +161,25 @@ const Page = () => {
                   </DrawerHeader>
                   <DrawerFooter className=" overflow-y-scroll">
                     {comments.map((el, ind) => (
-                      <div className="flex gap-2  ">
+                      <div key={el._id} className="flex gap-2  ">
                         <div className="">
                           <div>{el.user.username}</div>
                           <div>{el.content}</div>
+                          <div className="flex justify-between items-center w-10 gap-3">
+                            <div>
+                              <ThumbsUp />
+                            </div>
+                            <div>
+                              <ThumbsDown />
+                            </div>
+                            <div onClick={() => handleReply(el._id)}>reply</div>
+                          </div>
+                          {el._id === replyId && (
+                            <div className="flex  gap-2">
+                              <Input />
+                              <Button variant={"secondary"}>Reply</Button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}

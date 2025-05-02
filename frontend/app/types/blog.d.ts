@@ -37,11 +37,19 @@ export interface ADD_COMMENT{
     content: string;
   }
 
+  export interface REPLIES{
+    content:string,
+    userId:string,
+    blogId:string,
+    user:User,
+  }
 
   export interface GET_COMMENT{
+    _id:string,
     content:string,
     userId:string,
     blogId:string,
     user:User,
     parentComment:string,
+    replies:REPLIES
   }
