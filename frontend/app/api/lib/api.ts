@@ -177,10 +177,10 @@ export const addReactionOnPost=async(data:ADD_REACTION)=>{
 }
 
 
-export const getReactionOnPost=async()=>{
+export const getReactionOnPost=async(id:string)=>{
 
   try {
-    const res= await axios.get(`${baseUrl}/reaction`);
+    const res= await axios.get(`${baseUrl}/reaction/${id}`);
     return res.data;
   } catch (error) {
 

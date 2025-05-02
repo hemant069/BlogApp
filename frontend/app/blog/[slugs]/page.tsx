@@ -136,6 +136,7 @@ const Page = () => {
   };
 
   const handleDislikeOnPost = async () => {
+    console.log("Hello babay");
     if (user?.id) {
       const data = {
         type: "dislike",
@@ -145,7 +146,6 @@ const Page = () => {
       try {
         const res = await addReactionOnPost(data);
         handleGetReaction();
-        console.log(res);
       } catch (error) {
         if (error instanceof Error) {
           console.log(error.message);
@@ -156,9 +156,8 @@ const Page = () => {
 
   const handleGetReaction = async () => {
     try {
-      const res = await getReactionOnPost();
+      const res = await getReactionOnPost(id);
       setreaction(res.data);
-      console.log(res);
     } catch (error) {
       console.log(error);
     }

@@ -18,8 +18,11 @@ const handleReaction = async (req, res) => {
 };
 
 const handlegetReactions = async (req, res) => {
+  const { id } = req.params;
   try {
-    const like = await ReactionModel.countDocuments({ type: "like" });
+    const like = await ReactionModel.find({ blogId: id }).countDocuments({
+      type: "like",
+    });
 
     const dislike = await ReactionModel.countDocuments({ type: "dislike" });
 
