@@ -1,4 +1,4 @@
-import { ADD_COMMENT } from "@/app/types/blog";
+import { ADD_COMMENT, ADD_REACTION } from "@/app/types/blog";
 import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
@@ -158,7 +158,7 @@ export const getCommentOnPost=async(id:string)=>{
 // Add Reaction On Post
 
 
-export const addReactionOnPost=async(data:string)=>{
+export const addReactionOnPost=async(data:ADD_REACTION)=>{
 
     try {
         

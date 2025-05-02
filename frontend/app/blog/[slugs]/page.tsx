@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   addCommentOnPost,
+  addReactionOnPost,
   getCommentOnPost,
+  getReactionOnPost,
   getsingleBlog,
 } from "@/app/api/lib/api";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { COMMENT, GET_COMMENT } from "@/app/types/blog";
+import { COMMENT, GET_COMMENT, GET_REACTION } from "@/app/types/blog";
 import { useAuth } from "@/app/Context/AuthContext";
 import { User } from "@/app/types/user";
 import { MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
@@ -26,6 +28,7 @@ import {
 } from "@/components/ui/drawer";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
+import { AvatarImage } from "@radix-ui/react-avatar";
 
 interface BlogType {
   title: string;
@@ -41,7 +44,10 @@ const Page = () => {
   const [blog, setBlog] = useState<BlogType | null>();
   const [comments, setComments] = useState<GET_COMMENT[]>([]);
   const [replyId, setreplyId] = useState<string>("");
+  const [isreplies, setisreplies] = useState<boolean>(false);
+  const [reaction, setreaction] = useState<GET_REACTION>();
 
+  // Fetching the blog here
   const handleBlog = async () => {
     try {
       const res = await getsingleBlog(id);
@@ -52,6 +58,7 @@ const Page = () => {
     }
   };
 
+  // Handling the GET comment here
   const handlegetComment = async () => {
     try {
       const res = await getCommentOnPost(id);
@@ -62,6 +69,7 @@ const Page = () => {
     }
   };
 
+  // Add Comment function start from here
   const addComment: SubmitHandler<COMMENT> = async (comment: COMMENT) => {
     //content, userId, blogId, parentcommentId
     // content:string,
@@ -100,7 +108,7 @@ const Page = () => {
     }
   };
 
-  // Reply in Comments
+  // Reply in Comment function start from here
 
   const handleReply = (id: string) => {
     // My Parent comment Id
@@ -108,9 +116,58 @@ const Page = () => {
     setreplyId(id);
   };
 
+  const handleLikeOnPost = async () => {
+    if (user?.id) {
+      const data = {
+        type: "like",
+        blogId: id,
+        userId: user?.id,
+      };
+      try {
+        const res = await addReactionOnPost(data);
+        handleGetReaction();
+        console.log(res);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
+    }
+  };
+
+  const handleDislikeOnPost = async () => {
+    if (user?.id) {
+      const data = {
+        type: "dislike",
+        blogId: id,
+        userId: user?.id,
+      };
+      try {
+        const res = await addReactionOnPost(data);
+        handleGetReaction();
+        console.log(res);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+      }
+    }
+  };
+
+  const handleGetReaction = async () => {
+    try {
+      const res = await getReactionOnPost();
+      setreaction(res.data);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleBlog();
     handlegetComment();
+    handleGetReaction();
   }, [pathname]);
 
   // console.log(blog);
@@ -139,11 +196,13 @@ const Page = () => {
         <div className="flex gap-10">
           {/* Like Comment And Share is start from here  */}
 
-          <div>
-            <ThumbsUp />
+          <div className="flex items-center gap-2">
+            <ThumbsUp onClick={handleLikeOnPost} />
+            <div>{reaction?.like}</div>
           </div>
-          <div>
-            <ThumbsDown />
+          <div className="flex items-center gap-2">
+            <ThumbsDown onClick={handleDislikeOnPost} />
+            <div>{reaction?.dislike}</div>
           </div>
           <div className="">
             <div className="">
@@ -161,30 +220,85 @@ const Page = () => {
                   </DrawerHeader>
                   <DrawerFooter className=" overflow-y-scroll">
                     {comments.map((el, ind) => (
-                      <div key={el._id} className="flex gap-2  ">
-                        <div className="">
-                          <div>{el.user.username}</div>
-                          <div>{el.content}</div>
-                          <div className="flex justify-between items-center w-10 gap-3">
-                            <div>
-                              <ThumbsUp />
+                      <div key={el._id}>
+                        <div key={el._id} className="flex gap-2  ">
+                          <div className="">
+                            <div className="flex items-center gap-1">
+                              <Image
+                                alt="iamge"
+                                width={30}
+                                height={30}
+                                src={
+                                  "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
+                                }
+                              />
+                              <p>{el.user.username}</p>
                             </div>
-                            <div>
-                              <ThumbsDown />
-                            </div>
-                            <div onClick={() => handleReply(el._id)}>reply</div>
-                          </div>
-                          {el._id === replyId && (
-                            <div className="flex  gap-2">
-                              <Input {...register("content")} />
-                              <Button
-                                onClick={handleSubmit(addComment)}
-                                variant={"secondary"}
+                            <p className="ml-5">{el.content}</p>
+                            <div className="flex justify-between items-center w-10 gap-5 mt-2">
+                              <div>
+                                <ThumbsUp />
+                              </div>
+                              <div>
+                                <ThumbsDown />
+                              </div>
+                              <div
+                                className="cursor-pointer"
+                                onClick={() => handleReply(el._id)}
                               >
-                                Reply
-                              </Button>
+                                reply
+                              </div>
                             </div>
-                          )}
+                            {el._id === replyId && (
+                              <div className="flex  gap-2 mt-">
+                                <Input {...register("content")} />
+                                <Button
+                                  onClick={handleSubmit(addComment)}
+                                  variant={"secondary"}
+                                >
+                                  Reply
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <p
+                            onClick={() => handleReply(el._id)}
+                            className="text-slate-400"
+                          >
+                            replies ({el?.replies?.length})
+                          </p>
+                          <div>
+                            {el._id === replyId && (
+                              <div key={el._id}>
+                                {el.replies.map((el, ind) => (
+                                  <div key={ind} className="ml-5">
+                                    <div className="flex items-center">
+                                      {/* <Avatar>
+                                        <AvatarImage
+                                          className="rounded-full"
+                                          width={25}
+                                          height={225}
+                                          src="https://github.com/shadcn.png"
+                                        />
+                                      </Avatar> */}
+                                      <Image
+                                        alt="iamge"
+                                        width={30}
+                                        height={30}
+                                        src={
+                                          "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
+                                        }
+                                      />
+                                      <p> {el.user.username}</p>
+                                    </div>
+                                    <p className="ml-5">{el.content}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}

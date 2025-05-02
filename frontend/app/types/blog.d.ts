@@ -51,5 +51,19 @@ export interface ADD_COMMENT{
     blogId:string,
     user:User,
     parentComment:string,
-    replies:REPLIES
+    replies:REPLIES[]
+  }
+
+
+  // Reactions Type 
+
+  export interface ADD_REACTION{
+    type:string,
+    blogId:string,
+    userId:string|null,
+  }
+
+  export interface GET_REACTION {
+    like: number;
+    dislike: number;
   }

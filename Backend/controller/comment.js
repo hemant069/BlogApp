@@ -39,7 +39,7 @@ const handleGetComment = async (req, res) => {
 
     const comments = await CommentModel.find({ blog: id, parentComment: null })
       .populate({ path: "user" })
-      .populate({ path: "replies" });
+      .populate({ path: "replies", populate: { path: "user" } });
 
     return res.json({ msg: "comment data successfully", data: comments });
   } catch (error) {
