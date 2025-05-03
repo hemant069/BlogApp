@@ -18,12 +18,11 @@ const Page = () => {
   const handleCreatePost: SubmitHandler<CREATE_BLOG> = async (
     data: CREATE_BLOG
   ) => {
-    const tags = data.tag.split(",");
     const formData = new FormData();
     formData.append("coverImage", data.coverImgUrl[0]); // Extract first file
     formData.append("title", data.title);
     formData.append("content", data.content);
-    formData.append("tag", tags);
+    formData.append("tag", data.tag.join(","));
     console.log(formData, data);
     try {
       const res = await createBlogPost(formData);
