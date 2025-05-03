@@ -24,7 +24,9 @@ const handlegetReactions = async (req, res) => {
       type: "like",
     });
 
-    const dislike = await ReactionModel.countDocuments({ type: "dislike" });
+    const dislike = await ReactionModel.find({ blogId: id }).countDocuments({
+      type: "dislike",
+    });
 
     return res.json({
       msg: "reactions get successfully",

@@ -195,11 +195,11 @@ const Page = () => {
         <div className="flex gap-10">
           {/* Like Comment And Share is start from here  */}
 
-          <div className="flex items-center gap-2">
+          <div className="flex cursor-pointer items-center gap-2">
             <ThumbsUp onClick={handleLikeOnPost} />
             <div>{reaction?.like}</div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex cursor-pointer items-center gap-2">
             <ThumbsDown onClick={handleDislikeOnPost} />
             <div>{reaction?.dislike}</div>
           </div>
