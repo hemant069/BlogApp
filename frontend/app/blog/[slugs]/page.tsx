@@ -206,7 +206,14 @@ const Page = () => {
     try {
       const res = await getSaveBlogPost(id);
       console.log(res);
-    } catch (error) {}
+      if (res.data.blogId === id) {
+        setisSavedBlog(true);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
   };
 
   useEffect(() => {
