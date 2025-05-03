@@ -18,11 +18,13 @@ const Page = () => {
   const handleCreatePost: SubmitHandler<CREATE_BLOG> = async (
     data: CREATE_BLOG
   ) => {
+    const tags = data.tag.split(",");
     const formData = new FormData();
     formData.append("coverImage", data.coverImgUrl[0]); // Extract first file
     formData.append("title", data.title);
     formData.append("content", data.content);
-
+    formData.append("tag", tags);
+    console.log(formData, data);
     try {
       const res = await createBlogPost(formData);
       toast({ title: res.data?.msg });
@@ -62,8 +64,16 @@ const Page = () => {
           />
         </div>
         <div>
+          <Label>Tags</Label>
+          <Input
+            placeholder="Lifestyle,Technology,Blogs"
+            type="text"
+            {...register("tag")}
+          />
+        </div>
+        <div>
           <Button onClick={handleSubmit(handleCreatePost)} type="submit">
-            Create Post
+            Publish Post
           </Button>
         </div>
       </div>

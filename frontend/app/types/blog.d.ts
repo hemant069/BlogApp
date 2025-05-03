@@ -23,6 +23,7 @@ export interface CREATE_BLOG{
     title:string,
     content:string,
     coverImgUrl:FileList
+    tag:string[]
 }
 
 export interface ADD_COMMENT{

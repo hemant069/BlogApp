@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { COMMENT, GET_COMMENT, GET_REACTION } from "@/app/types/blog";
+import { blogs, COMMENT, GET_COMMENT, GET_REACTION } from "@/app/types/blog";
 import { useAuth } from "@/app/Context/AuthContext";
 import { User } from "@/app/types/user";
 import { MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
@@ -30,18 +30,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 
-interface BlogType {
-  title: string;
-  content: string;
-  coverImgUrl: string;
-}
 const Page = () => {
   const pathname = usePathname();
   const id = pathname.split("/")[2];
   const { user } = useAuth();
   const { handleSubmit, register, setValue } = useForm<COMMENT>();
 
-  const [blog, setBlog] = useState<BlogType | null>();
+  const [blog, setBlog] = useState<blogs | null>();
   const [comments, setComments] = useState<GET_COMMENT[]>([]);
   const [replyId, setreplyId] = useState<string>("");
   const [isreplies, setisreplies] = useState<boolean>(false);
@@ -191,7 +186,15 @@ const Page = () => {
         <div>
           <p>{blog?.content}</p>
         </div>
-
+        <div className="flex gap-2">
+          {/* Tags for the blog sections start from here */}
+          {blog.tag &&
+            blog.tag?.map((item, ind) => (
+              <div>
+                <p className=" px-8 rounded-xl py-1 bg-slate-300">{item}</p>
+              </div>
+            ))}
+        </div>
         <div className="flex gap-10">
           {/* Like Comment And Share is start from here  */}
 
@@ -203,6 +206,7 @@ const Page = () => {
             <ThumbsDown onClick={handleDislikeOnPost} />
             <div>{reaction?.dislike}</div>
           </div>
+
           <div className="">
             <div className="">
               <Drawer direction="left">
