@@ -7,7 +7,10 @@ import {
   addReactionOnPost,
   getCommentOnPost,
   getReactionOnPost,
+  getSaveBlogPost,
   getsingleBlog,
+  RemoveSaveBlogPost,
+  SaveBlogPost,
 } from "@/app/api/lib/api";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -17,7 +20,13 @@ import { jwtDecode } from "jwt-decode";
 import { blogs, COMMENT, GET_COMMENT, GET_REACTION } from "@/app/types/blog";
 import { useAuth } from "@/app/Context/AuthContext";
 import { User } from "@/app/types/user";
-import { MessageCircle, ThumbsDown, ThumbsUp } from "lucide-react";
+import {
+  Bookmark,
+  BookmarkCheck,
+  MessageCircle,
+  ThumbsDown,
+  ThumbsUp,
+} from "lucide-react";
 import {
   Drawer,
   DrawerContent,
@@ -41,6 +50,7 @@ const Page = () => {
   const [replyId, setreplyId] = useState<string>("");
   const [isreplies, setisreplies] = useState<boolean>(false);
   const [reaction, setreaction] = useState<GET_REACTION>();
+  const [isSavedBlog, setisSavedBlog] = useState<boolean>(false);
 
   // Fetching the blog here
   const handleBlog = async () => {
@@ -158,10 +168,52 @@ const Page = () => {
     }
   };
 
+  // Save blog function start from here
+
+  const handleSaveBlog = async () => {
+    if (!user?.id) {
+      throw Error;
+    }
+
+    const data = {
+      blogId: id,
+      userId: user?.id,
+    };
+    try {
+      const res = await SaveBlogPost(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRemoveSaveBlog = async () => {
+    if (!user?.id) {
+      throw Error;
+    }
+
+    const data = {
+      blogId: id,
+    };
+    try {
+      const res = await RemoveSaveBlogPost(data);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetSavedBlog = async () => {
+    try {
+      const res = await getSaveBlogPost(id);
+      console.log(res);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     handleBlog();
     handlegetComment();
     handleGetReaction();
+    handleGetSavedBlog();
   }, [pathname]);
 
   // console.log(blog);
@@ -309,6 +361,14 @@ const Page = () => {
                 </DrawerContent>
               </Drawer>
             </div>
+          </div>
+          {/* BookMark Post Or Save Post  */}
+          <div>
+            {isSavedBlog ? (
+              <BookmarkCheck onClick={handleRemoveSaveBlog} />
+            ) : (
+              <Bookmark onClick={handleSaveBlog} />
+            )}
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { ADD_COMMENT, ADD_REACTION } from "@/app/types/blog";
+import { ADD_COMMENT, ADD_REACTION, REMOVE_SAVED_BLOG, SAVE_BLOG } from "@/app/types/blog";
 import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
@@ -193,6 +193,52 @@ export const getReactionOnPost=async(id:string)=>{
 }
 
 
+// BookMark or Save blog post
+
+export const SaveBlogPost=async(data:SAVE_BLOG)=>{
+    try {
+        
+        const res =await axios.post(`${baseUrl}/saveblogs`,data);
+
+        return res.data;
+
+    } catch (error) {
+        
+        if(error instanceof Error){
+            console.log(error.message)
+        }
+    }
+}
 
 
+export const RemoveSaveBlogPost=async(data:REMOVE_SAVED_BLOG)=>{
+    try {
+        
+        const res =await axios.post(`${baseUrl}/saveblogs`,data);
+
+        return res.data;
+
+    } catch (error) {
+        
+        if(error instanceof Error){
+            console.log(error.message)
+        }
+    }
+}
+
+
+export const getSaveBlogPost=async(id:string)=>{
+    try {
+        
+        const res =await axios.get(`${baseUrl}/saveblogs/${id}`);
+
+        return res.data;
+
+    } catch (error) {
+        
+        if(error instanceof Error){
+            console.log(error.message)
+        }
+    }
+}
 

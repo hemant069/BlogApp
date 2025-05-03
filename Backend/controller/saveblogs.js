@@ -4,9 +4,9 @@ const handleSaveBlogs = async (req, res) => {
   try {
     const { userId, blogId } = req.body;
 
-    const existingBlogId = SaveModel.findOne({ blogId });
+    const existingBlogId = await SaveModel.findOne({ blogId: blogId });
 
-    if (!blogId) {
+    if (!existingBlogId) {
       const saveblogs = new SaveModel({ userId, blogId });
 
       await saveblogs.save();
@@ -23,24 +23,11 @@ const handleSaveBlogs = async (req, res) => {
   }
 };
 
-const handleGetSaveBlogs = async (req, res) => {
-  try {
-    const saveblogs = await SaveModel.find({}).populate("blogId");
-
-    return res.json({ msg: "save blogs get success", data: saveblogs });
-  } catch (error) {
-    return res.json({
-      msg: "somethin went wrong with handlegetblogs",
-      error: error.message,
-    });
-  }
-};
-
 const handleRemoveSaveBlogs = async (req, res) => {
   try {
     const { blogId } = req.body;
 
-    const blog = await SaveModel.findOneAndDelete({ blogId });
+    await SaveModel.findOneAndDelete({ blogId });
 
     return res.json({ msg: "blog removed successfully" });
   } catch (error) {
@@ -51,4 +38,37 @@ const handleRemoveSaveBlogs = async (req, res) => {
   }
 };
 
-module.exports = { handleSaveBlogs, handleGetSaveBlogs, handleRemoveSaveBlogs };
+const handleGetSaveBlogs = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const saveblogs = await SaveModel.findOne({ blogId: id });
+
+    return res.json({ msg: "save blogs get success", data: saveblogs });
+  } catch (error) {
+    return res.json({
+      msg: "somethin went wrong with handlegetblogs",
+      error: error.message,
+    });
+  }
+};
+
+const handleGetSavedBlogsForUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id, "Hello world");
+
+    const savedBlog = await SaveModel.find({ userId: id })
+      .populate("userId")
+      .populate("blogId");
+    return res.json({ msg: "saved blogs for user", data: savedBlog });
+  } catch (error) {
+    return res.json({ msg: "something went wrong", error: error.message });
+  }
+};
+
+module.exports = {
+  handleSaveBlogs,
+  handleGetSaveBlogs,
+  handleRemoveSaveBlogs,
+  handleGetSavedBlogsForUser,
+};

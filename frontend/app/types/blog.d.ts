@@ -68,3 +68,18 @@ export interface ADD_COMMENT{
     like: number;
     dislike: number;
   }
+
+
+  // Save blogs types
+
+
+  export interface SAVE_BLOG{
+    blogId:string,
+    userId:string,
+  }
+
+  export interface REMOVE_SAVED_BLOG{
+    blogId:string,
+  }
+
+  

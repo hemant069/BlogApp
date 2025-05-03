@@ -3,12 +3,14 @@ const {
   handleSaveBlogs,
   handleGetSaveBlogs,
   handleRemoveSaveBlogs,
+  handleGetSavedBlogsForUser,
 } = require("../controller/saveblogs");
 
 const router = express.Router();
 
 router.post("/", handleSaveBlogs);
-router.get("/", handleGetSaveBlogs);
+router.get("/:id", handleGetSaveBlogs);
+router.get("/user/:id", handleGetSavedBlogsForUser);
 router.delete("/", handleRemoveSaveBlogs);
 
 module.exports = router;
