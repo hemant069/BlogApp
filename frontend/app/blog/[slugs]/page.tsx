@@ -119,6 +119,7 @@ const Page = () => {
     setreplyId(id);
   };
 
+  // Reaction on post function start from here
   const handleLikeOnPost = async () => {
     if (user?.id) {
       const data = {
