@@ -215,6 +215,8 @@ const Page = () => {
     }
   };
 
+  // Comment Like and dislike start from here
+
   useEffect(() => {
     handleBlog();
     handlegetComment();

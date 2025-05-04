@@ -40,4 +40,24 @@ const handlegetReactions = async (req, res) => {
   }
 };
 
-module.exports = { handleReaction, handlegetReactions };
+const handleCommentReaction = async (req, res) => {
+  const { blogId, userId, type, commentId } = req.body;
+
+  try {
+    const commentReaction = await ReactionModel({
+      blogId,
+      userId,
+      type,
+      commentId,
+    }).populate("commentId");
+
+    return res.json({
+      msg: "comment reaction added successfully",
+      data: commentReaction,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { handleReaction, handlegetReactions, handleCommentReaction };

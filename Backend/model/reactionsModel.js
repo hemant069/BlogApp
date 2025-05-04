@@ -5,6 +5,7 @@ const ReactionSchema = new mongoose.Schema(
     type: { type: String, enum: ["like", "dislike"], required: true },
     userId: { type: mongoose.Types.ObjectId, ref: "user" },
     blogId: { type: mongoose.Types.ObjectId, ref: "blog" },
+    commentId: { type: mongoose.Types.ObjectId, ref: "Comment" },
   },
   { timestamps: true }
 );

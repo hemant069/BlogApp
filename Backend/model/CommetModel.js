@@ -12,7 +12,6 @@ const CommentSchema = mongoose.Schema(
       default: null,
     },
     replies: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    likes: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   {
     timestamps: true,
