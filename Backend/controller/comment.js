@@ -1,4 +1,5 @@
 const CommentModel = require("../model/CommetModel");
+const ReactionModel = require("../model/reactionsModel");
 
 const handleComment = async (req, res) => {
   try {
@@ -38,12 +39,42 @@ const handleGetComment = async (req, res) => {
     const { id } = req.params;
 
     const comments = await CommentModel.find({ blog: id, parentComment: null })
-      .populate({ path: "user" })
+      .populate("user")
       .populate({ path: "replies", populate: { path: "user" } });
 
-    return res.json({ msg: "comment data successfully", data: comments });
+    const commentIds = comments.map((comment) => comment._id);
+
+    const reactions = await ReactionModel.aggregate([
+      {
+        $match: { commentId: { $in: commentIds } },
+      },
+      {
+        $group: {
+          _id: { commentId: "$commentId", type: "$type" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const reactionMap = {};
+
+    reactions.forEach(({ _id, count }) => {
+      const { commentId, type } = _id;
+      if (!reactionMap[commentId]) reactionMap[commentId] = {};
+      reactionMap[commentId][type] = count;
+    });
+
+    const enrichedComments = comments.map((comment) => ({
+      ...comment.toObject(),
+      reactions: reactionMap[comment._id] || { like: 0, dislike: 0 },
+    }));
+
+    return res.json({
+      msg: "Comment data fetched successfully",
+      data: enrichedComments,
+    });
   } catch (error) {
-    return res.json({ msg: "something went wrong", error: error.message });
+    return res.json({ msg: "Something went wrong", error: error.message });
   }
 };
 

@@ -9,6 +9,7 @@ import {
   getReactionOnPost,
   getSaveBlogPost,
   getsingleBlog,
+  handleCommentReaction,
   RemoveSaveBlogPost,
   SaveBlogPost,
 } from "@/app/api/lib/api";
@@ -120,40 +121,61 @@ const Page = () => {
   };
 
   // Reaction on post function start from here
-  const handleLikeOnPost = async () => {
-    if (user?.id) {
-      const data = {
+  const handleLike = async (commentId: string | null) => {
+    let data;
+    if (!user?.id) {
+      throw Error;
+    }
+    if (!commentId) {
+      data = {
         type: "like",
         blogId: id,
         userId: user?.id,
       };
-      try {
-        const res = await addReactionOnPost(data);
-        handleGetReaction();
-        console.log(res);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        }
+    }
+    data = {
+      type: "like",
+      blogId: id,
+      userId: user?.id,
+      commentId,
+    };
+
+    try {
+      const res = await addReactionOnPost(data);
+      handleGetReaction();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
       }
     }
   };
 
-  const handleDislikeOnPost = async () => {
-    console.log("Hello babay");
-    if (user?.id) {
-      const data = {
+  const handleDislike = async (commentId: string | null) => {
+    console.log("commentId", commentId);
+    let data;
+    if (!user?.id) {
+      throw Error;
+    }
+    if (!commentId) {
+      data = {
         type: "dislike",
         blogId: id,
         userId: user?.id,
       };
-      try {
-        const res = await addReactionOnPost(data);
-        handleGetReaction();
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log(error.message);
-        }
+    }
+    data = {
+      type: "dislike",
+      blogId: id,
+      userId: user?.id,
+      commentId,
+    };
+
+    try {
+      const res = await addReactionOnPost(data);
+      handleGetReaction();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
       }
     }
   };
@@ -164,6 +186,25 @@ const Page = () => {
       setreaction(res.data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  // Get comment Reaction
+
+  const handleGetCommentReaction = async (
+    blogId: string,
+    commentId: string
+  ) => {
+    try {
+      const data = {
+        blogId,
+        commentId,
+      };
+      const res = await handleCommentReaction(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     }
   };
 
@@ -215,8 +256,6 @@ const Page = () => {
     }
   };
 
-  // Comment Like and dislike start from here
-
   useEffect(() => {
     handleBlog();
     handlegetComment();
@@ -259,11 +298,11 @@ const Page = () => {
           {/* Like Comment And Share is start from here  */}
 
           <div className="flex cursor-pointer items-center gap-2">
-            <ThumbsUp onClick={handleLikeOnPost} />
+            <ThumbsUp onClick={() => handleLike(null)} />
             <div>{reaction?.like}</div>
           </div>
           <div className="flex cursor-pointer items-center gap-2">
-            <ThumbsDown onClick={handleDislikeOnPost} />
+            <ThumbsDown onClick={() => handleDislike(null)} />
             <div>{reaction?.dislike}</div>
           </div>
 
@@ -300,10 +339,12 @@ const Page = () => {
                             <p className="ml-5">{el.content}</p>
                             <div className="flex justify-between items-center w-10 gap-5 mt-2">
                               <div>
-                                <ThumbsUp />
+                                <ThumbsUp onClick={() => handleLike(el._id)} />
                               </div>
                               <div>
-                                <ThumbsDown />
+                                <ThumbsDown
+                                  onClick={() => handleDislike(el._id)}
+                                />
                               </div>
                               <div
                                 className="cursor-pointer"

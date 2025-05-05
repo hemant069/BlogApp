@@ -62,6 +62,7 @@ export interface ADD_COMMENT{
     type:string,
     blogId:string,
     userId:string|null,
+    commentId?:string
   }
 
   export interface GET_REACTION {
@@ -69,6 +70,15 @@ export interface ADD_COMMENT{
     dislike: number;
   }
 
+
+  export interface GET_COMMENT_REACTION{
+    like:number,
+    dislike:number
+  }
+  export interface GET_COMMENT_REACTION_TYPE{
+    blogId:string,
+    commentId:string
+  }
 
   // Save blogs types
 

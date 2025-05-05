@@ -2,13 +2,13 @@ const express = require("express");
 const {
   handleReaction,
   handlegetReactions,
-  handleCommentReaction,
+  handleGetCommentReaction,
 } = require("../controller/reaction");
 
 const router = express.Router();
 
 router.post("/", handleReaction);
-router.post("/comment", handleCommentReaction);
 router.get("/:id", handlegetReactions);
+router.get("/", handleGetCommentReaction);
 
 module.exports = router;
