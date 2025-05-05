@@ -10,6 +10,7 @@ import {
   getSaveBlogPost,
   getsingleBlog,
   handleCommentReaction,
+  handleFollow,
   RemoveSaveBlogPost,
   SaveBlogPost,
 } from "@/app/api/lib/api";
@@ -47,15 +48,17 @@ const Page = () => {
   const [blog, setBlog] = useState<blogs | null>();
   const [comments, setComments] = useState<GET_COMMENT[]>([]);
   const [replyId, setreplyId] = useState<string>("");
-  const [isreplies, setisreplies] = useState<boolean>(false);
   const [reaction, setreaction] = useState<GET_REACTION>();
   const [isSavedBlog, setisSavedBlog] = useState<boolean>(false);
+  const [follow, setfollow] = useState<boolean>(false);
 
   // Fetching the blog here
   const handleBlog = async () => {
     try {
       const res = await getsingleBlog(id);
       const data = res.data;
+
+      console.log(data);
       setBlog(data);
     } catch (error) {
       console.log(error);
@@ -191,23 +194,6 @@ const Page = () => {
 
   // Get comment Reaction
 
-  const handleGetCommentReaction = async (
-    blogId: string,
-    commentId: string
-  ) => {
-    try {
-      const data = {
-        blogId,
-        commentId,
-      };
-      const res = await handleCommentReaction(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-    }
-  };
-
   // Save blog function start from here
 
   const handleSaveBlog = async () => {
@@ -256,6 +242,25 @@ const Page = () => {
     }
   };
 
+  // Toggle Follow Start over here
+
+  const handleFollowAuthors = async (targetUserId: string) => {
+    if (!targetUserId && user?.id) {
+      throw Error;
+    }
+    const data = {
+      targetuserId: targetUserId,
+      userId: user?.id,
+    };
+    try {
+      const res = await handleFollow(data);
+      console.log(res);
+      setfollow(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleBlog();
     handlegetComment();
@@ -268,160 +273,182 @@ const Page = () => {
   if (!blog) return <h1>Loading</h1>;
 
   return (
-    <div className="flex justify-center ">
-      <div className="flex flex-col items-center justify-center mt-10 gap-3 max-w-[50rem] ">
-        <div>
-          <Image
-            src={blog?.coverImgUrl || "/blog.png"}
-            width={400}
-            height={200}
-            alt={blog?.coverImgUrl || "blog image"}
-            priority={true}
-          />
+    <>
+      <div className="flex border border-slate-300  justify-between p-2 rounded-md">
+        <div className="font-semibold">
+          <p>{blog.createdBy.username}</p>
         </div>
-        <div>
-          <p className="text-5xl ">{blog?.title}</p>
-        </div>
-        <div>
-          <p>{blog?.content}</p>
-        </div>
-        <div className="flex gap-2">
-          {/* Tags for the blog sections start from here */}
-          {blog.tag &&
-            blog.tag?.map((item, ind) => (
-              <div>
-                <p className=" px-8 rounded-xl py-1 bg-slate-300">{item}</p>
-              </div>
-            ))}
-        </div>
-        <div className="flex gap-10">
-          {/* Like Comment And Share is start from here  */}
-
-          <div className="flex cursor-pointer items-center gap-2">
-            <ThumbsUp onClick={() => handleLike(null)} />
-            <div>{reaction?.like}</div>
-          </div>
-          <div className="flex cursor-pointer items-center gap-2">
-            <ThumbsDown onClick={() => handleDislike(null)} />
-            <div>{reaction?.dislike}</div>
-          </div>
-
-          <div className="">
-            <div className="">
-              <Drawer direction="left">
-                <DrawerTrigger>
-                  <MessageCircle />
-                </DrawerTrigger>
-                <DrawerContent className="h-screen w-1/4">
-                  <DrawerHeader>
-                    <DrawerTitle>Add Your Throught On This</DrawerTitle>
-                    <div className="flex gap-2 items-center flex-col w-full">
-                      <Textarea className="h-[8rem]" {...register("content")} />
-                      <Button onClick={handleSubmit(addComment)}>Submit</Button>
-                    </div>
-                  </DrawerHeader>
-                  <DrawerFooter className=" overflow-y-scroll">
-                    {comments.map((el, ind) => (
-                      <div key={el._id}>
-                        <div key={el._id} className="flex gap-2  ">
-                          <div className="">
-                            <div className="flex items-center gap-1">
-                              <Image
-                                alt="iamge"
-                                width={30}
-                                height={30}
-                                src={
-                                  "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
-                                }
-                              />
-                              <p>{el.user.username}</p>
-                            </div>
-                            <p className="ml-5">{el.content}</p>
-                            <div className="flex justify-between items-center w-10 gap-5 mt-2">
-                              <div>
-                                <ThumbsUp onClick={() => handleLike(el._id)} />
-                              </div>
-                              <div>
-                                <ThumbsDown
-                                  onClick={() => handleDislike(el._id)}
-                                />
-                              </div>
-                              <div
-                                className="cursor-pointer"
-                                onClick={() => handleReply(el._id)}
-                              >
-                                reply
-                              </div>
-                            </div>
-                            {el._id === replyId && (
-                              <div className="flex  gap-2 mt-">
-                                <Input {...register("content")} />
-                                <Button
-                                  onClick={handleSubmit(addComment)}
-                                  variant={"secondary"}
-                                >
-                                  Reply
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div>
-                          <p
-                            onClick={() => handleReply(el._id)}
-                            className="text-slate-400"
-                          >
-                            replies ({el?.replies?.length})
-                          </p>
-                          <div>
-                            {el._id === replyId && (
-                              <div key={el._id}>
-                                {el.replies.map((el, ind) => (
-                                  <div key={ind} className="ml-5">
-                                    <div className="flex items-center">
-                                      {/* <Avatar>
-                                        <AvatarImage
-                                          className="rounded-full"
-                                          width={25}
-                                          height={225}
-                                          src="https://github.com/shadcn.png"
-                                        />
-                                      </Avatar> */}
-                                      <Image
-                                        alt="iamge"
-                                        width={30}
-                                        height={30}
-                                        src={
-                                          "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
-                                        }
-                                      />
-                                      <p> {el.user.username}</p>
-                                    </div>
-                                    <p className="ml-5">{el.content}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
-            </div>
-          </div>
-          {/* BookMark Post Or Save Post  */}
+        <p
+          className="cursor-pointer"
+          onClick={() => handleFollowAuthors(blog.createdBy._id)}
+        >
+          {follow ? "Following" : "Follow"}
+        </p>
+      </div>
+      <div className="flex justify-center ">
+        <div className="flex flex-col items-center justify-center mt-10 gap-3 max-w-[50rem] ">
           <div>
-            {isSavedBlog ? (
-              <BookmarkCheck onClick={handleRemoveSaveBlog} />
-            ) : (
-              <Bookmark onClick={handleSaveBlog} />
-            )}
+            <Image
+              src={blog?.coverImgUrl || "/blog.png"}
+              width={400}
+              height={200}
+              alt={blog?.coverImgUrl || "blog image"}
+              priority={true}
+            />
+          </div>
+          <div>
+            <p className="text-5xl ">{blog?.title}</p>
+          </div>
+          <div>
+            <p>{blog?.content}</p>
+          </div>
+          <div className="flex gap-2">
+            {/* Tags for the blog sections start from here */}
+            {blog.tag &&
+              blog.tag?.map((item, ind) => (
+                <div>
+                  <p className=" px-8 rounded-xl py-1 bg-slate-300">{item}</p>
+                </div>
+              ))}
+          </div>
+          <div className="flex gap-10">
+            {/* Like Comment And Share is start from here  */}
+
+            <div className="flex cursor-pointer items-center gap-2">
+              <ThumbsUp onClick={() => handleLike(null)} />
+              <div>{reaction?.like}</div>
+            </div>
+            <div className="flex cursor-pointer items-center gap-2">
+              <ThumbsDown onClick={() => handleDislike(null)} />
+              <div>{reaction?.dislike}</div>
+            </div>
+
+            <div className="">
+              <div className="">
+                <Drawer direction="left">
+                  <DrawerTrigger>
+                    <MessageCircle />
+                  </DrawerTrigger>
+                  <DrawerContent className="h-screen w-1/4">
+                    <DrawerHeader>
+                      <DrawerTitle>Add Your Throught On This</DrawerTitle>
+                      <div className="flex gap-2 items-center flex-col w-full">
+                        <Textarea
+                          className="h-[8rem]"
+                          {...register("content")}
+                        />
+                        <Button onClick={handleSubmit(addComment)}>
+                          Submit
+                        </Button>
+                      </div>
+                    </DrawerHeader>
+                    <DrawerFooter className=" overflow-y-scroll">
+                      {comments.map((el, ind) => (
+                        <div key={el._id}>
+                          <div key={el._id} className="flex gap-2  ">
+                            <div className="">
+                              <div className="flex items-center gap-1">
+                                <Image
+                                  alt="iamge"
+                                  width={30}
+                                  height={30}
+                                  src={
+                                    "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
+                                  }
+                                />
+                                <p>{el.user.username}</p>
+                              </div>
+                              <p className="ml-5">{el.content}</p>
+                              <div className="flex justify-between items-center w-10 gap-5 mt-2">
+                                <div className="cursor-pointer">
+                                  <ThumbsUp
+                                    onClick={() => handleLike(el._id)}
+                                  />
+                                  <p>{el.reactions.like}</p>
+                                </div>
+                                <div className="cursor-pointer">
+                                  <ThumbsDown
+                                    onClick={() => handleDislike(el._id)}
+                                  />
+                                  <p>{el.reactions.dislike}</p>
+                                </div>
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={() => handleReply(el._id)}
+                                >
+                                  reply
+                                </div>
+                              </div>
+                              {el._id === replyId && (
+                                <div className="flex  gap-2 mt-">
+                                  <Input {...register("content")} />
+                                  <Button
+                                    onClick={handleSubmit(addComment)}
+                                    variant={"secondary"}
+                                  >
+                                    Reply
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <p
+                              onClick={() => handleReply(el._id)}
+                              className="text-slate-400 cursor-pointer"
+                            >
+                              replies ({el?.replies?.length})
+                            </p>
+                            <div>
+                              {el._id === replyId && (
+                                <div key={el._id}>
+                                  {el.replies.map((el, ind) => (
+                                    <div key={ind} className="ml-5">
+                                      <div className="flex items-center">
+                                        {/* <Avatar>
+                                      <AvatarImage
+                                        className="rounded-full"
+                                        width={25}
+                                        height={225}
+                                        src="https://github.com/shadcn.png"
+                                      />
+                                    </Avatar> */}
+                                        <Image
+                                          alt="iamge"
+                                          width={30}
+                                          height={30}
+                                          src={
+                                            "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
+                                          }
+                                        />
+                                        <p> {el.user.username}</p>
+                                      </div>
+                                      <p className="ml-5">{el.content}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </DrawerFooter>
+                  </DrawerContent>
+                </Drawer>
+              </div>
+            </div>
+            {/* BookMark Post Or Save Post  */}
+            <div>
+              {isSavedBlog ? (
+                <BookmarkCheck onClick={handleRemoveSaveBlog} />
+              ) : (
+                <Bookmark onClick={handleSaveBlog} />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

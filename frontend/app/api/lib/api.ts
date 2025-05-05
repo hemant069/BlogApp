@@ -1,5 +1,5 @@
 import { ADD_COMMENT, ADD_REACTION, GET_COMMENT_REACTION_TYPE, GET_REACTION, REMOVE_SAVED_BLOG, SAVE_BLOG } from "@/app/types/blog";
-import { CREATE_USER, LOGIN_USER } from "@/app/types/user";
+import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
@@ -194,17 +194,6 @@ export const getReactionOnPost=async(id:string)=>{
 
 // comment reaction 
 
-export const handleCommentReaction=async(data:GET_COMMENT_REACTION_TYPE)=>{{
-    try {
-        
-        const res=await axios.get(`${baseUrl}/reaction`,data);
-        return res.data;
-
-    } catch (error) {
-        
-    }
-}}
-
 
 // BookMark or Save blog post
 
@@ -255,3 +244,22 @@ export const getSaveBlogPost=async(id:string)=>{
     }
 }
 
+
+
+// Follow and Unfollow to authors
+
+
+export const handleFollow=async(data:FOLLOW_AUTHORS)=>{
+    try {
+        
+        const res=await axios.post(`${baseUrl}/follow`,data)
+        return res.data;
+
+    } catch (error) {
+
+        if(error instanceof Error){
+            console.log(error.message)
+        }
+        
+    }
+}

@@ -4,6 +4,8 @@ const { setUserToken, getUserToken } = require("../utils/auth");
 const Otpgenerate = require("../utils/generateOtp");
 const otpModel = require("../model/otpModel");
 
+// Signup  function
+
 const handleSignUp = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -27,6 +29,8 @@ const handleSignUp = async (req, res) => {
     });
   }
 };
+
+// Login Function
 
 const handleLogin = async (req, res) => {
   try {
@@ -60,6 +64,8 @@ const handleLogin = async (req, res) => {
     });
   }
 };
+
+// Forget Password
 
 const handleForgetPassword = async (req, res) => {
   try {
@@ -199,7 +205,7 @@ const handleToggleFollow = async (req, res) => {
         { new: true }
       );
 
-      return res.json({ msg: "user started following" });
+      return res.json({ msg: "user started following", data: true });
     }
 
     await userModel.findByIdAndUpdate(
@@ -214,7 +220,7 @@ const handleToggleFollow = async (req, res) => {
       { new: true }
     );
 
-    return res.json({ msg: "user unfollowed " });
+    return res.json({ msg: "user unfollowed ", data: false });
   } catch (error) {
     return res.json({
       msg: "something went wrong with togglefollow",

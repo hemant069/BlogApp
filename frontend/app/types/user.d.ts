@@ -16,3 +16,10 @@ export interface LOGIN_USER{
     email:string,
     password:string,
 }
+
+export interface FOLLOW_AUTHORS{
+
+    userId:string|undefined,
+    targetuserId:string
+
+}

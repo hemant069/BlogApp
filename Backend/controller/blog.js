@@ -57,7 +57,9 @@ const handlegetblogpost = async (req, res) => {
 const handlegetoneblogpost = async (req, res) => {
   try {
     const { id } = req.params;
-    const getOneblogpost = await BlogModel.findOne({ _id: id });
+    const getOneblogpost = await BlogModel.findOne({ _id: id }).populate(
+      "createdBy"
+    );
     return res
       .status(200)
       .send({ msg: "blog post get successfully", data: getOneblogpost });
