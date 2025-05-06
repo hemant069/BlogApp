@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const { setUserToken, getUserToken } = require("../utils/auth");
 const Otpgenerate = require("../utils/generateOtp");
 const otpModel = require("../model/otpModel");
-
+const cloudnary = require(".././utils/cloudnary");
 // Signup  function
 
 const handleSignUp = async (req, res) => {
@@ -160,15 +160,58 @@ const handleresetPassword = async (req, res) => {
   }
 };
 
-// Profile Image Upload
+// Profile Update
 
-const handleProfileImageUpload = async (req, res) => {
+const handleProfileUpdate = async (req, res) => {
   try {
+    const { userId, username } = req.body;
+
     if (!req.file) {
-      return res.json({ msg: "Image is not uploaded" });
+      return res.json({ msg: "Please upload file" });
     }
+
+    // const result = await cloudnary.uploader
+    //   .upload_stream(async (result, error) => {
+    //     const existingUsername = await userModel.find({ username });
+
+    //     if (!existingUsername || existingUsername.length === 0) {
+    //       const newuser = await userModel.findByIdAndUpdate(
+    //         { _id: userId },
+    //         { $set: { username, profileImg: result.secure_url } },
+    //         { new: true }
+    //       );
+
+    //       // return res.json({ msg: "user updated", data: newuser });
+    //     }
+    //   })
+    //   .end(req.file.buffer);
+    const result = await cloudnary.uploader
+      .upload_stream(async (result, error) => {
+        if (error) {
+          return res.json({ msg: "somthing went wrong with clounary" });
+        }
+
+        const existingUsername = await userModel.find({ username });
+
+        if (!existingUsername || existingUsername.length === 0) {
+          const newuser = await userModel.findByIdAndUpdate(
+            { _id: userId },
+            { $set: { username, profileImg: result.secure_url } },
+            { new: true }
+          );
+        }
+        return res
+          .status(201)
+          .json({ msg: "user updated successfully", data: "" });
+      })
+      .end(req.file.buffer);
+
+    return result;
   } catch (error) {
-    return res.json({ msg: "Something went wrong with handleProfile" });
+    return res.json({
+      msg: "Something went wrong with handleProfile",
+      error: error.message,
+    });
   }
 };
 
@@ -236,4 +279,5 @@ module.exports = {
   handleverifyOtp,
   handleresetPassword,
   handleToggleFollow,
+  handleProfileUpdate,
 };

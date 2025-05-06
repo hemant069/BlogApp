@@ -68,7 +68,7 @@ export interface ADD_COMMENT{
     type:string,
     blogId:string,
     userId:string|null,
-    commentId?:string
+    commentId?:string|null
   }
 
   export interface GET_REACTION {
