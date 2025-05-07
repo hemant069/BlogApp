@@ -170,21 +170,6 @@ const handleProfileUpdate = async (req, res) => {
       return res.json({ msg: "Please upload file" });
     }
 
-    // const result = await cloudnary.uploader
-    //   .upload_stream(async (result, error) => {
-    //     const existingUsername = await userModel.find({ username });
-
-    //     if (!existingUsername || existingUsername.length === 0) {
-    //       const newuser = await userModel.findByIdAndUpdate(
-    //         { _id: userId },
-    //         { $set: { username, profileImg: result.secure_url } },
-    //         { new: true }
-    //       );
-
-    //       // return res.json({ msg: "user updated", data: newuser });
-    //     }
-    //   })
-    //   .end(req.file.buffer);
     const result = await cloudnary.uploader
       .upload_stream(async (result, error) => {
         if (error) {
