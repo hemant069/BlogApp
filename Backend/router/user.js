@@ -7,6 +7,7 @@ const {
   handleresetPassword,
   handleToggleFollow,
   handleProfileUpdate,
+  handlegetProfileUpdate,
 } = require("../controller/user");
 const multer = require("multer");
 
@@ -23,5 +24,6 @@ router.post("/verify-otp", handleverifyOtp);
 router.post("/reset-password", handleresetPassword);
 router.post("/follow", handleToggleFollow);
 router.put("/profile", upload.single("profileImg"), handleProfileUpdate);
+router.get("/profile/:id", handlegetProfileUpdate);
 
 module.exports = router;

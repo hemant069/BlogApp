@@ -200,6 +200,18 @@ const handleProfileUpdate = async (req, res) => {
   }
 };
 
+const handlegetProfileUpdate = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const Profile = await userModel.findById({ _id: id });
+
+    return res.json({ msg: "profile get successfully", data: Profile });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Follow Handle start from here
 
 const handleToggleFollow = async (req, res) => {
@@ -265,4 +277,5 @@ module.exports = {
   handleresetPassword,
   handleToggleFollow,
   handleProfileUpdate,
+  handlegetProfileUpdate,
 };
