@@ -61,6 +61,8 @@ const Page = () => {
     }
   };
 
+  // update proflie start from here
+
   const handlegetUpdateProfile = async () => {
     try {
       if (!user?.id) {
