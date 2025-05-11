@@ -75,6 +75,8 @@ const Page = () => {
     }
   };
 
+  // useEffect load the once
+
   useEffect(() => {
     handlegetUpdateProfile();
   }, []);
