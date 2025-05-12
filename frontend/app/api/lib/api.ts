@@ -9,6 +9,7 @@ const baseUrl:string|null="http://localhost:8000/api";
 
 const token=Cookies.get('token')
 axios.defaults.headers.common["Authorization"]=`Bearer ${token}`;
+axios.defaults.withCredentials=true
 
 
 export const signupFn=async(data:CREATE_USER)=>{
