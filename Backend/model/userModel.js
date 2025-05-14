@@ -4,8 +4,10 @@ const userSchema = mongoose.Schema(
   {
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String },
     profileImg: { type: String, default: "./images/default.png" },
+    provider: { type: String, enum: ["GOOGLE", "CRED"] },
+    providerId: { type: String },
     role: { type: String, enum: ["USER", "ADMIN"], default: "USER" },
     following: [{ type: mongoose.Types.ObjectId, ref: "user" }],
     followers: [{ type: mongoose.Types.ObjectId, ref: "user" }],

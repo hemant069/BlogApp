@@ -14,7 +14,13 @@ const handleSignUp = async (req, res) => {
     if (!existingUserByEmail && !existingUserByUsername) {
       const saltround = 10;
       const hashPass = await bcrypt.hash(password, saltround);
-      const newuser = new userModel({ username, password: hashPass, email });
+      const newuser = new userModel({
+        username,
+        password: hashPass,
+        email,
+        provider: "CRED",
+        providerId: null,
+      });
       const savedUser = await newuser.save();
       return res.status(201).json({ msg: "user is created successfully" });
     } else {
@@ -63,6 +69,35 @@ const handleLogin = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+// Oauth login
+
+const handleOauthLogin = async (req, res) => {
+  try {
+    const { email, username, providerId } = req.body;
+
+    const alreadyUser = await userModel.find({ email });
+    const providerIdalreadyUser = await userModel.find({ providerId });
+    if (!alreadyUser && providerIdalreadyUser) {
+      const newuser = new userModel({
+        email,
+        username,
+        provider: "GOOGLE",
+        providerId,
+      });
+      await newuser.save();
+
+      return res.json({ msg: "user is created successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleOauthVerify = async (req, res) => {
+  try {
+  } catch (error) {}
 };
 
 // Forget Password
