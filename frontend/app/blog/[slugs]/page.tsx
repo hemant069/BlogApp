@@ -9,7 +9,6 @@ import {
   getReactionOnPost,
   getSaveBlogPost,
   getsingleBlog,
-  handleCommentReaction,
   handleFollow,
   RemoveSaveBlogPost,
   SaveBlogPost,
@@ -144,7 +143,7 @@ const Page = () => {
     };
 
     try {
-      const res = await addReactionOnPost(data);
+      await addReactionOnPost(data);
       handleGetReaction();
     } catch (error) {
       if (error instanceof Error) {
@@ -174,7 +173,7 @@ const Page = () => {
     };
 
     try {
-      const res = await addReactionOnPost(data);
+      await addReactionOnPost(data);
       handleGetReaction();
     } catch (error) {
       if (error instanceof Error) {
@@ -206,7 +205,7 @@ const Page = () => {
       userId: user?.id,
     };
     try {
-      const res = await SaveBlogPost(data);
+      await SaveBlogPost(data);
     } catch (error) {
       console.log(error);
     }
@@ -306,7 +305,7 @@ const Page = () => {
             {/* Tags for the blog sections start from here */}
             {blog.tag &&
               blog.tag?.map((item, ind) => (
-                <div>
+                <div key={ind}>
                   <p className=" px-8 rounded-xl py-1 bg-slate-300">{item}</p>
                 </div>
               ))}
@@ -343,7 +342,7 @@ const Page = () => {
                       </div>
                     </DrawerHeader>
                     <DrawerFooter className=" overflow-y-scroll">
-                      {comments.map((el, ind) => (
+                      {comments.map((el) => (
                         <div key={el._id}>
                           <div key={el._id} className="flex gap-2  ">
                             <div className="">

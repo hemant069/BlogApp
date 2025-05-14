@@ -97,7 +97,20 @@ const handleOauthLogin = async (req, res) => {
 
 const handleOauthVerify = async (req, res) => {
   try {
-  } catch (error) {}
+    const { providerId, email } = req.body;
+
+    const alreadyUser = userModel.findOne({ providerId });
+    const alreadyUserEmail = userModel.findOne({ email });
+    if (!alreadyUser && !alreadyUserEmail) {
+      return res.json({ msg: "Try login again " });
+    }
+    return res.json({ msg: "login success" });
+  } catch (error) {
+    return res.json({
+      msg: "something wrong with handleOauthVerify",
+      error: error.message,
+    });
+  }
 };
 
 // Forget Password
@@ -313,4 +326,6 @@ module.exports = {
   handleToggleFollow,
   handleProfileUpdate,
   handlegetProfileUpdate,
+  handleOauthLogin,
+  handleOauthVerify,
 };

@@ -1,5 +1,5 @@
-import { ADD_COMMENT, ADD_REACTION, GET_COMMENT_REACTION_TYPE, GET_REACTION, REMOVE_SAVED_BLOG, SAVE_BLOG } from "@/app/types/blog";
-import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER, PROFILE_INFO, UPDATE_PROFILE_INFO } from "@/app/types/user";
+import { ADD_COMMENT, ADD_REACTION, REMOVE_SAVED_BLOG, SAVE_BLOG } from "@/app/types/blog";
+import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER,  UPDATE_PROFILE_INFO } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 

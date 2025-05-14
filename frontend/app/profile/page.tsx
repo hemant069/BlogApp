@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import profileimag from "../../public/robot.jpeg";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import { handlegetProfile, handleProfile } from "../api/lib/api";
 import {
   Dialog,
@@ -18,18 +16,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UPDATE_PROFILE_INFO } from "../types/user";
-import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
-
-interface User {
-  username: string;
-  email: string;
-  iat: number;
-}
 
 const Page = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [userDetails, setuserDetails] = useState<User | null | undefined>();
+  // const [userDetails, setuserDetails] = useState<User | null | undefined>();
   const { user } = useAuth();
 
   const { register, handleSubmit } = useForm<UPDATE_PROFILE_INFO>();
@@ -169,13 +160,10 @@ const Page = () => {
 
             <div className="text-center">
               <p className="text-lg text-neutral-500">
-                Username{" "}
-                <span className="text-black">
-                  {userDetails?.username || "username is not found"}
-                </span>
+                Username <span className="text-black"></span>
               </p>
               <p className="text-lg text-neutral-500">
-                Email <span className="text-black">{userDetails?.email}</span>
+                Email <span className="text-black"></span>
               </p>
             </div>
           </div>
