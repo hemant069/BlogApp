@@ -77,9 +77,10 @@ const handleOauthLogin = async (req, res) => {
   try {
     const { email, username, providerId } = req.body;
 
-    const alreadyUser = await userModel.find({ email });
-    const providerIdalreadyUser = await userModel.find({ providerId });
-    if (!alreadyUser && providerIdalreadyUser) {
+    const alreadyUser = await userModel.findOne({ email });
+    const providerIdalreadyUser = await userModel.findOne({ providerId });
+
+    if (!alreadyUser && !providerIdalreadyUser) {
       const newuser = new userModel({
         email,
         username,
@@ -87,11 +88,13 @@ const handleOauthLogin = async (req, res) => {
         providerId,
       });
       await newuser.save();
-
-      return res.json({ msg: "user is created successfully" });
+      return res.status(201).json({ msg: "User created successfully" });
+    } else {
+      return res.status(200).json({ msg: "User already exists" });
     }
   } catch (error) {
-    console.log(error);
+    console.log("OAuth Login Error:", error);
+    return res.status(500).json({ msg: "Internal server error" });
   }
 };
 

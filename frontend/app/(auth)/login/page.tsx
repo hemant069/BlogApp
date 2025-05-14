@@ -13,6 +13,7 @@ import { useAuth } from "../../Context/AuthContext";
 import { loginFn } from "@/app/api/lib/api";
 import { LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
+import AuthButton from "@/app/Context/oauth";
 
 const Page = () => {
   const router = useRouter();
@@ -51,6 +52,7 @@ const Page = () => {
   };
   return (
     <div className="flex flex-col justify-center items-center h-screen    ">
+      <AuthButton />
       <div className="flex justify-center gap-4 flex-col shadow-xl shadow-slate-800    rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
         <div className="flex justify-center gap-11 ">
           <Image

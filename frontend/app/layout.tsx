@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import Navbar from "./components/Navbar";
-import { AuthProvider } from "./Context/AuthContext";
-import { BlogProvider } from "./Context/BlogContext";
+import { Providers } from "./ProviderLayout";
+// import { Providers } from "./Providers"; // 👈 import the new wrapper
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "MindVerse",
   description:
-    "MindVerse is platfrom where people can come write there thought",
+    "MindVerse is platform where people can come write their thought",
 };
 
 export default function RootLayout({
@@ -32,13 +31,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <BlogProvider>
-            <Navbar />
-            <main>{children}</main>
-          </BlogProvider>
-        </AuthProvider>
-        <Toaster />
+        <Providers>
+          <Navbar />
+          <main>{children}</main>
+        </Providers>
       </body>
     </html>
   );
