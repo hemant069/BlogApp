@@ -71,50 +71,7 @@ const handleLogin = async (req, res) => {
   }
 };
 
-// Oauth login
 
-const handleOauthLogin = async (req, res) => {
-  try {
-    const { email, username, providerId } = req.body;
-
-    const alreadyUser = await userModel.findOne({ email });
-    const providerIdalreadyUser = await userModel.findOne({ providerId });
-
-    if (!alreadyUser && !providerIdalreadyUser) {
-      const newuser = new userModel({
-        email,
-        username,
-        provider: "GOOGLE",
-        providerId,
-      });
-      await newuser.save();
-      return res.status(201).json({ msg: "User created successfully" });
-    } else {
-      return res.status(200).json({ msg: "User already exists" });
-    }
-  } catch (error) {
-    console.log("OAuth Login Error:", error);
-    return res.status(500).json({ msg: "Internal server error" });
-  }
-};
-
-const handleOauthVerify = async (req, res) => {
-  try {
-    const { providerId, email } = req.body;
-
-    const alreadyUser = userModel.findOne({ providerId });
-    const alreadyUserEmail = userModel.findOne({ email });
-    if (!alreadyUser && !alreadyUserEmail) {
-      return res.json({ msg: "Try login again " });
-    }
-    return res.json({ msg: "login success" });
-  } catch (error) {
-    return res.json({
-      msg: "something wrong with handleOauthVerify",
-      error: error.message,
-    });
-  }
-};
 
 // Forget Password
 
