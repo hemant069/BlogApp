@@ -8,7 +8,7 @@ const {
   handleToggleFollow,
   handleProfileUpdate,
   handlegetProfileUpdate,
-  handleOauthLogin,
+  
 } = require("../controller/user");
 const multer = require("multer");
 
@@ -20,7 +20,6 @@ const router = express.Router();
 
 router.post("/signup", handleSignUp);
 router.post("/login", handleLogin);
-router.post("/oauth", handleOauthLogin);
 router.post("/forget-password", handleForgetPassword);
 router.post("/verify-otp", handleverifyOtp);
 router.post("/reset-password", handleresetPassword);

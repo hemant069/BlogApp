@@ -286,6 +286,4 @@ module.exports = {
   handleToggleFollow,
   handleProfileUpdate,
   handlegetProfileUpdate,
-  handleOauthLogin,
-  handleOauthVerify,
 };

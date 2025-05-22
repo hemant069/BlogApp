@@ -4,8 +4,8 @@ import GoogleProvider from 'next-auth/providers/google'
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     })
   ],
   callbacks: {
@@ -22,10 +22,10 @@ const handler = NextAuth({
       })
 
       const data = await res.json()
-        console.log("OAUTH LOGIN RESPONSE:", res.status, data);
+      console.log("OAUTH LOGIN RESPONSE:", res.status, data);
 
       // Optional: Save extra data in session or token
-     return res.ok
+      return res.ok
     },
 
     async session({ session, token, user }) {
