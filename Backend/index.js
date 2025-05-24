@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 
 // API Router is Here
 
-app.use("/api", checkAuth(), user);
+app.use("/api",  user);
 app.use("/api/blog", checkAuth(), blog);
 app.use("/api/comment", checkAuth(), comment);
 app.use("/api/reaction", checkAuth(), reaction);

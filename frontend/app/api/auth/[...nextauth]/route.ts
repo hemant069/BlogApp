@@ -1,7 +1,8 @@
-import NextAuth from 'next-auth'
+import axios from 'axios'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
-const handler = NextAuth({
+const handler: NextAuthOptions = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -9,24 +10,27 @@ const handler = NextAuth({
     })
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      // Send this data to your backend
-      const res = await fetch('http://localhost:8000/api/oauth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+    signIn: async ({ user, account, profile }) => {
+      try {
+        // Send this data to your backend
+        console.log(user, account);
+
+        const res = await axios.post("http://localhost:8000/api/login", {
           email: user.email,
-          username: user.name,
-          providerId: account.providerAccountId,
-        }),
-      })
+          provider: "google",
+        });
 
-      const data = await res.json()
-      console.log("OAUTH LOGIN RESPONSE:", res.status, data);
+        const data = res.data;
+        console.log(data);
 
-      // Optional: Save extra data in session or token
-      return res.ok
+        // Only allow sign-in if backend responds positively
+        return res.status === 200;
+      } catch (error) {
+        console.error("OAuth login failed:", error.message);
+        return false; // Deny sign-in on error
+      }
     },
+
 
     async session({ session, token, user }) {
       // You can attach backend user info to the session here if needed
@@ -35,6 +39,17 @@ const handler = NextAuth({
   },
   session: {
     strategy: 'jwt',
+  },
+  cookies: {
+    sessionToken: {
+      name: "token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 })

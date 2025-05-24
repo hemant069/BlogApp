@@ -18,7 +18,7 @@ const handleSignUp = async (req, res) => {
         username,
         password: hashPass,
         email,
-        provider: "CRED",
+        provider: "cred",
         providerId: null,
       });
       const savedUser = await newuser.save();
@@ -40,12 +40,12 @@ const handleSignUp = async (req, res) => {
 
 const handleLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password ,provider} = req.body;
 
     const exisitingUser = await userModel.findOne({ email });
     console.log(exisitingUser);
 
-    if (exisitingUser) {
+    if (exisitingUser && provider!=="google") {
       // TODO
       const checkpassword = await bcrypt.compare(
         password,
@@ -55,12 +55,30 @@ const handleLogin = async (req, res) => {
         // If password is true
         const token = setUserToken(exisitingUser);
         // res.cookie("token", token);
-        return res.status(202).json({ msg: "User login in success", token });
+        return res.status(201).json({ msg: "User login in success", token });
       } else {
         // password is wrong
         return res.status(401).json({ msg: "Please Enter Correct Password" });
       }
-    } else {
+    }
+
+    if(!exisitingUser && provider==="google" ){
+
+      const oauthuser=await userModel.create({email,provider:"google"});
+
+      const token=setUserToken(oauthuser);
+
+      return res.status(200).json({msg:"Oauth user is created",token})
+    }
+
+    if(exisitingUser && provider==="google"){
+
+      const token=setUserToken(exisitingUser)
+
+      return res.status(200).json({msg:"oauth",token})
+    }
+
+     else {
       return res.status(404).json({ msg: "User is not exist" });
     }
   } catch (error) {

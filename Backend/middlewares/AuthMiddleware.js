@@ -4,6 +4,8 @@ const checkAuth = () => {
   return (req, res, next) => {
     const userIdToken = req?.headers["authorization"];
 
+    console.log(req.path,req.originalUrl)
+
     if (!userIdToken) return res.status(401).json({ msg: "Unauthorized" });
 
     const token = userIdToken?.split("Bearer ")[1];
