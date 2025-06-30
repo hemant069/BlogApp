@@ -3,14 +3,24 @@ const { getUserToken } = require("../utils/auth");
 const checkAuth = () => {
   return (req, res, next) => {
     const userIdToken = req?.headers["authorization"];
+let token
+    console.log(req.cookies)
 
-    console.log(req.path,req.originalUrl)
+ const authHeader = req.headers["authorization"];
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split("Bearer ")[1];
+    }
 
-    if (!userIdToken) return res.status(401).json({ msg: "Unauthorized" });
+    // 2. Try cookies (NextAuth stores it here)
+    if (!token && req.cookies) {
+      token =
+        req.cookies["next-auth.session-token"] ||
+        req.cookies["next-auth.session-token"];
+    }
 
-    const token = userIdToken?.split("Bearer ")[1];
-
-    if (!token) return res.status(401).json({ msg: "Unauthorized" });
+    if (!token) {
+      return res.status(401).json({ msg: "Unauthorized" });
+    }
 
     try {
       console.log("token baby", token);

@@ -7,6 +7,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
+    console.log(user, loading)
     if (!user && !loading) {
       router.push("/login");
     }

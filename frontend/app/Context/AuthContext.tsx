@@ -27,20 +27,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const getToken = Cookies.get("token");
 
-    if (getToken) {
+    const customToken = Cookies.get("token");
+
+
+    if (customToken) {
       try {
-        const decode: User = jwtDecode(getToken);
-        setToken(getToken);
+        const decode: User = jwtDecode(customToken);
+        setToken(customToken);
         setuser(decode);
       } catch (error) {
         console.log(error);
         logout();
       }
     }
-    setLoading(false);
+
+    console.log(customToken)
+
+    setLoading(false); // Move this INSIDE the effect, after token check
   }, []);
+
+
 
   const login = (token: string) => {
     Cookies.set("token", token);

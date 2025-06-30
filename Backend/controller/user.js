@@ -40,7 +40,7 @@ const handleSignUp = async (req, res) => {
 
 const handleLogin = async (req, res) => {
   try {
-    const { email, password ,provider} = req.body;
+    const {username, email, password ,provider} = req.body;
 
     const exisitingUser = await userModel.findOne({ email });
     console.log(exisitingUser);
@@ -64,7 +64,7 @@ const handleLogin = async (req, res) => {
 
     if(!exisitingUser && provider==="google" ){
 
-      const oauthuser=await userModel.create({email,provider:"google"});
+      const oauthuser=await userModel.create({username,email,provider:"google"});
 
       const token=setUserToken(oauthuser);
 

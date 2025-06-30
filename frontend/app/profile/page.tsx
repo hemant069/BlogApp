@@ -72,6 +72,8 @@ const Page = () => {
     handlegetUpdateProfile();
   }, []);
 
+
+
   return (
     <div>
       <Card>
@@ -160,10 +162,10 @@ const Page = () => {
 
             <div className="text-center">
               <p className="text-lg text-neutral-500">
-                Username <span className="text-black"></span>
+                Username <span className="text-black">{user?.username}</span>
               </p>
               <p className="text-lg text-neutral-500">
-                Email <span className="text-black"></span>
+                Email <span className="text-black">{user?.email}</span>
               </p>
             </div>
           </div>

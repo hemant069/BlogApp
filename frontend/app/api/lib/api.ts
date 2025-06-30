@@ -1,118 +1,118 @@
 import { ADD_COMMENT, ADD_REACTION, REMOVE_SAVED_BLOG, SAVE_BLOG } from "@/app/types/blog";
-import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER,  UPDATE_PROFILE_INFO } from "@/app/types/user";
+import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER, UPDATE_PROFILE_INFO } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 
-//const baseUrl:string|null=process.env.NEXT_PUBLIC_BACKEND||"http://localhost:8000/api";
-const baseUrl:string|null="http://localhost:8000/api";
+// const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8000/api";
+const baseUrl: string | null = "http://localhost:8000/api";
 
-const token=Cookies.get('token')
-axios.defaults.headers.common["Authorization"]=`Bearer ${token}`;
-axios.defaults.withCredentials=true
+const token = Cookies.get('token')
+axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+axios.defaults.withCredentials = true
 
 
-export const signupFn=async(data:CREATE_USER)=>{
+export const signupFn = async (data: CREATE_USER) => {
     try {
-        
-        const res=await axios.post(`${baseUrl}/signup`,data);
 
-        if(res.status!==201){
+        const res = await axios.post(`${baseUrl}/signup`, data);
+
+        if (res.status !== 201) {
             console.log("something went wrong with signup");
         }
 
         return res;
 
 
-    } catch (error:unknown) {
+    } catch (error: unknown) {
         console.log(error)
-        
+
     }
 }
 
-interface LOGIN_RESPONSE{
-    msg:string,
-    token:string
+interface LOGIN_RESPONSE {
+    msg: string,
+    token: string
 }
 
 
-export const loginFn=async(data:LOGIN_USER): Promise<AxiosResponse<LOGIN_RESPONSE>|undefined>=>{
+export const loginFn = async (data: LOGIN_USER): Promise<AxiosResponse<LOGIN_RESPONSE> | undefined> => {
 
     try {
-        
-        const res:AxiosResponse<LOGIN_RESPONSE>= await axios.post(`${baseUrl}/login`,data);
 
-        if(res.status!==200){
-        console.log("something went wrong")
+        const res: AxiosResponse<LOGIN_RESPONSE> = await axios.post(`${baseUrl}/login`, data);
+
+        if (res.status !== 200) {
+            console.log("something went wrong")
         }
         return res;
 
-    } catch (error:unknown) {
-if(error instanceof Error)
-       console.log(error)
-        
+    } catch (error: unknown) {
+        if (error instanceof Error)
+            console.log(error)
+
     }
 }
 
 
 // All Blogs related api start from Here
-export const getallBlogs=async()=>{
+export const getallBlogs = async () => {
 
     try {
-        
-        const res= await axios.get(`${baseUrl}/blog`)
-        if(res.status!==200){
+
+        const res = await axios.get(`${baseUrl}/blog`)
+        if (res.status !== 200) {
             console.log("something wrong with getallblogs")
         }
         return res.data;
 
-    } catch (error:unknown) {
+    } catch (error: unknown) {
 
-        if(error instanceof Error)
+        if (error instanceof Error)
 
-        console.log(error.message)
-        
+            console.log(error.message)
+
     }
 }
 
 
-export const getsingleBlog=async(id:string)=>{
+export const getsingleBlog = async (id: string) => {
     try {
-        
-        const res= await axios.get(`${baseUrl}/blog/${id}`);
 
-        if(res.status!==200){
+        const res = await axios.get(`${baseUrl}/blog/${id}`);
+
+        if (res.status !== 200) {
             console.log("something wrong with get single blog");
         }
 
         return res.data;
 
 
-    } catch (error:unknown) {
+    } catch (error: unknown) {
 
-        if(error instanceof Error)
+        if (error instanceof Error)
 
-        console.log(error.message);
-        
+            console.log(error.message);
+
     }
 }
 
-export const createBlogPost=async(data:FormData)=>{
+export const createBlogPost = async (data: FormData) => {
     try {
-        
-        const res= await axios.post(`${baseUrl}/blog/create-post`,data)
 
-        if(res.status!==200){
-            return  new Error("Something went wrong with createBlog");
-            
+        const res = await axios.post(`${baseUrl}/blog/create-post`, data)
+
+        if (res.status !== 200) {
+            return new Error("Something went wrong with createBlog");
+
         }
         return res.data;
 
-    } catch (error:unknown) {
+    } catch (error: unknown) {
 
-        if(error instanceof Error)
-        console.log(error.message);
-        
+        if (error instanceof Error)
+            console.log(error.message);
+
     }
 }
 
@@ -120,38 +120,38 @@ export const createBlogPost=async(data:FormData)=>{
 
 
 
-export const addCommentOnPost=async(data:ADD_COMMENT)=>{
+export const addCommentOnPost = async (data: ADD_COMMENT) => {
 
     try {
-        const res= await axios.post(`${baseUrl}/comment`,data)
+        const res = await axios.post(`${baseUrl}/comment`, data)
         return res.data;
     } catch (error) {
 
-        if(error instanceof Error){
+        if (error instanceof Error) {
 
             console.log(error.message);
         }
-        
+
     }
 }
 
-export interface COMMENT_ID{
-    postId:string
+export interface COMMENT_ID {
+    postId: string
 }
 
-export const getCommentOnPost=async(id:string)=>{
+export const getCommentOnPost = async (id: string) => {
     try {
-        
-        const res= await axios.get(`${baseUrl}/comment/${id}`,);
+
+        const res = await axios.get(`${baseUrl}/comment/${id}`,);
 
         return res.data;
 
     } catch (error) {
 
-        if(error instanceof Error){
+        if (error instanceof Error) {
             console.log(error.message)
         }
-        
+
     }
 }
 
@@ -159,38 +159,38 @@ export const getCommentOnPost=async(id:string)=>{
 // Add Reaction On Post
 
 
-export const addReactionOnPost=async(data:ADD_REACTION)=>{
+export const addReactionOnPost = async (data: ADD_REACTION) => {
 
     try {
-        
-        const res= await axios.post(`${baseUrl}/reaction`,data)
-        
+
+        const res = await axios.post(`${baseUrl}/reaction`, data)
+
         return res.data;
 
     } catch (error) {
 
-        if(error instanceof Error){
+        if (error instanceof Error) {
 
             console.log(error.message)
         }
-        
+
     }
 }
 
 
-export const getReactionOnPost=async(id:string)=>{
+export const getReactionOnPost = async (id: string) => {
 
-  try {
-    const res= await axios.get(`${baseUrl}/reaction/${id}`);
-    return res.data;
-  } catch (error) {
+    try {
+        const res = await axios.get(`${baseUrl}/reaction/${id}`);
+        return res.data;
+    } catch (error) {
 
-    if(error instanceof Error){
+        if (error instanceof Error) {
 
-        console.log(error.message)
+            console.log(error.message)
+        }
+
     }
-    
-  }
 }
 
 // comment reaction 
@@ -198,48 +198,48 @@ export const getReactionOnPost=async(id:string)=>{
 
 // BookMark or Save blog post
 
-export const SaveBlogPost=async(data:SAVE_BLOG)=>{
+export const SaveBlogPost = async (data: SAVE_BLOG) => {
     try {
-        
-        const res =await axios.post(`${baseUrl}/saveblogs`,data);
+
+        const res = await axios.post(`${baseUrl}/saveblogs`, data);
 
         return res.data;
 
     } catch (error) {
-        
-        if(error instanceof Error){
+
+        if (error instanceof Error) {
             console.log(error.message)
         }
     }
 }
 
 
-export const RemoveSaveBlogPost=async(data:REMOVE_SAVED_BLOG)=>{
+export const RemoveSaveBlogPost = async (data: REMOVE_SAVED_BLOG) => {
     try {
-        
-        const res =await axios.post(`${baseUrl}/saveblogs`,data);
+
+        const res = await axios.post(`${baseUrl}/saveblogs`, data);
 
         return res.data;
 
     } catch (error) {
-        
-        if(error instanceof Error){
+
+        if (error instanceof Error) {
             console.log(error.message)
         }
     }
 }
 
 
-export const getSaveBlogPost=async(id:string)=>{
+export const getSaveBlogPost = async (id: string) => {
     try {
-        
-        const res =await axios.get(`${baseUrl}/saveblogs/${id}`);
+
+        const res = await axios.get(`${baseUrl}/saveblogs/${id}`);
 
         return res.data;
 
     } catch (error) {
-        
-        if(error instanceof Error){
+
+        if (error instanceof Error) {
             console.log(error.message)
         }
     }
@@ -250,18 +250,18 @@ export const getSaveBlogPost=async(id:string)=>{
 // Follow and Unfollow to authors
 
 
-export const handleFollow=async(data:FOLLOW_AUTHORS)=>{
+export const handleFollow = async (data: FOLLOW_AUTHORS) => {
     try {
-        
-        const res=await axios.post(`${baseUrl}/follow`,data)
+
+        const res = await axios.post(`${baseUrl}/follow`, data)
         return res.data;
 
     } catch (error) {
 
-        if(error instanceof Error){
+        if (error instanceof Error) {
             console.log(error.message)
         }
-        
+
     }
 }
 
@@ -269,30 +269,30 @@ export const handleFollow=async(data:FOLLOW_AUTHORS)=>{
 // Profile Api's 
 
 
-export const handleProfile=async(data:UPDATE_PROFILE_INFO)=>{
+export const handleProfile = async (data: UPDATE_PROFILE_INFO) => {
     try {
-        
-        const res=await axios.post(`${baseUrl}/profile`,data)
+
+        const res = await axios.post(`${baseUrl}/profile`, data)
         return res.data;
 
 
     } catch (error) {
 
         console.log(error)
-        
+
     }
 }
 
-export const handlegetProfile=async(id:string)=>{
+export const handlegetProfile = async (id: string) => {
     try {
-        
-        const res=await axios.get(`${baseUrl}/profile/${id}`);
+
+        const res = await axios.get(`${baseUrl}/profile/${id}`);
         return res.data;
 
 
     } catch (error) {
 
         console.log(error)
-        
+
     }
 }

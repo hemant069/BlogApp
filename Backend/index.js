@@ -7,14 +7,18 @@ const blog = require("./router/blog");
 const comment = require("./router/comment");
 const reaction = require("./router/reactions");
 const saveblogs = require("./router/saveblogs");
-const { checkAuth } = require("./middlewares/AuthMiddleware");
 const cors = require("cors");
 const app = express();
+const cookieParser = require("cookie-parser");
+const { checkAuth } = require("./middlewares/AuthMiddleware");
+
+
 
 const PORT = 8000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -24,6 +28,8 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+
 
 // Middleware  is added here
 
