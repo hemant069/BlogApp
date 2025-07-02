@@ -1,6 +1,7 @@
 import axios from 'axios'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import { useAuth } from '@/app/Context/AuthContext'
 
 const handler: NextAuthOptions = NextAuth({
   providers: [
@@ -23,37 +24,32 @@ const handler: NextAuthOptions = NextAuth({
         }, { withCredentials: true });
 
         const data = res.data;
-        console.log("data meri janeman", data);
+
+
 
         // Only allow sign-in if backend responds positively
-        return res.status === 200;
+        if (res.status == 200) {
+          return true
+        }
       } catch (error) {
-        console.error("OAuth login failed:", error.message);
+        console.error("OAuth login failed:", error);
         return false; // Deny sign-in on error
       }
     },
 
 
-    async session({ session, token, user }) {
-      // You can attach backend user info to the session here if needed
-      console.log("Hey session ", session, user)
-      return session
-    },
+
   },
-  session: {
-    strategy: 'jwt',
-  },
-  cookies: {
-    sessionToken: {
-      name: "token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-  },
+
+  // cookies: {
+  //   sessionToken: {
+  //     name: "token",
+  //     options: {
+  //       path: "/",
+  //       secure: process.env.NODE_ENV === "production",
+  //     },
+  //   },
+  // },
   secret: process.env.NEXTAUTH_SECRET,
 })
 

@@ -29,6 +29,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
 
     const customToken = Cookies.get("token");
+    const random = Cookies.get("ramdon")
+
+    console.log("yok", customToken, random)
 
 
     if (customToken) {

@@ -38,7 +38,6 @@ const Page = () => {
           toast({ title: "Invaild Creads" });
         }
       }
-//change something for commit right now 
       login(res?.data.token);
       toast({ title: "Login Success" });
       router.push("/dashboard");

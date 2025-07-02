@@ -67,6 +67,7 @@ const handleLogin = async (req, res) => {
       const oauthuser=await userModel.create({username,email,provider:"google"});
 
       const token=setUserToken(oauthuser);
+      console.log("token from handlelogin",token)
 
       return res.status(200).json({msg:"Oauth user is created",token})
     }
@@ -74,6 +75,7 @@ const handleLogin = async (req, res) => {
     if(exisitingUser && provider==="google"){
 
       const token=setUserToken(exisitingUser)
+      console.log("token from handlelogin",token)
 
       return res.status(200).json({msg:"oauth",token})
     }

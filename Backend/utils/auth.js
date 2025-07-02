@@ -14,6 +14,7 @@ const setUserToken = (user) => {
 };
 
 const getUserToken = (token) => {
+  console.log("verify-token",token,process.env.SCERET_KEY)
   try {
     if (!token) return null;
 
