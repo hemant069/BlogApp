@@ -1,7 +1,7 @@
 import axios from 'axios'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import { useAuth } from '@/app/Context/AuthContext'
+
 
 const handler: NextAuthOptions = NextAuth({
   providers: [
