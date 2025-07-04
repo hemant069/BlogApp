@@ -13,9 +13,6 @@ const handler: NextAuthOptions = NextAuth({
   callbacks: {
     signIn: async ({ user, account, profile }) => {
       try {
-        // Send this data to your backend
-        console.log(user, account);
-
         const res = await axios.post("http://localhost:8000/api/login", {
           username: user.name,
           email: user.email,
@@ -23,33 +20,36 @@ const handler: NextAuthOptions = NextAuth({
           profileImg: user.image,
         }, { withCredentials: true });
 
-        const data = res.data;
-
-
-
-        // Only allow sign-in if backend responds positively
         if (res.status == 200) {
           return true
         }
       } catch (error) {
         console.error("OAuth login failed:", error);
-        return false; // Deny sign-in on error
+        return false;
       }
     },
 
+    // Add JWT callback to customize the token
+    jwt: async ({ token, user, account }) => {
+      if (account && user) {
+        // You can add custom data to the token here
+        token.customData = user;
+      }
+      return token;
+    },
 
-
+    // Add session callback to pass token to client
+    session: async ({ session, token }) => {
+      session.accessToken = token.accessToken;
+      return session;
+    }
   },
 
-  // cookies: {
-  //   sessionToken: {
-  //     name: "token",
-  //     options: {
-  //       path: "/",
-  //       secure: process.env.NODE_ENV === "production",
-  //     },
-  //   },
-  // },
+  // Enable JWT strategy
+  session: {
+    strategy: "jwt"
+  },
+
   secret: process.env.NEXTAUTH_SECRET,
 })
 

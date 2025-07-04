@@ -1,15 +1,9 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../types/user";
-
-// interface User {
-//   id: string;
-//   username: string;
-//   email: string;
-//   avatar?: string;
-// }
 
 interface AuthContextType {
   user: User | null;
@@ -17,56 +11,73 @@ interface AuthContextType {
   login: (token: string) => void;
   logout: () => void;
   loading: boolean;
+  isOAuthUser: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setuser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // NextAuth session for OAuth users
+  const { data: session, status } = useSession();
+
   useEffect(() => {
+    // Check if user is authenticated via NextAuth (OAuth)
+    if (status === "authenticated" && session?.user) {
+      // OAuth user - convert NextAuth session to your User format
+      const oauthUser: User = {
+        id: session.user.id || "",
+        username: session.user.name || "",
+        email: session.user.email || "",
+        avatar: session.user.image || "",
+      };
+      setUser(oauthUser);
+      setToken("oauth-session"); // Use a placeholder token for OAuth users
+      setLoading(false);
+      return;
+    }
 
+    // Check for custom JWT token (regular login)
     const customToken = Cookies.get("token");
-    const random = Cookies.get("ramdon")
-
-    console.log("yok", customToken, random)
-
 
     if (customToken) {
       try {
-        const decode: User = jwtDecode(customToken);
+        const decoded: User = jwtDecode(customToken);
         setToken(customToken);
-        setuser(decode);
+        setUser(decoded);
       } catch (error) {
-        console.log(error);
+        console.log("JWT decode error:", error);
         logout();
       }
     }
 
-    console.log(customToken)
-
-    setLoading(false); // Move this INSIDE the effect, after token check
-  }, []);
-
-
+    setLoading(status === "loading");
+  }, [session, status]);
 
   const login = (token: string) => {
-    Cookies.set("token", token);
-    const decode: User = jwtDecode(token);
-    setuser(decode);
-    setToken(token);
+    Cookies.set("token", token, { expires: 7 }); // Set expiry
+    try {
+      const decoded: User = jwtDecode(token);
+      setUser(decoded);
+      setToken(token);
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+    }
   };
 
   const logout = () => {
     Cookies.remove("token");
     setToken(null);
-    setuser(null);
+    setUser(null);
   };
 
+  const isOAuthUser = !!(session?.user && status === "authenticated");
+
   return (
-    <AuthContext.Provider value={{ login, logout, user, token, loading }}>
+    <AuthContext.Provider value={{ login, logout, user, token, loading, isOAuthUser }}>
       {children}
     </AuthContext.Provider>
   );
@@ -74,10 +85,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
   if (!context) {
-    throw new Error("Something went wrong with context");
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-
   return context;
 };
