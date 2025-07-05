@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../types/user";
+import { signOut } from "next-auth/react";
 
 interface AuthContextType {
   user: User | null;
@@ -28,6 +29,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Check if user is authenticated via NextAuth (OAuth)
     if (status === "authenticated" && session?.user) {
       // OAuth user - convert NextAuth session to your User format
+
+
       const oauthUser: User = {
         id: session.user.id || "",
         username: session.user.name || "",
@@ -35,7 +38,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         avatar: session.user.image || "",
       };
       setUser(oauthUser);
-      setToken("oauth-session"); // Use a placeholder token for OAuth users
       setLoading(false);
       return;
     }
@@ -69,7 +71,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
+    signOut()
     Cookies.remove("token");
+
     setToken(null);
     setUser(null);
   };

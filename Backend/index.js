@@ -10,9 +10,7 @@ const saveblogs = require("./router/saveblogs");
 const cors = require("cors");
 const app = express();
 const cookieParser = require("cookie-parser");
-
-// ✅ FIXED: Destructure checkAuth from the exported object
-const { checkAuth } = require("./middlewares/AuthMiddleware");
+const  checkAuth  = require("./middlewares/AuthMiddleware");
 
 const PORT = 8000;
 
@@ -41,13 +39,10 @@ app.get("/", (req, res) => {
 
 // API Router is Here
 app.use("/api", user);
-app.use("/api/blog", checkAuth(), blog);
+app.use("/api/blog",checkAuth(), blog);
 app.use("/api/comment", checkAuth(), comment);
 app.use("/api/reaction", checkAuth(), reaction);
 app.use("/api/saveblogs", checkAuth(), saveblogs);
 
 // Server is Here
 app.listen(PORT, () => console.log("Server is connected"));
-
-// Debug: Check if checkAuth is properly imported
-console.log("checkAuth type:", typeof checkAuth); // Should log "function"

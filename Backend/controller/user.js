@@ -40,49 +40,64 @@ const handleSignUp = async (req, res) => {
 
 const handleLogin = async (req, res) => {
   try {
-    const {username, email, password ,provider} = req.body;
+    const { username, email, password, provider, profileImg } = req.body;
 
-    const exisitingUser = await userModel.findOne({ email });
-    console.log(exisitingUser);
+    const existingUser = await userModel.findOne({ email });
+    console.log(existingUser);
 
-    if (exisitingUser && provider!=="google") {
-      // TODO
-      const checkpassword = await bcrypt.compare(
-        password,
-        exisitingUser.password
-      );
+    // Handle credentials login
+    if (existingUser && provider !== "google") {
+      const checkpassword = await bcrypt.compare(password, existingUser.password);
       if (checkpassword) {
-        // If password is true
-        const token = setUserToken(exisitingUser);
-        // res.cookie("token", token);
-        return res.status(201).json({ msg: "User login in success", token });
+        const token = setUserToken(existingUser);
+        return res.status(201).json({ 
+          msg: "User login in success", 
+          token,
+          userId: existingUser._id,
+          username: existingUser.username,
+          email: existingUser.email
+        });
       } else {
-        // password is wrong
         return res.status(401).json({ msg: "Please Enter Correct Password" });
       }
     }
 
-    if(!exisitingUser && provider==="google" ){
+    // Handle Google OAuth - new user
+    if (!existingUser && provider === "google") {
+      const oauthUser = await userModel.create({
+        username,
+        email,
+        provider: "google",
+        profileImg // Store profile image if provided
+      });
 
-      const oauthuser=await userModel.create({username,email,provider:"google"});
-
-      const token=setUserToken(oauthuser);
-      console.log("token from handlelogin",token)
-
-      return res.status(200).json({msg:"Oauth user is created",token})
+      const token = setUserToken(oauthUser);
+      return res.status(200).json({
+        msg: "Oauth user is created",
+        token,
+        userId: oauthUser._id,
+        username: oauthUser.username,
+        email: oauthUser.email
+      });
     }
 
-    if(exisitingUser && provider==="google"){
-
-      const token=setUserToken(exisitingUser)
-      console.log("token from handlelogin",token)
-
-      return res.status(200).json({msg:"oauth",token})
+    // Handle Google OAuth - existing user
+    if (existingUser && provider === "google") {
+      const token = setUserToken(existingUser);
+      return res.status(200).json({
+        msg: "oauth",
+        token,
+        userId: existingUser._id,
+        username: existingUser.username,
+        email: existingUser.email
+      });
     }
 
-     else {
+    // Handle credentials login - user doesn't exist
+    if (!existingUser && provider !== "google") {
       return res.status(404).json({ msg: "User is not exist" });
     }
+
   } catch (error) {
     return res.json({
       msg: "Something went wrong with handleLogin function",

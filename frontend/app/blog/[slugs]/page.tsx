@@ -50,6 +50,7 @@ const Page = () => {
   const [reaction, setreaction] = useState<GET_REACTION>();
   const [isSavedBlog, setisSavedBlog] = useState<boolean>(false);
   const [follow, setfollow] = useState<boolean>(false);
+  console.log("userbeta", user)
 
   // Fetching the blog here
   const handleBlog = async () => {

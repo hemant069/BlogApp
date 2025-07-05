@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 const baseUrl: string | null = "http://localhost:8000/api";
 
 const token = Cookies.get('token')
+console.log(token, "token")
 axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 axios.defaults.withCredentials = true
 
@@ -64,6 +65,7 @@ export const getallBlogs = async () => {
         if (res.status !== 200) {
             console.log("something wrong with getallblogs")
         }
+        console.log("res", res.data)
         return res.data;
 
     } catch (error: unknown) {

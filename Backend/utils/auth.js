@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv").config();
 
 const setUserToken = (user) => {
-  console.log("user baby", user);
   return jwt.sign(
     {
       id: user._id,
