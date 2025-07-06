@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (status === "authenticated" && session?.user) {
       // OAuth user - convert NextAuth session to your User format
 
+      console.log("session", session)
 
       const oauthUser: User = {
         id: session.user.id || "",

@@ -8,37 +8,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 const handler: NextAuthOptions = NextAuth({
   providers: [
     // Custom credentials provider
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
-      },
-      async authorize(credentials) {
-        try {
-          const res = await axios.post("http://localhost:8000/api/login", {
-            email: credentials.email,
-            password: credentials.password,
-            provider: 'credentials'
-          }, { withCredentials: true });
 
-          if (res.status === 201 && res.data.token) {
-            // Your backend should return user details along with token
-            return {
-              id: res.data.userId || res.data.id,
-              email: credentials.email,
-              name: res.data.username,
-              backendToken: res.data.token,
-              mongoId: res.data.userId || res.data.id
-            }
-          }
-          return null
-        } catch (error) {
-          console.error('Credentials auth error:', error)
-          return null
-        }
-      }
-    }),
 
     // Google OAuth provider
     GoogleProvider({
@@ -60,7 +30,7 @@ const handler: NextAuthOptions = NextAuth({
 
           if (res.status === 200 && res.data.token) {
             // Your backend already returns the user data
-            user.mongoId = res.data.userId || res.data.id || res.data._id;
+            user.mongoId = res.data._id;
             user.backendToken = res.data.token;
             user.username = res.data.username;
 
