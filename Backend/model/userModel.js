@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema(
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String },
-    profileImg: { type: String, default: "./images/default.png" },
+    avatar: { type: String, default: "./images/default.png" },
     provider: { type: String, enum: ["google", "cred"],default:"cred" },
     providerId: { type: String },
     role: { type: String, enum: ["USER", "ADMIN"], default: "USER" },

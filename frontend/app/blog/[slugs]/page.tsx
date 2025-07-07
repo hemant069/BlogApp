@@ -268,10 +268,14 @@ const Page = () => {
     handlegetComment();
     handleGetReaction();
     handleGetSavedBlog();
-    if (blog && blog.createdBy._id) {
-      handleFollowAuthors(blog?.createdBy?._id)
+
+  }, [pathname]);
+
+  useEffect(() => {
+    if (blog && user) {
+      handleFollowAuthors(blog.createdBy._id)
     }
-  }, [pathname, blog]);
+  }, [blog, user])
 
   // console.log(blog);
 

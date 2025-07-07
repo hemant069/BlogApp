@@ -11,6 +11,7 @@ const handleSignUp = async (req, res) => {
     const { username, email, password } = req.body;
     const existingUserByEmail = await userModel.findOne({ email });
     const existingUserByUsername = await userModel.findOne({ username });
+     const defaultavatars = `https://ui-avatars.com/api/?name=${username}`
     if (!existingUserByEmail && !existingUserByUsername) {
       const saltround = 10;
       const hashPass = await bcrypt.hash(password, saltround);
@@ -20,6 +21,7 @@ const handleSignUp = async (req, res) => {
         email,
         provider: "cred",
         providerId: null,
+        avatar:defaultavatars
       });
       const savedUser = await newuser.save();
       return res.status(201).json({ msg: "user is created successfully" });

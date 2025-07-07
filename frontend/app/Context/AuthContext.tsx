@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
@@ -21,44 +21,78 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   // NextAuth session for OAuth users
   const { data: session, status } = useSession();
 
+  // Use ref to track previous session to avoid unnecessary re-renders
+  const prevSessionRef = useRef<any>(null);
+
   useEffect(() => {
-    // Check if user is authenticated via NextAuth (OAuth)
-    if (status === "authenticated" && session?.user) {
-      // OAuth user - convert NextAuth session to your User format
-
-      console.log("session", session)
-
-      const oauthUser: User = {
-        id: session.user?.mongoId || "",
-        username: session.user.name || "",
-        email: session.user.email || "",
-        avatar: session.user.image || "",
-      };
-      setUser(oauthUser);
-      setLoading(false);
+    // Prevent running on every render - only run when truly needed
+    if (isInitialized &&
+      status !== "loading" &&
+      JSON.stringify(session) === JSON.stringify(prevSessionRef.current)) {
       return;
     }
 
-    // Check for custom JWT token (regular login)
-    const customToken = Cookies.get("token");
-
-    if (customToken) {
+    const initializeAuth = async () => {
       try {
-        const decoded: User = jwtDecode(customToken);
-        setToken(customToken);
-        setUser(decoded);
-      } catch (error) {
-        console.log("JWT decode error:", error);
-        logout();
-      }
-    }
+        // Check if user is authenticated via NextAuth (OAuth)
+        if (status === "authenticated" && session?.user) {
+          // Only log once during initialization
+          if (!isInitialized) {
+            console.log("session", session);
+          }
 
-    setLoading(status === "loading");
-  }, [session, status]);
+          const oauthUser: User = {
+            id: session.user?.mongoId || "",
+            username: session.user.name || "",
+            email: session.user.email || "",
+            avatar: session.user.image || "",
+          };
+
+          setUser(oauthUser);
+          setToken(null); // Clear any existing custom token
+          setLoading(false);
+          setIsInitialized(true);
+          prevSessionRef.current = session;
+          return;
+        }
+
+        // Only check for custom JWT token if not OAuth authenticated
+        if (status !== "authenticated") {
+          const customToken = Cookies.get("token");
+
+          if (customToken) {
+            try {
+              const decoded: User = jwtDecode(customToken);
+              setToken(customToken);
+              setUser(decoded);
+            } catch (error) {
+              console.log("JWT decode error:", error);
+              logout();
+            }
+          }
+        }
+
+        // Set loading to false only when NextAuth is done loading
+        if (status !== "loading") {
+          setLoading(false);
+          setIsInitialized(true);
+        }
+
+        prevSessionRef.current = session;
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+        setLoading(false);
+        setIsInitialized(true);
+      }
+    };
+
+    initializeAuth();
+  }, [session?.user?.mongoId, session?.user?.email, status, isInitialized]);
 
   const login = (token: string) => {
     Cookies.set("token", token, { expires: 7 }); // Set expiry
@@ -72,9 +106,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    signOut()
+    signOut({ redirect: false }); // Prevent automatic redirect
     Cookies.remove("token");
-
     setToken(null);
     setUser(null);
   };
