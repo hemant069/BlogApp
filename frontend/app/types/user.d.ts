@@ -3,38 +3,39 @@ interface User {
     username: string;
     email: string;
     avatar?: string;
-  }
+    mongoId?: string,
+}
 
-export interface CREATE_USER{
-    email:string,
-    password:string,
-    username:string,
+export interface CREATE_USER {
+    email: string,
+    password: string,
+    username: string,
 }
 
 
-export interface LOGIN_USER{
-    email:string,
-    password:string,
+export interface LOGIN_USER {
+    email: string,
+    password: string,
 }
 
-export interface FOLLOW_AUTHORS{
+export interface FOLLOW_AUTHORS {
 
-    userId:string|undefined,
-    targetuserId:string
+    userId: string | undefined,
+    targetuserId: string
 
-
-}
-
-export interface PROFILE_INFO{
-    username:string,
-    email:string,
-    profileImg:string,
-    role:string,
 
 }
 
-export interface UPDATE_PROFILE_INFO{
-    profileImg:FileList,
-    username:string,
+export interface PROFILE_INFO {
+    username: string,
+    email: string,
+    profileImg: string,
+    role: string,
+
+}
+
+export interface UPDATE_PROFILE_INFO {
+    profileImg: FileList,
+    username: string,
 }
 

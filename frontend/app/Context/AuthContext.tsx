@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("session", session)
 
       const oauthUser: User = {
-        id: session.user.id || "",
+        id: session.user?.mongoId || "",
         username: session.user.name || "",
         email: session.user.email || "",
         avatar: session.user.image || "",

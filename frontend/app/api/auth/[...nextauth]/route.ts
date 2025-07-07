@@ -7,10 +7,6 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 
 const handler: NextAuthOptions = NextAuth({
   providers: [
-    // Custom credentials provider
-
-
-    // Google OAuth provider
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!
@@ -28,11 +24,22 @@ const handler: NextAuthOptions = NextAuth({
             profileImg: user.image,
           }, { withCredentials: true });
 
+          // DEBUG: Log the entire response
+          console.log("Backend response:", res.data);
+          console.log("Response status:", res.status);
+
           if (res.status === 200 && res.data.token) {
-            // Your backend already returns the user data
-            user.mongoId = res.data._id;
+            // Try different possible field names from your backend
+            const mongoId = res.data._id || res.data.userId || res.data.id;
+            const username = res.data.username || user.name;
+
+            console.log("Extracted mongoId:", mongoId);
+            console.log("Extracted username:", username);
+
+            // Store in user object
+            user.mongoId = mongoId;
             user.backendToken = res.data.token;
-            user.username = res.data.username;
+            user.username = username;
 
             return true;
           }
@@ -45,9 +52,10 @@ const handler: NextAuthOptions = NextAuth({
       return true;
     },
 
-    // JWT callback to store all necessary data in token
     jwt: async ({ token, user, account }) => {
       if (account && user) {
+        console.log("JWT callback - user object:", user);
+
         // Store all necessary data in token
         token.mongoId = user.mongoId;
         token.backendToken = user.backendToken;
@@ -55,22 +63,26 @@ const handler: NextAuthOptions = NextAuth({
         token.name = user.name;
         token.picture = user.image;
         token.username = user.username || user.name;
+
+        console.log("JWT callback - token object:", token);
       }
       return token;
     },
 
-    // Session callback to pass data to client
     session: async ({ session, token }) => {
+      console.log("Session callback - token object:", token);
+
       // Add all necessary data to session
       session.user.mongoId = token.mongoId;
       session.user.id = token.mongoId;
       session.user.username = token.username;
       session.backendToken = token.backendToken;
+
+      console.log("Session callback - final session:", session);
       return session;
     }
   },
 
-  // Enable JWT strategy
   session: {
     strategy: 'jwt',
   },
