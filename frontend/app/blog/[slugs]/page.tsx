@@ -31,6 +31,7 @@ import {
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -245,6 +246,7 @@ const Page = () => {
   // Toggle Follow Start over here
 
   const handleFollowAuthors = async (targetUserId: string) => {
+    console.log("targetuserId", targetUserId)
     if (!targetUserId && user?.id) {
       throw Error;
     }
@@ -266,7 +268,10 @@ const Page = () => {
     handlegetComment();
     handleGetReaction();
     handleGetSavedBlog();
-  }, [pathname]);
+    if (blog && blog.createdBy._id) {
+      handleFollowAuthors(blog?.createdBy?._id)
+    }
+  }, [pathname, blog]);
 
   // console.log(blog);
 
@@ -331,10 +336,14 @@ const Page = () => {
                   </DrawerTrigger>
                   <DrawerContent className="h-screen w-1/4">
                     <DrawerHeader>
-                      <DrawerTitle>Add Your Throught On This</DrawerTitle>
+                      <DrawerTitle>Add Your Thought On This</DrawerTitle>
+                      <DrawerDescription>
+                        Share your thoughts and engage with other comments below.
+                      </DrawerDescription>
                       <div className="flex gap-2 items-center flex-col w-full">
                         <Textarea
                           className="h-[8rem]"
+                          placeholder="Write your comment here..."
                           {...register("content")}
                         />
                         <Button onClick={handleSubmit(addComment)}>
@@ -342,49 +351,53 @@ const Page = () => {
                         </Button>
                       </div>
                     </DrawerHeader>
-                    <DrawerFooter className=" overflow-y-scroll">
+                    <DrawerFooter className="overflow-y-scroll">
                       {comments.map((el) => (
                         <div key={el._id}>
-                          <div key={el._id} className="flex gap-2  ">
-                            <div className="">
+                          <div className="flex gap-2">
+                            <div className="w-full">
                               <div className="flex items-center gap-1">
                                 <Image
-                                  alt="iamge"
+                                  alt="User avatar"
                                   width={30}
                                   height={30}
-                                  src={
-                                    "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
-                                  }
+                                  src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
                                 />
-                                <p>{el.user.username}</p>
+                                <p className="font-semibold">{el.user.username}</p>
                               </div>
-                              <p className="ml-5">{el.content}</p>
-                              <div className="flex justify-between items-center w-10 gap-5 mt-2">
-                                <div className="cursor-pointer">
+                              <p className="ml-8 mt-1 text-gray-700">{el.content}</p>
+                              <div className="flex items-center gap-4 mt-2 ml-8">
+                                <div className="flex items-center gap-1 cursor-pointer hover:text-blue-500">
                                   <ThumbsUp
+                                    size={16}
                                     onClick={() => handleLike(el._id)}
                                   />
-                                  <p>{el.reactions.like}</p>
+                                  <span className="text-sm">{el.reactions.like}</span>
                                 </div>
-                                <div className="cursor-pointer">
+                                <div className="flex items-center gap-1 cursor-pointer hover:text-red-500">
                                   <ThumbsDown
+                                    size={16}
                                     onClick={() => handleDislike(el._id)}
                                   />
-                                  <p>{el.reactions.dislike}</p>
+                                  <span className="text-sm">{el.reactions.dislike}</span>
                                 </div>
-                                <div
-                                  className="cursor-pointer"
+                                <button
+                                  className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer"
                                   onClick={() => handleReply(el._id)}
                                 >
-                                  reply
-                                </div>
+                                  Reply
+                                </button>
                               </div>
                               {el._id === replyId && (
-                                <div className="flex  gap-2 mt-">
-                                  <Input {...register("content")} />
+                                <div className="flex gap-2 mt-2 ml-8">
+                                  <Input
+                                    placeholder="Write a reply..."
+                                    {...register("replyContent")}
+                                  />
                                   <Button
-                                    onClick={handleSubmit(addComment)}
-                                    variant={"secondary"}
+                                    onClick={handleSubmit(addReply)}
+                                    variant="secondary"
+                                    size="sm"
                                   >
                                     Reply
                                   </Button>
@@ -392,43 +405,33 @@ const Page = () => {
                               )}
                             </div>
                           </div>
-                          <div>
-                            <p
-                              onClick={() => handleReply(el._id)}
-                              className="text-slate-400 cursor-pointer"
-                            >
-                              replies ({el?.replies?.length})
-                            </p>
-                            <div>
-                              {el._id === replyId && (
-                                <div key={el._id}>
-                                  {el.replies.map((el, ind) => (
-                                    <div key={ind} className="ml-5">
-                                      <div className="flex items-center">
-                                        {/* <Avatar>
-                                      <AvatarImage
-                                        className="rounded-full"
-                                        width={25}
-                                        height={225}
-                                        src="https://github.com/shadcn.png"
+                          <div className="ml-8">
+                            {el.replies && el.replies.length > 0 && (
+                              <button
+                                onClick={() => handleReply(el._id)}
+                                className="text-slate-400 hover:text-slate-600 cursor-pointer text-sm mt-2"
+                              >
+                                {el._id === replyId ? 'Hide' : 'Show'} replies ({el.replies.length})
+                              </button>
+                            )}
+                            {el._id === replyId && el.replies && (
+                              <div className="mt-2 space-y-2">
+                                {el.replies.map((reply, ind) => (
+                                  <div key={ind} className="ml-4 pl-4 border-l-2 border-gray-200">
+                                    <div className="flex items-center gap-1">
+                                      <Image
+                                        alt="User avatar"
+                                        width={24}
+                                        height={24}
+                                        src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
                                       />
-                                    </Avatar> */}
-                                        <Image
-                                          alt="iamge"
-                                          width={30}
-                                          height={30}
-                                          src={
-                                            "https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
-                                          }
-                                        />
-                                        <p> {el.user.username}</p>
-                                      </div>
-                                      <p className="ml-5">{el.content}</p>
+                                      <p className="font-medium text-sm">{reply.user.username}</p>
                                     </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
+                                    <p className="ml-7 text-sm text-gray-600">{reply.content}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
