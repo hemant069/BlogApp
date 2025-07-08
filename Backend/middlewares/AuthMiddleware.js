@@ -2,32 +2,30 @@ const { getUserToken } = require("../utils/auth");
 
 const checkAuth = () => {
   return (req, res, next) => {
-    let token
-      const authHeader = req.headers["authorization"];
-      if (authHeader && authHeader.startsWith("Bearer ")) {
-        token = authHeader.split(" ")[1]; 
-}
+    const authHeader = req.headers["authorization"];
+    let token;
 
-
-   
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
 
     if (!token) {
-      return res.status(401).json({ msg: "Unauthorized" });
+      return res.status(401).json({ msg: "Unauthorized: No token provided" });
     }
 
     try {
-      console.log("token baby", token);
       const user = getUserToken(token);
-      if(user){
-
+      if (user) {
         req.user = user;
-        next();
+        return next();
+      } else {
+        return res.status(401).json({ msg: "Unauthorized: Invalid token" });
       }
-
     } catch (error) {
-      return res.status(401).json({ msg: "something went wrong auth" });
+      console.error("Auth error:", error);
+      return res.status(401).json({ msg: "Invalid or expired token" });
     }
   };
 };
 
-module.exports =  checkAuth ;
+module.exports = checkAuth;

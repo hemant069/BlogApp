@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import logingif from "../../../public/login.gif";
 import typing from "../../../public/typing.gif";
@@ -14,12 +14,14 @@ import { loginFn } from "@/app/api/lib/api";
 import { LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import AuthButton from "@/app/Context/oauth";
+import { useSession } from "next-auth/react";
 
 const Page = () => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<LOGIN_USER>();
   const { toast } = useToast();
   const { login } = useAuth();
+  const { data: session, status } = useSession()
 
   interface Res {
     msg: string;
@@ -49,8 +51,13 @@ const Page = () => {
       }
     }
   };
+  useEffect(() => {
+    if (status === "authenticated" && session.user?.email) {
+      router.push("/dashboard")
+    }
+  }, [status])
   return (
-    <div className="flex flex-col justify-center items-center h-screen    ">
+    <div className="flex flex-col justify-center items-center h-screen">
       <AuthButton />
       <div className="flex justify-center gap-4 flex-col shadow-xl shadow-slate-800    rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
         <div className="flex justify-center gap-11 ">

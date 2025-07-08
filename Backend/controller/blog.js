@@ -3,38 +3,48 @@ const cloudnary = require(".././utils/cloudnary");
 const handlecreateblogpost = async (req, res) => {
   try {
     if (!req.file) {
-      return res.json({ msg: "Please Upload image" });
+      return res.status(400).json({ msg: "Please Upload image" });
     }
 
     const { title, content, tag } = req.body;
-
     const tagArray = tag.split(",");
 
-    const result = await cloudnary.uploader
-      .upload_stream(async (result, error) => {
-        if (error) {
-          return res.json({ msg: "somthing went wrong with clounary" });
-        }
+    // Wrap cloudinary stream in a Promise
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudnary.uploader.upload_stream(
+          { folder: "blog_covers" }, // optional
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+    };
 
-        const createdBlogpost = new BlogModel({
-          title,
-          content,
-          coverImgUrl: result.secure_url,
-          createdBy: req.user.id,
-          tag: tagArray,
-        });
-        await createdBlogpost.save();
-        return res
-          .status(201)
-          .json({ msg: "blog created successfully", data: createdBlogpost });
-      })
-      .end(req.file.buffer);
+    const result = await uploadToCloudinary();
 
-    return result;
+    const createdBlogpost = new BlogModel({
+      title,
+      content,
+      coverImgUrl: result.secure_url,
+      createdBy: req.user.id,
+      tag: tagArray,
+    });
+
+    await createdBlogpost.save();
+
+    return res.status(201).json({
+      msg: "blog created successfully",
+      data: createdBlogpost,
+    });
   } catch (err) {
-    return res.json({ msg: "something went wrong" });
+    console.error("Error creating blog post:", err);
+    return res.status(500).json({ msg: "Something went wrong", error: err.message });
   }
 };
+
 
 const handlegetblogpost = async (req, res) => {
   try {
