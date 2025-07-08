@@ -7,7 +7,7 @@ const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localh
 // Function to set up axios with current session token
 export const setupAxiosAuth = async () => {
     try {
-        const session = await getSession();
+        const session: any = await getSession();
 
         if (session?.backendToken) {
             axios.defaults.headers.common["Authorization"] = `Bearer ${session.backendToken}`;
@@ -25,8 +25,6 @@ export const setupAxiosAuth = async () => {
     }
 };
 
-// Usage in components:
-// await setupAxiosAuth();
-// const response = await axios.get('/protected-route');
+
 
 export default axios;

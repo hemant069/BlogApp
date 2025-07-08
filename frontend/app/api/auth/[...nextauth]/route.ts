@@ -3,8 +3,9 @@
 import axios from 'axios'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import CredentialsProvider from 'next-auth/providers/credentials'
 
+
+const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8000/api";
 const handler: NextAuthOptions = NextAuth({
   providers: [
     GoogleProvider({
@@ -14,10 +15,10 @@ const handler: NextAuthOptions = NextAuth({
   ],
 
   callbacks: {
-    signIn: async ({ user, account, profile }) => {
+    signIn: async ({ user, account, }) => {
       if (account?.provider === 'google') {
         try {
-          const res = await axios.post("http://localhost:8000/api/login", {
+          const res = await axios.post(`${baseUrl}/login`, {
             username: user.name,
             email: user.email,
             provider: "google",
