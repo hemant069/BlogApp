@@ -3,7 +3,7 @@ import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER, UPDATE_PROFILE_INFO } from "@/
 import { setupAxiosAuth } from "@/app/utils";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-import { getSession } from 'next-auth/react'
+
 
 const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8000/api";
 

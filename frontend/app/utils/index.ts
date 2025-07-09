@@ -1,13 +1,14 @@
 import axios from 'axios';
+import { Session } from 'next-auth';
 import { getSession } from 'next-auth/react';
 
 const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8000/api";
-//const baseUrl: string = "http://localhost:8000/api";
+
 
 // Function to set up axios with current session token
 export const setupAxiosAuth = async () => {
     try {
-        const session: any = await getSession();
+        const session: Session | null = await getSession();
 
         if (session?.backendToken) {
             axios.defaults.headers.common["Authorization"] = `Bearer ${session.backendToken}`;
