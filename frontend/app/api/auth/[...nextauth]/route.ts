@@ -1,7 +1,6 @@
-// app/api/auth/[...nextauth]/route.ts
-
 import axios from 'axios'
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import NextAuth, { NextAuthOptions, Session, User } from 'next-auth'
+import { JWT } from 'next-auth/jwt';
 import GoogleProvider from 'next-auth/providers/google'
 
 
@@ -53,25 +52,25 @@ const handler: NextAuthOptions = NextAuth({
       return true;
     },
 
-    jwt: async ({ token, user, account }) => {
+    jwt: async ({ token, user, account }: { token: any, user: User, account: any }) => {
       if (account && user) {
         console.log("JWT callback - user object:", user);
 
         // Store all necessary data in token
-        token.mongoId = user.mongoId;
-        token.backendToken = user.backendToken;
+        token.mongoId = user?.mongoId;
+        token.backendToken = user?.backendToken;
         token.email = user.email;
         token.name = user.name;
         token.picture = user.image;
-        token.username = user.username || user.name;
+        token.username = user.name;
 
-        console.log("JWT callback - token object:", token);
+
       }
       return token;
     },
 
-    session: async ({ session, token }) => {
-      console.log("Session callback - token object:", token);
+    session: async ({ session, token }: { session: Session, token: JWT }) => {
+
 
       // Add all necessary data to session
       session.user.mongoId = token.mongoId;
@@ -79,7 +78,6 @@ const handler: NextAuthOptions = NextAuth({
       session.user.username = token.username;
       session.backendToken = token.backendToken;
 
-      console.log("Session callback - final session:", session);
       return session;
     }
   },

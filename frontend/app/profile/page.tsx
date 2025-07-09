@@ -82,7 +82,7 @@ const Page = () => {
             <div>
               <Dialog>
                 <DialogTrigger>
-                  <Button>Edit</Button>
+                  Edit
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>

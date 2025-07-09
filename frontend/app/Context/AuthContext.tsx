@@ -5,7 +5,6 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { User } from "../types/user";
 import { signOut } from "next-auth/react";
-import { Session } from "next-auth";
 
 interface AuthContextType {
   user: User | null;
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session, status } = useSession();
 
   // Use ref to track previous session to avoid unnecessary re-renders
-  const prevSessionRef = useRef<Session | any>(null);
+  const prevSessionRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Prevent running on every render - only run when truly needed
