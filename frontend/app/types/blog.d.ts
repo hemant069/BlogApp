@@ -28,7 +28,7 @@ export interface CREATE_BLOG {
 
 export interface ADD_COMMENT {
   content: string,
-  userId: string,
+  userId: string | undefined,
   blogId: string,
   parentcommentId?: string | null
 }
@@ -36,6 +36,7 @@ export interface ADD_COMMENT {
 // Comment Parameter 
 export interface COMMENT {
   content: string;
+  replyContent: string;
 }
 
 export interface REPLIES {

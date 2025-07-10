@@ -16,11 +16,10 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { blogs, COMMENT, GET_COMMENT, GET_REACTION } from "@/app/types/blog";
+
+import { blogs, COMMENT, GET_COMMENT, GET_REACTION, } from "@/app/types/blog";
 import { useAuth } from "@/app/Context/AuthContext";
-import { User } from "@/app/types/user";
+
 import {
   Bookmark,
   BookmarkCheck,
@@ -51,7 +50,7 @@ const Page = () => {
   const [reaction, setreaction] = useState<GET_REACTION>();
   const [isSavedBlog, setisSavedBlog] = useState<boolean>(false);
   const [follow, setfollow] = useState<boolean>(false);
-  console.log("userbeta", user)
+
 
   // Fetching the blog here
   const handleBlog = async () => {
@@ -79,26 +78,25 @@ const Page = () => {
 
   // Add Comment function start from here
   const addComment: SubmitHandler<COMMENT> = async (comment: COMMENT) => {
-    //content, userId, blogId, parentcommentId
-    // content:string,
-    // user:string,
-    // blog:string,
-    // parentComment?:string
-    const token = Cookies.get("token");
 
-    if (token) {
-      const userId: User = jwtDecode(token);
+    console.log("comment", comment, replyId)
+
+    const oauthuser = user?.id;
+
+
+    if (oauthuser) {
+
       let data;
       if (!replyId) {
         data = {
           content: comment.content,
-          userId: userId.id,
+          userId: oauthuser,
           blogId: id,
         };
       }
       data = {
-        content: comment.content,
-        userId: userId.id,
+        content: comment.replyContent,
+        userId: oauthuser,
         blogId: id,
         parentcommentId: replyId,
       };
@@ -123,6 +121,13 @@ const Page = () => {
     console.log(id);
     setreplyId(id);
   };
+
+  // const addReply: SubmitHandler<REPLIES> = async (data) => {
+
+  //   console.log("data", data)
+  //   data.
+
+  // }
 
   // Reaction on post function start from here
   const handleLike = async (commentId: string | null) => {
@@ -399,7 +404,7 @@ const Page = () => {
                                     {...register("replyContent")}
                                   />
                                   <Button
-                                    onClick={handleSubmit(addReply)}
+                                    onClick={handleSubmit(addComment)}
                                     variant="secondary"
                                     size="sm"
                                   >
