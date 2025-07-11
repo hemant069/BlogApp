@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "../../Context/AuthContext";
-import { loginFn } from "@/app/api/lib/api";
+import { getallBlogs, loginFn } from "@/app/api/lib/api";
 import { LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import AuthButton from "@/app/Context/oauth";
@@ -43,6 +43,7 @@ const Page = () => {
       login(res?.data.token);
       toast({ title: "Login Success" });
       router.push("/dashboard");
+      getallBlogs()
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast({ title: error?.response?.data?.msg });

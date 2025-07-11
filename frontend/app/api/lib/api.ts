@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 
 
 const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8000/api";
+// const baseUrl: string = "http://localhost:8000/api";
 
 
 const token = Cookies.get('token')
@@ -60,7 +61,9 @@ export const loginFn = async (data: LOGIN_USER): Promise<AxiosResponse<LOGIN_RES
 export const getallBlogs = async () => {
 
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.get(`${baseUrl}/blog`)
         if (res.status !== 200) {
             console.log("something wrong with getallblogs")

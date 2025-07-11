@@ -24,5 +24,6 @@ declare module "next-auth" {
         id: string;
         backendToken?: string | null;
         mongoId?: string | null;
+        username?: string | null
     }
 }

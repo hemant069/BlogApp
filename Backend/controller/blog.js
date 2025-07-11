@@ -51,7 +51,7 @@ const handlegetblogpost = async (req, res) => {
     const getAllblogpost = await BlogModel.find({}).populate(
       "createdBy",
       "username email profileImg"
-    ); // Fetch only required fields
+    ).lean();; // Fetch only required fields
 
     return res
       .status(200)

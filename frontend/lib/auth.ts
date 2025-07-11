@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-import { NextAuthOptions } from 'next-auth';
+import { JWT, NextAuthOptions, Session } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google'
 
 
@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
                         // Store in user object
                         user.mongoId = mongoId;
                         user.backendToken = res.data.token;
-                        user.username = username;
+                        user.name = username;
 
                         return true;
                     }
@@ -71,13 +71,13 @@ export const authOptions: NextAuthOptions = {
         },
 
         session: async ({ session, token }) => {
-
-
-            // Add all necessary data to session
-            session.user.mongoId = token.mongoId;
-            session.user.id = token.mongoId;
-            session.user.username = token.username;
-            session.backendToken = token.backendToken;
+            session.user = {
+                ...session.user,
+                id: token.id as string,
+                mongoId: token.mongoId as string,
+                backendToken: token.backendToken as string,
+                name: token.username as string,
+            };
 
             return session;
         }
