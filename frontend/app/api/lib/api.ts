@@ -5,8 +5,8 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 
-const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8000/api";
-// const baseUrl: string = "http://localhost:8000/api";
+//const baseUrl: string | null = process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8000/api";
+const baseUrl: string = "http://localhost:8000/api";
 
 
 const token = Cookies.get('token')
@@ -83,7 +83,9 @@ export const getallBlogs = async () => {
 
 export const getsingleBlog = async (id: string) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.get(`${baseUrl}/blog/${id}`);
 
         if (res.status !== 200) {
@@ -104,7 +106,9 @@ export const getsingleBlog = async (id: string) => {
 
 export const createBlogPost = async (data: FormData) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.post(`${baseUrl}/blog/create-post`, data)
 
         if (res.status !== 200) {
@@ -128,7 +132,9 @@ export const createBlogPost = async (data: FormData) => {
 export const addCommentOnPost = async (data: ADD_COMMENT) => {
 
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.post(`${baseUrl}/comment`, data)
         return res.data;
     } catch (error) {
@@ -147,7 +153,9 @@ export interface COMMENT_ID {
 
 export const getCommentOnPost = async (id: string) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.get(`${baseUrl}/comment/${id}`,);
 
         return res.data;
@@ -168,7 +176,9 @@ export const getCommentOnPost = async (id: string) => {
 export const addReactionOnPost = async (data: ADD_REACTION) => {
 
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.post(`${baseUrl}/reaction`, data)
 
         return res.data;
@@ -187,7 +197,9 @@ export const addReactionOnPost = async (data: ADD_REACTION) => {
 export const getReactionOnPost = async (id: string) => {
 
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.get(`${baseUrl}/reaction/${id}`);
         return res.data;
     } catch (error) {
@@ -207,7 +219,9 @@ export const getReactionOnPost = async (id: string) => {
 
 export const SaveBlogPost = async (data: SAVE_BLOG) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.post(`${baseUrl}/saveblogs`, data);
 
         return res.data;
@@ -223,7 +237,9 @@ export const SaveBlogPost = async (data: SAVE_BLOG) => {
 
 export const RemoveSaveBlogPost = async (data: REMOVE_SAVED_BLOG) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.post(`${baseUrl}/saveblogs`, data);
 
         return res.data;
@@ -239,7 +255,9 @@ export const RemoveSaveBlogPost = async (data: REMOVE_SAVED_BLOG) => {
 
 export const getSaveBlogPost = async (id: string) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.get(`${baseUrl}/saveblogs/${id}`);
 
         return res.data;
@@ -259,7 +277,9 @@ export const getSaveBlogPost = async (id: string) => {
 
 export const handleFollow = async (data: FOLLOW_AUTHORS) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.post(`${baseUrl}/follow`, data)
         return res.data;
 
@@ -278,7 +298,9 @@ export const handleFollow = async (data: FOLLOW_AUTHORS) => {
 
 export const handleProfile = async (data: UPDATE_PROFILE_INFO) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.post(`${baseUrl}/profile`, data)
         return res.data;
 
@@ -292,7 +314,9 @@ export const handleProfile = async (data: UPDATE_PROFILE_INFO) => {
 
 export const handlegetProfile = async (id: string) => {
     try {
-        await setupAxiosAuth()
+        if (!token) {
+            await setupAxiosAuth()
+        }
         const res = await axios.get(`${baseUrl}/profile/${id}`);
         return res.data;
 
