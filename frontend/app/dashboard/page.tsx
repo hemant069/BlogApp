@@ -17,6 +17,7 @@ const Page = () => {
           image={item.coverImgUrl}
           createdBy={item.createdBy}
           user={item.user}
+          tag={item.tag}
         />
       ))}
     </div>

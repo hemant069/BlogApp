@@ -19,12 +19,12 @@ router.get("/:id", handlegetoneblogpost);
 router.post(
   "/create-post",
 
-  upload.single("coverImage"),
+  upload.single("coverImgUrl"),
   handlecreateblogpost
 );
 router.put(
   "/update-post/:id",
-  upload.single("coverImage"),
+  upload.single("coverImgUrl"),
   handleupdateblogpost
 );
 router.delete("/delete-post/:id", handledeleteblogpost);

@@ -1,49 +1,74 @@
 const BlogModel = require("../model/blogModel");
-const cloudnary = require(".././utils/cloudnary");
+const cloudinary = require(".././utils/cloudnary");
+
+
 const handlecreateblogpost = async (req, res) => {
   try {
+    console.log("➡️ Route hit");
+
     if (!req.file) {
+      console.log("❌ No file received");
       return res.status(400).json({ msg: "Please Upload image" });
     }
+
+    console.log("✅ File received");
+    console.log("Body:", req.body);
 
     const { title, content, tag } = req.body;
     const tagArray = tag.split(",");
 
-    // Wrap cloudinary stream in a Promise
-    const uploadToCloudinary = () => {
-      return new Promise((resolve, reject) => {
-        const stream = cloudnary.uploader.upload_stream(
-          { folder: "blog_covers" }, // optional
-          (error, result) => {
-            if (error) return reject(error);
-            resolve(result);
-          }
-        );
-        stream.end(req.file.buffer);
-      });
-    };
+    console.log("➡️ Starting upload to Cloudinary");
 
-    const result = await uploadToCloudinary();
+  const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "blog_covers" },
+      (error, result) => {
+        if (error) {
+          console.error("❌ Cloudinary error:", error);
+          return reject(error);
+        }
+        console.log("✅ Cloudinary success:", result.secure_url);
+        resolve(result);
+      }
+    );
+
+    if (!fileBuffer) {
+      console.error("❌ File buffer is undefined");
+      return reject(new Error("No file buffer"));
+    }
+
+    stream.end(fileBuffer); // actually start the upload
+  });
+};
+
+
+   const result = await uploadToCloudinary(req.file.buffer);
+
+    console.log("✅ Upload done:", result.secure_url);
 
     const createdBlogpost = new BlogModel({
       title,
       content,
       coverImgUrl: result.secure_url,
-      createdBy: req.user.id,
+      createdBy: req.user?.id,
       tag: tagArray,
     });
 
     await createdBlogpost.save();
 
+    console.log("✅ Blog saved to DB");
+
     return res.status(201).json({
-      msg: "blog created successfully",
+      msg: "Blog created successfully",
       data: createdBlogpost,
     });
   } catch (err) {
-    console.error("Error creating blog post:", err);
+    console.error("❌ Error creating blog post:", err);
     return res.status(500).json({ msg: "Something went wrong", error: err.message });
   }
 };
+
 
 
 const handlegetblogpost = async (req, res) => {

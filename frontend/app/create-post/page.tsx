@@ -41,7 +41,7 @@ const Page = () => {
       console.log("HTML content:", htmlContent);
 
       const formData = new FormData();
-      formData.append("coverImage", data.coverImgUrl[0]); // Extract first file
+      formData.append("coverImgUrl", data.coverImgUrl[0]); // Extract first file
       formData.append("title", data.title);
       formData.append("content", htmlContent); // Use HTML content for rich formatting
       // Optional: also save markdown version
