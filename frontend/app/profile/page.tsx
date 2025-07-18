@@ -11,162 +11,280 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UPDATE_PROFILE_INFO } from "../types/user";
 import { useAuth } from "../Context/AuthContext";
+import { toast } from "@/hooks/use-toast";
+import { Camera, Edit3, User } from "lucide-react";
 
 const Page = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  // const [userDetails, setuserDetails] = useState<User | null | undefined>();
-  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { user, updateUser } = useAuth();
 
-  const { register, handleSubmit } = useForm<UPDATE_PROFILE_INFO>();
+  const { register, handleSubmit, setValue, watch, reset } = useForm<UPDATE_PROFILE_INFO>({
+    defaultValues: {
+      username: user?.username || "",
+    }
+  });
 
+  const watchedUsername = watch("username");
+
+  // Handle file selection with preview
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
     if (file) {
       setSelectedFile(file);
-      // You can add upload logic here or keep it separate
+
+      // Create preview URL
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+
       console.log("File selected:", file);
     }
   };
 
+  // Handle profile update
   const handleProfileUpdate: SubmitHandler<UPDATE_PROFILE_INFO> = async (
     data: UPDATE_PROFILE_INFO
   ) => {
-    const formdata = new FormData();
-
-    formdata.append("profileImg", data.profileImg[0]);
-    formdata.append("username", data.username);
+    setIsSubmitting(true);
 
     try {
-      const res = await handleProfile(data);
-      console.log(res);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
+      const formdata = new FormData();
+
+      // Only append file if one is selected
+      if (data.profileImg && data.profileImg[0]) {
+        formdata.append("profileImg", data.profileImg[0]);
       }
+
+      formdata.append("username", data.username);
+
+      console.log("Updating profile with:", {
+        username: data.username,
+        profileImg: !!data.profileImg?.[0]
+      });
+
+      const res = await handleProfile(formdata);
+      console.log("Profile update response:", res);
+
+      // Update user context if successful
+      if (res?.data) {
+        updateUser?.(res.data);
+      }
+
+      toast({
+        title: "Success",
+        description: "Profile updated successfully!",
+      });
+
+      setIsDialogOpen(false);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+
+    } catch (error) {
+      console.error("Profile update error:", error);
+
+      if (error instanceof Error) {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to update profile",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // update proflie start from here
-
+  // Fetch user profile
   const handlegetUpdateProfile = async () => {
     try {
       if (!user?.id) {
-        throw Error;
+        throw new Error("User ID not found");
       }
+
       const res = await handlegetProfile(user.id);
-      console.log(res);
+      console.log("Profile data:", res);
+
+      // Update form with fetched data
+      if (res?.data) {
+        setValue("username", res.data.username);
+      }
+
     } catch (error) {
-      console.log(error);
+      console.error("Failed to fetch profile:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load profile data",
+        variant: "destructive",
+      });
     }
   };
 
-  // useEffect load the once
+  // Reset form when dialog closes
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    reset({ username: user?.username || "" });
+  };
 
+  // Load profile on mount
   useEffect(() => {
-    handlegetUpdateProfile();
-  }, []);
+    if (user?.id) {
+      handlegetUpdateProfile();
+    }
+  }, [user?.id]);
 
+  // Clean up preview URL
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
+  // changes
+  const currentProfileImage = user?.avatar || profileimag;
 
   return (
-    <div>
-      <Card>
-        <CardContent>
-          <div className="flex flex-col justify-center items-center gap-4 pt-6">
-            <div>
-              <Dialog>
-                <DialogTrigger>
-                  Edit
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle className="sr-only">
-                      Are you absolutely sure?
-                    </DialogTitle>
-                    <DialogDescription className="sr-only">
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="relative border border-black p-5 rounded-full group">
-                    <Image
-                      width={100}
-                      height={100}
-                      className="w-full rounded-full"
-                      alt="profile"
-                      src={profileimag}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <label
-                        htmlFor="file-upload"
-                        className="bg-black/50 text-white px-4 py-2 rounded-full cursor-pointer hover:bg-black/70"
-                      >
-                        Upload
-                      </label>
-                      <input
-                        id="file-upload"
-                        className="hidden"
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        {...register("profileImg")}
-                      />
+    <div className="max-w-2xl mx-auto p-6">
+      <Card className="shadow-lg">
+        <CardContent className="pt-6">
+          <div className="flex flex-col justify-center items-center gap-6">
+
+            {/* Edit Button */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Edit3 size={16} />
+                  Edit Profile
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <User size={20} />
+                    Edit Profile
+                  </DialogTitle>
+                  <DialogDescription>
+                    Update your profile information and photo.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <form onSubmit={handleSubmit(handleProfileUpdate)} className="space-y-6">
+                  {/* Profile Image Upload */}
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="relative group">
+                      <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
+                        <Image
+                          width={96}
+                          height={96}
+                          className="w-full h-full object-cover"
+                          alt="profile"
+                          src={previewUrl || currentProfileImage}
+                        />
+                      </div>
+
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full bg-black/40">
+                        <label
+                          htmlFor="profile-upload"
+                          className="bg-white text-black px-3 py-1 rounded-full cursor-pointer hover:bg-gray-100 transition-colors flex items-center gap-2 text-sm"
+                        >
+                          <Camera size={14} />
+                          Change
+                        </label>
+                        <input
+                          id="profile-upload"
+                          className="hidden"
+                          type="file"
+                          accept=".png,.jpg,.jpeg"
+                          {...register("profileImg")}
+                          onChange={handleFileChange}
+                        />
+                      </div>
                     </div>
+
+                    {selectedFile && (
+                      <p className="text-sm text-green-600">
+                        Selected: {selectedFile.name}
+                      </p>
+                    )}
                   </div>
-                  <div>
-                    <Input {...register("username")} />
+
+                  {/* Username Input */}
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username</Label>
+                    <Input
+                      id="username"
+                      placeholder="Enter your username"
+                      {...register("username", { required: "Username is required" })}
+                    />
                   </div>
-                  <div>
-                    <Button onClick={handleSubmit(handleProfileUpdate)}>
-                      Submit
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-end gap-3">
+                    <DialogClose asChild>
+                      <Button type="button" variant="outline" onClick={handleDialogClose}>
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? "Updating..." : "Update Profile"}
                     </Button>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="relative border border-black p-5 rounded-full group">
-              <Image
-                width={100}
-                height={100}
-                className="w-full rounded-full"
-                alt="profile"
-                src={profileimag}
-              />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <label
-                  htmlFor="file-upload"
-                  className="bg-black/50 text-white px-4 py-2 rounded-full cursor-pointer hover:bg-black/70"
-                >
-                  Upload
-                </label>
-                <input
-                  id="file-upload"
-                  className="hidden"
-                  type="file"
-                  accept=".png,.jpg,.jpeg"
-                  onChange={handleFileChange}
-                />
+                </form>
+              </DialogContent>
+            </Dialog>
+
+            {/* Main Profile Display */}
+            <div className="flex flex-col items-center gap-6">
+              <div className="relative">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 shadow-lg">
+                  <Image
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover"
+                    alt="profile"
+                    src={currentProfileImage}
+                  />
+                </div>
+              </div>
+
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {user?.username || "Unknown User"}
+                </h2>
+                <p className="text-gray-600">
+                  {user?.email || "No email provided"}
+                </p>
               </div>
             </div>
 
-            {selectedFile && (
-              <p className="text-sm text-neutral-500">
-                Selected: {selectedFile.name}
-              </p>
-            )}
-
-            <div className="text-center">
-              <p className="text-lg text-neutral-500">
-                Username <span className="text-black">{user?.username}</span>
-              </p>
-              <p className="text-lg text-neutral-500">
-                Email <span className="text-black">{user?.email}</span>
-              </p>
+            {/* Profile Stats or Additional Info */}
+            <div className="w-full max-w-md">
+              <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                <div className="text-center">
+                  <p className="text-sm text-gray-600">Member Since</p>
+                  <p className="font-semibold">
+                    {user?.createdAt ? new Date(user.createdAt).getFullYear() : "2024"}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-600">Posts</p>
+                  <p className="font-semibold">{user?.postsCount || 0}</p>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
