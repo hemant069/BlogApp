@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { signIn, } from "next-auth/react";
 export default function AuthButton() {
   const handleLogin = () => {
+
+
     signIn("google", { callbackUrl: "/dashboard" }); // redirect after login
   };
 

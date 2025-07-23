@@ -16,6 +16,8 @@ export const authOptions: NextAuthOptions = {
 
     callbacks: {
         signIn: async ({ user, account, }) => {
+
+
             if (account?.provider === 'google') {
                 try {
                     const res = await axios.post(`${baseUrl}/login`, {

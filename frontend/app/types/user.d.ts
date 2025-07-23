@@ -4,6 +4,9 @@ interface User {
     email: string;
     avatar?: string;
     mongoId?: string,
+    postCount?: string,
+    followers?: string,
+    following?: string,
 }
 
 export interface CREATE_USER {

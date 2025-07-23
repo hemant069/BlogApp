@@ -4,6 +4,7 @@ const { setUserToken, getUserToken } = require("../utils/auth");
 const Otpgenerate = require("../utils/generateOtp");
 const otpModel = require("../model/otpModel");
 const cloudnary = require(".././utils/cloudnary");
+const BlogModel = require("../model/blogModel");
 // Signup  function
 
 const handleSignUp = async (req, res) => {
@@ -45,19 +46,24 @@ const handleLogin = async (req, res) => {
     const { username, email, password, provider, profileImg } = req.body;
 
     const existingUser = await userModel.findOne({ email });
-    console.log(existingUser);
+    let postCount=0;
 
     // Handle credentials login
     if (existingUser && provider !== "google") {
       const checkpassword = await bcrypt.compare(password, existingUser.password);
       if (checkpassword) {
+        const userPostCount=await BlogModel.find({createdBy:existingUser._id});
+       if(userPostCount){
+          postCount=userPostCount.length;
+       }
         const token = setUserToken(existingUser);
         return res.status(201).json({ 
           msg: "User login in success", 
           token,
           userId: existingUser._id,
           username: existingUser.username,
-          email: existingUser.email
+          email: existingUser.email,
+          postCount:postCount
         });
       } else {
         return res.status(401).json({ msg: "Please Enter Correct Password" });
