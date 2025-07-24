@@ -296,7 +296,7 @@ export const handleFollow = async (data: FOLLOW_AUTHORS) => {
 // Profile Api's 
 
 
-export const handleProfile = async (data: UPDATE_PROFILE_INFO) => {
+export const handleProfile = async (data: FormData) => {
     try {
         if (!token) {
             await setupAxiosAuth()

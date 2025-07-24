@@ -66,26 +66,23 @@ const Page = () => {
       }
 
       formdata.append("username", data.username);
+      formdata.append("userId", user?.mongoId || "")
 
-      console.log("Updating profile with:", {
-        username: data.username,
-        profileImg: !!data.profileImg?.[0]
-      });
 
       const res = await handleProfile(formdata);
       console.log("Profile update response:", res);
 
       // Update user context if successful
-      if (res?.data) {
-        updateUser?.(res.data);
-      }
+      // if (res?.data) {
+      //   updateUser?.(res.data);
+      // }
 
-      toast({
-        title: "Success",
-        description: "Profile updated successfully!",
-      });
+      // toast({
+      //   title: "Success",
+      //   description: "Profile updated successfully!",
+      // });
 
-      setIsDialogOpen(false);
+      // setIsDialogOpen(false);
       setSelectedFile(null);
       setPreviewUrl(null);
 
@@ -139,10 +136,10 @@ const Page = () => {
 
   // Load profile on mount
   useEffect(() => {
-    if (user?.id) {
+    if (user && user?.id) {
       handlegetUpdateProfile();
     }
-  }, [user?.id]);
+  }, [user, user?.id]);
 
   // Clean up preview URL
   useEffect(() => {

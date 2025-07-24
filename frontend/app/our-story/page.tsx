@@ -16,7 +16,7 @@ const Page = () => {
       <div className="flex flex-col justify-center items-center">
         <Image
           width={100}
-          className="w-[25rem]  "
+          className="w-[25rem] "
           height={100}
           src={about}
           alt="about.png"

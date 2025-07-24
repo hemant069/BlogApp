@@ -4,20 +4,17 @@ const cloudinary = require(".././utils/cloudnary");
 
 const handlecreateblogpost = async (req, res) => {
   try {
-    console.log("➡️ Route hit");
-
+    
     if (!req.file) {
-      console.log("❌ No file received");
+      
       return res.status(400).json({ msg: "Please Upload image" });
     }
 
-    console.log("✅ File received");
-    console.log("Body:", req.body);
+  
 
     const { title, content, tag } = req.body;
     const tagArray = tag.split(",");
 
-    console.log("➡️ Starting upload to Cloudinary");
 
   const uploadToCloudinary = (fileBuffer) => {
   return new Promise((resolve, reject) => {
@@ -25,10 +22,10 @@ const handlecreateblogpost = async (req, res) => {
       { folder: "blog_covers" },
       (error, result) => {
         if (error) {
-          console.error("❌ Cloudinary error:", error);
+        
           return reject(error);
         }
-        console.log("✅ Cloudinary success:", result.secure_url);
+       
         resolve(result);
       }
     );
@@ -45,7 +42,6 @@ const handlecreateblogpost = async (req, res) => {
 
    const result = await uploadToCloudinary(req.file.buffer);
 
-    console.log("✅ Upload done:", result.secure_url);
 
     const createdBlogpost = new BlogModel({
       title,
@@ -57,7 +53,7 @@ const handlecreateblogpost = async (req, res) => {
 
     await createdBlogpost.save();
 
-    console.log("✅ Blog saved to DB");
+  
 
     return res.status(201).json({
       msg: "Blog created successfully",

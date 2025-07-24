@@ -40,5 +40,6 @@ export interface PROFILE_INFO {
 export interface UPDATE_PROFILE_INFO {
     profileImg: FileList,
     username: string,
+    userId:string,
 }
 
