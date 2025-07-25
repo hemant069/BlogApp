@@ -134,7 +134,7 @@ const Page = () => {
     reset({ username: user?.username || "" });
   };
 
-  // Load profile on mount
+  // Load profile on mount need to understand
   useEffect(() => {
     if (user && user?.id) {
       handlegetUpdateProfile();
