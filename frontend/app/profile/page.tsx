@@ -61,12 +61,16 @@ const Page = () => {
       const formdata = new FormData();
 
       // Only append file if one is selected
-      if (data.profileImg && data.profileImg[0]) {
-        formdata.append("profileImg", data.profileImg[0]);
+      if (selectedFile) {
+        formdata.append("profileImg", selectedFile);
+
       }
 
       formdata.append("username", data.username);
-      formdata.append("userId", user?.mongoId || "")
+      formdata.append("userId", user?.id || "")
+
+      console.log(selectedFile)
+      console.log("file name here", data.profileImg.item)
 
 
       const res = await handleProfile(formdata);

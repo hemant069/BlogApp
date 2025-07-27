@@ -301,7 +301,7 @@ export const handleProfile = async (data: FormData) => {
         if (!token) {
             await setupAxiosAuth()
         }
-        const res = await axios.post(`${baseUrl}/profile`, data)
+        const res = await axios.put(`${baseUrl}/profile`, data)
         return res.data;
 
 

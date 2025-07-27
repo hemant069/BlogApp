@@ -12,7 +12,7 @@ const handleSignUp = async (req, res) => {
     const { username, email, password } = req.body;
     const existingUserByEmail = await userModel.findOne({ email });
     const existingUserByUsername = await userModel.findOne({ username });
-     const defaultavatars = `https://ui-avatars.com/api/?name=${username}`
+    const defaultavatars = `https://ui-avatars.com/api/?name=${username}`;
     if (!existingUserByEmail && !existingUserByUsername) {
       const saltround = 10;
       const hashPass = await bcrypt.hash(password, saltround);
@@ -22,7 +22,7 @@ const handleSignUp = async (req, res) => {
         email,
         provider: "cred",
         providerId: null,
-        avatar:defaultavatars
+        avatar: defaultavatars,
       });
       const savedUser = await newuser.save();
       return res.status(201).json({ msg: "user is created successfully" });
@@ -46,24 +46,29 @@ const handleLogin = async (req, res) => {
     const { username, email, password, provider, profileImg } = req.body;
 
     const existingUser = await userModel.findOne({ email });
-    let postCount=0;
+    let postCount = 0;
 
     // Handle credentials login
     if (existingUser && provider !== "google") {
-      const checkpassword = await bcrypt.compare(password, existingUser.password);
+      const checkpassword = await bcrypt.compare(
+        password,
+        existingUser.password
+      );
       if (checkpassword) {
-        const userPostCount=await BlogModel.find({createdBy:existingUser._id});
-       if(userPostCount){
-          postCount=userPostCount.length;
-       }
+        const userPostCount = await BlogModel.find({
+          createdBy: existingUser._id,
+        });
+        if (userPostCount) {
+          postCount = userPostCount.length;
+        }
         const token = setUserToken(existingUser);
-        return res.status(201).json({ 
-          msg: "User login in success", 
+        return res.status(201).json({
+          msg: "User login in success",
           token,
           userId: existingUser._id,
           username: existingUser.username,
           email: existingUser.email,
-          postCount:postCount
+          postCount: postCount,
         });
       } else {
         return res.status(401).json({ msg: "Please Enter Correct Password" });
@@ -76,7 +81,7 @@ const handleLogin = async (req, res) => {
         username,
         email,
         provider: "google",
-        profileImg // Store profile image if provided
+        profileImg, // Store profile image if provided
       });
 
       const token = setUserToken(oauthUser);
@@ -85,7 +90,7 @@ const handleLogin = async (req, res) => {
         token,
         userId: oauthUser._id,
         username: oauthUser.username,
-        email: oauthUser.email
+        email: oauthUser.email,
       });
     }
 
@@ -97,7 +102,7 @@ const handleLogin = async (req, res) => {
         token,
         userId: existingUser._id,
         username: existingUser.username,
-        email: existingUser.email
+        email: existingUser.email,
       });
     }
 
@@ -105,7 +110,6 @@ const handleLogin = async (req, res) => {
     if (!existingUser && provider !== "google") {
       return res.status(404).json({ msg: "User is not exist" });
     }
-
   } catch (error) {
     return res.json({
       msg: "Something went wrong with handleLogin function",
@@ -113,8 +117,6 @@ const handleLogin = async (req, res) => {
     });
   }
 };
-
-
 
 // Forget Password
 
