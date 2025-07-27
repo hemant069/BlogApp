@@ -17,17 +17,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { UPDATE_PROFILE_INFO } from "../types/user";
+import { UPDATE_PROFILE_INFO, User as typeuser } from "../types/user";
 import { useAuth } from "../Context/AuthContext";
 import { toast } from "@/hooks/use-toast";
 import { Camera, Edit3, User } from "lucide-react";
+
 
 const Page = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { user, updateUser } = useAuth();
+  const [updatedUser, setUpdateUser] = useState<typeuser>()
+  const { user } = useAuth();
+
 
   const { register, handleSubmit, setValue, watch, reset } = useForm<UPDATE_PROFILE_INFO>({
     defaultValues: {
@@ -105,30 +108,7 @@ const Page = () => {
     }
   };
 
-  // Fetch user profile
-  const handlegetUpdateProfile = async () => {
-    try {
-      if (!user?.id) {
-        throw new Error("User ID not found");
-      }
 
-      const res = await handlegetProfile(user.id);
-      console.log("Profile data:", res);
-
-      // Update form with fetched data
-      if (res?.data) {
-        setValue("username", res.data.username);
-      }
-
-    } catch (error) {
-      console.error("Failed to fetch profile:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load profile data",
-        variant: "destructive",
-      });
-    }
-  };
 
   // Reset form when dialog closes
   const handleDialogClose = () => {
@@ -140,10 +120,37 @@ const Page = () => {
 
   // Load profile on mount need to understand
   useEffect(() => {
-    if (user && user?.id) {
-      handlegetUpdateProfile();
+    // Fetch user profile
+    const handlegetUpdateProfile = async () => {
+      try {
+        if (!user?.id) {
+          throw new Error("User ID not found");
+        }
+
+        const res = await handlegetProfile(user.id);
+        console.log("Profile data:", res);
+        setUpdateUser(res.data)
+
+        // Update form with fetched data
+        if (res?.data) {
+          setValue("username", res.data.username);
+        }
+
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load profile data",
+          variant: "destructive",
+        });
+      }
+    };
+
+    if (user && user.id) {
+      handlegetUpdateProfile()
     }
-  }, [user, user?.id]);
+
+  }, [user, user?.id, setValue]);
 
   // Clean up preview URL
   useEffect(() => {
@@ -155,7 +162,7 @@ const Page = () => {
   }, [previewUrl]);
 
 
-  const currentProfileImage = user?.avatar || profileimag;
+  const currentProfileImage = updatedUser?.avatar || profileimag;
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -264,10 +271,10 @@ const Page = () => {
 
               <div className="text-center space-y-2">
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {user?.username || "Unknown User"}
+                  {updatedUser?.username || "Unknown User"}
                 </h2>
                 <p className="text-gray-600">
-                  {user?.email || "No email provided"}
+                  {updatedUser?.email || "No email provided"}
                 </p>
               </div>
             </div>
@@ -278,12 +285,12 @@ const Page = () => {
                 <div className="text-center">
                   <p className="text-sm text-gray-600">Member Since</p>
                   <p className="font-semibold">
-                    {user?.createdAt ? new Date(user.createdAt).getFullYear() : "2024"}
+                    {updatedUser?.createdAt ? new Date(updatedUser.createdAt).getFullYear() : "2024"}
                   </p>
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-600">Posts</p>
-                  <p className="font-semibold">{user?.postsCount || 0}</p>
+                  <p className="font-semibold">{updatedUser?.postsCount || 0}</p>
                 </div>
               </div>
             </div>

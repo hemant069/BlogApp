@@ -6,6 +6,8 @@ import { jwtDecode } from "jwt-decode";
 import { User } from "../types/user";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
+import { toast } from "@/hooks/use-toast";
+import { handlegetProfile } from "../api/lib/api";
 
 interface AuthContextType {
   user: User | null;
@@ -91,9 +93,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsInitialized(true);
       }
     };
+    const handlegetUpdateProfile = async () => {
+      try {
+        if (!user?.id) {
+          throw new Error("User ID not found");
+        }
+
+        const res = await handlegetProfile(user.id);
+        console.log("Profile data:", res);
+        setUser(res.data)
+
+
+
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load profile data",
+          variant: "destructive",
+        });
+      }
+    };
+
+    if (user && user.id) {
+      handlegetUpdateProfile()
+    }
 
     initializeAuth();
-  }, [session?.user?.mongoId, session?.user?.email, status, isInitialized]);
+  }, [session, user, session?.user?.mongoId, session?.user?.email, status, isInitialized]);
 
   const login = (token: string) => {
     Cookies.set("token", token, { expires: 7 }); // Set expiry

@@ -223,28 +223,48 @@ const handleProfileUpdate = async (req, res) => {
       return res.json({ msg: "Please upload file" });
     }
 
-    const result = await cloudnary.uploader
-      .upload_stream(async (result, error) => {
-        if (error) {
-          return res.json({ msg: "somthing went wrong with clounary" });
+    // const result = await cloudnary.uploader
+    //   .upload_stream(async (result, error) => {
+    //     if (error) {
+    //       return res.json({ msg: "somthing went wrong with clounary" });
+    //     }
+
+    //   .end(req.file.buffer);
+
+    // return result;
+    const uploadToCloudinary = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudnary.uploader.upload_stream(
+          { folder: "profiles" },
+          (error, result) => {
+            if (error) {
+              return reject(error);
+            }
+            resolve(result);
+          }
+        );
+
+        if (!fileBuffer) {
+          console.error("❌ File buffer is undefined");
+          return reject(new Error("No file buffer"));
         }
+        stream.end(fileBuffer);
+      });
+    };
 
-        const existingUsername = await userModel.find({ username });
+    const result = await uploadToCloudinary(req.file.buffer);
+    console.log("rres", result);
+    const existingUsername = await userModel.find({ username });
 
-        if (!existingUsername || existingUsername.length === 0) {
-          const newuser = await userModel.findByIdAndUpdate(
-            { _id: userId },
-            { $set: { username, profileImg: result.secure_url } },
-            { new: true }
-          );
-        }
-        return res
-          .status(201)
-          .json({ msg: "user updated successfully", data: "" });
-      })
-      .end(req.file.buffer);
+    const updateUser = await userModel.findByIdAndUpdate(
+      { _id: userId },
+      { $set: { username, avatar: result.secure_url } },
+      { new: true }
+    );
 
-    return result;
+    return res
+      .status(201)
+      .json({ msg: "user updated successfully", data: updateUser });
   } catch (error) {
     return res.json({
       msg: "Something went wrong with handleProfile",
