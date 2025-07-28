@@ -239,8 +239,9 @@ const Page = () => {
     }
   };
 
-  // Toggle Follow Start over here
+
   const handleFollowAuthors = async (targetUserId: string) => {
+
     console.log("targetuserId", targetUserId);
     if (!targetUserId || !user?.id) {
       throw Error;
@@ -253,7 +254,8 @@ const Page = () => {
       const res = await handleFollow(data);
       console.log(res);
       setfollow(res.data);
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   };
@@ -287,9 +289,7 @@ const Page = () => {
           />
           <div>
             <p className="font-semibold">{blog.createdBy.username}</p>
-            <p className="text-sm text-gray-500">
-              {new Date(blog.createdAt).toLocaleDateString()}
-            </p>
+
           </div>
         </div>
         <Button

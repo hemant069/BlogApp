@@ -10,26 +10,63 @@ import { useRouter } from "next/navigation";
 import { CREATE_BLOG } from "../types/blog";
 import { createBlogPost } from "../api/lib/api";
 import "@blocknote/core/fonts/inter.css";
-import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-import { useCreateBlockNote } from "@blocknote/react";
+import dynamic from "next/dynamic";
+
+// Dynamically import BlockNote components with SSR disabled
+const BlockNoteView = dynamic(
+  () => import("@blocknote/mantine").then((mod) => ({ default: mod.BlockNoteView })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-h-[400px] border border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+        <p className="text-gray-500">Loading editor...</p>
+      </div>
+    )
+  }
+);
+
+const useCreateBlockNote = dynamic(
+  () => import("@blocknote/react").then((mod) => ({ default: mod.useCreateBlockNote })),
+  { ssr: false }
+);
 
 const Page = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<CREATE_BLOG>();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Initialize BlockNote editor
-  const editor = useCreateBlockNote({
-    initialContent: [
-      {
-        type: "paragraph",
-        content: "Start writing your blog post here...",
-      },
-    ],
-  });
+  // Initialize BlockNote editor only on client side
+  const [editor, setEditor] = useState<any>(null);
+
+  React.useEffect(() => {
+    setMounted(true);
+
+    // Import and initialize editor on client side
+    import("@blocknote/react").then(({ useCreateBlockNote }) => {
+      const editorInstance = useCreateBlockNote({
+        initialContent: [
+          {
+            type: "paragraph",
+            content: "Start writing your blog post here...",
+          },
+        ],
+      });
+      setEditor(editorInstance);
+    });
+  }, []);
 
   const handleCreatePost: SubmitHandler<CREATE_BLOG> = async (data: CREATE_BLOG) => {
+    if (!editor) {
+      toast({
+        title: "Error",
+        description: "Editor not ready. Please wait a moment and try again.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -44,7 +81,6 @@ const Page = () => {
       formData.append("coverImgUrl", data.coverImgUrl[0]); // Extract first file
       formData.append("title", data.title);
       formData.append("content", htmlContent); // Use HTML content for rich formatting
-      // Optional: also save markdown version
       formData.append("tag", data.tag);
 
       console.log("Form data prepared:", {
@@ -112,14 +148,20 @@ const Page = () => {
           <div>
             <Label>Content</Label>
             <div className="mt-2 border border-gray-300 rounded-lg overflow-hidden">
-              <BlockNoteView
-                editor={editor}
-                theme="light"
-                className="min-h-[400px]"
-              />
+              {mounted && editor ? (
+                <BlockNoteView
+                  editor={editor}
+                  theme="light"
+                  className="min-h-[400px]"
+                />
+              ) : (
+                <div className="min-h-[400px] border border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
+                  <p className="text-gray-500">Loading editor...</p>
+                </div>
+              )}
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              Use the rich text editor above to write your blog content. The old textarea has been replaced.
+              Use the rich text editor above to write your blog content.
             </p>
           </div>
 
@@ -145,7 +187,7 @@ const Page = () => {
           <div className="flex justify-end">
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !editor}
               className="px-8 py-2"
             >
               {isSubmitting ? "Publishing..." : "Publish Post"}
