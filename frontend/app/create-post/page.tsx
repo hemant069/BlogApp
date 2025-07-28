@@ -12,6 +12,8 @@ import { createBlogPost } from "../api/lib/api";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import dynamic from "next/dynamic";
+import { useBlog } from "../Context/BlogContext";
+
 
 // Dynamic import with proper typing
 const BlockNoteEditor = dynamic(
@@ -32,6 +34,8 @@ const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mounted, setMounted] = useState(false);
   const editorRef = useRef<any>(null);
+  const { handleBlogData } = useBlog();
+
 
   useEffect(() => {
     setMounted(true);
@@ -80,7 +84,9 @@ const Page = () => {
 
       const res = await createBlogPost(formData);
       toast({ title: res.data?.msg || "Blog post created successfully!" });
+      await handleBlogData()
       router.push("/dashboard");
+
 
     } catch (error: unknown) {
       if (error instanceof Error) {

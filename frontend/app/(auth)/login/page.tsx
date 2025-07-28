@@ -15,6 +15,8 @@ import { LOGIN_USER } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import AuthButton from "@/app/Context/oauth";
 import { useSession } from "next-auth/react";
+import { useBlog } from "@/app/Context/BlogContext";
+
 
 const Page = () => {
   const router = useRouter();
@@ -22,6 +24,8 @@ const Page = () => {
   const { toast } = useToast();
   const { login } = useAuth();
   const { data: session, status } = useSession()
+  const { handleBlogData } = useBlog();
+
 
   interface Res {
     msg: string;
@@ -42,6 +46,7 @@ const Page = () => {
       }
       login(res?.data.token);
       toast({ title: "Login Success" });
+      await handleBlogData()
       router.push("/dashboard");
       getallBlogs()
     } catch (error: unknown) {
