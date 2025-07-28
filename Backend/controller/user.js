@@ -223,15 +223,6 @@ const handleProfileUpdate = async (req, res) => {
       return res.json({ msg: "Please upload file" });
     }
 
-    // const result = await cloudnary.uploader
-    //   .upload_stream(async (result, error) => {
-    //     if (error) {
-    //       return res.json({ msg: "somthing went wrong with clounary" });
-    //     }
-
-    //   .end(req.file.buffer);
-
-    // return result;
     const uploadToCloudinary = (fileBuffer) => {
       return new Promise((resolve, reject) => {
         const stream = cloudnary.uploader.upload_stream(

@@ -123,7 +123,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [session, user, session?.user?.mongoId, session?.user?.email, status, isInitialized]);
 
   const login = (token: string) => {
-    Cookies.set("token", token, { expires: 7 }); // Set expiry
+    Cookies.set("token", token); // Set expiry
     try {
       const decoded: User = jwtDecode(token);
       setUser(decoded);

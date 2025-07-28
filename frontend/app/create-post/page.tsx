@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ProtectedRoute from "../Context/ProtectedRoute";
 import { toast } from "@/hooks/use-toast";
@@ -13,9 +13,9 @@ import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import dynamic from "next/dynamic";
 
-// Dynamically import BlockNote components with SSR disabled
-const BlockNoteView = dynamic(
-  () => import("@blocknote/mantine").then((mod) => ({ default: mod.BlockNoteView })),
+// Dynamic import with proper typing
+const BlockNoteEditor = dynamic(
+  () => import("../components/BlackNoteEditor"),
   {
     ssr: false,
     loading: () => (
@@ -26,39 +26,19 @@ const BlockNoteView = dynamic(
   }
 );
 
-const useCreateBlockNote = dynamic(
-  () => import("@blocknote/react").then((mod) => ({ default: mod.useCreateBlockNote })),
-  { ssr: false }
-);
-
 const Page = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<CREATE_BLOG>();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const editorRef = useRef<any>(null);
 
-  // Initialize BlockNote editor only on client side
-  const [editor, setEditor] = useState<any>(null);
-
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
-
-    // Import and initialize editor on client side
-    import("@blocknote/react").then(({ useCreateBlockNote }) => {
-      const editorInstance = useCreateBlockNote({
-        initialContent: [
-          {
-            type: "paragraph",
-            content: "Start writing your blog post here...",
-          },
-        ],
-      });
-      setEditor(editorInstance);
-    });
   }, []);
 
   const handleCreatePost: SubmitHandler<CREATE_BLOG> = async (data: CREATE_BLOG) => {
-    if (!editor) {
+    if (!mounted || !editorRef.current) {
       toast({
         title: "Error",
         description: "Editor not ready. Please wait a moment and try again.",
@@ -70,11 +50,19 @@ const Page = () => {
     setIsSubmitting(true);
 
     try {
-      // Get content from BlockNote editor
-      const blocks = await editor.blocksToMarkdownLossy();
-      const htmlContent = await editor.blocksToHTMLLossy();
+      // Get content from the editor through ref
+      const htmlContent = await editorRef.current.getContent();
 
-      console.log("Markdown content:", blocks);
+      if (!htmlContent || htmlContent.trim() === '') {
+        toast({
+          title: "Error",
+          description: "Please add some content to your blog post.",
+          variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       console.log("HTML content:", htmlContent);
 
       const formData = new FormData();
@@ -148,17 +136,7 @@ const Page = () => {
           <div>
             <Label>Content</Label>
             <div className="mt-2 border border-gray-300 rounded-lg overflow-hidden">
-              {mounted && editor ? (
-                <BlockNoteView
-                  editor={editor}
-                  theme="light"
-                  className="min-h-[400px]"
-                />
-              ) : (
-                <div className="min-h-[400px] border border-gray-300 rounded-lg flex items-center justify-center bg-gray-50">
-                  <p className="text-gray-500">Loading editor...</p>
-                </div>
-              )}
+              {mounted && <BlockNoteEditor ref={editorRef} />}
             </div>
             <p className="text-sm text-gray-500 mt-1">
               Use the rich text editor above to write your blog content.
@@ -187,7 +165,7 @@ const Page = () => {
           <div className="flex justify-end">
             <Button
               type="submit"
-              disabled={isSubmitting || !editor}
+              disabled={isSubmitting}
               className="px-8 py-2"
             >
               {isSubmitting ? "Publishing..." : "Publish Post"}
