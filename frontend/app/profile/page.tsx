@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
-import profileimag from "../../public/robot.jpeg";
+import Image, { StaticImageData } from "next/image";
+import profileimag from "../../public/abstract-whale-webp.webp";
 import { handleProfile } from "../api/lib/api";
 import {
   Dialog,
@@ -79,17 +79,17 @@ const Page = () => {
       const res = await handleProfile(formdata);
       console.log("Profile update response:", res);
 
-      // Update user context if successful
-      // if (res?.data) {
-      //   updateUser?.(res.data);
-      // }
 
-      // toast({
-      //   title: "Success",
-      //   description: "Profile updated successfully!",
-      // });
+      if (res?.data) {
+        console.log("response", res)
+      }
 
-      // setIsDialogOpen(false);
+      toast({
+        title: "Success",
+        description: "Profile updated successfully!",
+      });
+
+      setIsDialogOpen(false);
       setSelectedFile(null);
       setPreviewUrl(null);
 
@@ -131,14 +131,15 @@ const Page = () => {
   }, [previewUrl]);
 
 
-  let currentProfileImage
+  let currentProfileImage: string | StaticImageData;
 
-  if (user?.avatar !== "./images/default.png ") {
-    currentProfileImage = profileimag
+  if (!user?.avatar || user.avatar === "./images/default.png") {
+    currentProfileImage = profileimag;
+  } else {
+    currentProfileImage = user.avatar as string;
   }
-  else {
-    currentProfileImage = user?.avatar
-  }
+
+
 
 
 
@@ -257,21 +258,7 @@ const Page = () => {
               </div>
             </div>
 
-            {/* Profile Stats or Additional Info */}
-            {/* <div className="w-full max-w-md">
-              <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Member Since</p>
-                  <p className="font-semibold">
-                    {(user?.createdAt) ? new Date(user.createdAt).getFullYear() : "2024"}
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">Posts</p>
-                  <p className="font-semibold">{user?.postsCount || 0}</p>
-                </div>
-              </div>
-            </div> */}
+
           </div>
         </CardContent>
       </Card>

@@ -93,6 +93,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsInitialized(true);
       }
     };
+
+
+    initializeAuth();
+  }, [session, session?.user?.mongoId, session?.user?.email, status, isInitialized]);
+
+
+
+  // For profile 
+
+
+  useEffect(() => {
     const handlegetUpdateProfile = async () => {
       try {
         if (!user?.id) {
@@ -118,9 +129,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user && user.id) {
       handlegetUpdateProfile()
     }
-
-    initializeAuth();
-  }, [session, user, session?.user?.mongoId, session?.user?.email, status, isInitialized]);
+  }, [user, user?.id])
 
   const login = (token: string) => {
     Cookies.set("token", token); // Set expiry
