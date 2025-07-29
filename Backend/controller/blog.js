@@ -1,47 +1,41 @@
 const BlogModel = require("../model/blogModel");
 const cloudinary = require(".././utils/cloudnary");
-
+const dbConnect = require("../connect");
 
 const handlecreateblogpost = async (req, res) => {
   try {
-    
+    await dbConnect();
+
     if (!req.file) {
-      
       return res.status(400).json({ msg: "Please Upload image" });
     }
-
-  
 
     const { title, content, tag } = req.body;
     const tagArray = tag.split(",");
 
+    const uploadToCloudinary = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "blog_covers" },
+          (error, result) => {
+            if (error) {
+              return reject(error);
+            }
 
-  const uploadToCloudinary = (fileBuffer) => {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: "blog_covers" },
-      (error, result) => {
-        if (error) {
-        
-          return reject(error);
+            resolve(result);
+          }
+        );
+
+        if (!fileBuffer) {
+          console.error("❌ File buffer is undefined");
+          return reject(new Error("No file buffer"));
         }
-       
-        resolve(result);
-      }
-    );
 
-    if (!fileBuffer) {
-      console.error("❌ File buffer is undefined");
-      return reject(new Error("No file buffer"));
-    }
+        stream.end(fileBuffer); // actually start the upload
+      });
+    };
 
-    stream.end(fileBuffer); // actually start the upload
-  });
-};
-
-
-   const result = await uploadToCloudinary(req.file.buffer);
-
+    const result = await uploadToCloudinary(req.file.buffer);
 
     const createdBlogpost = new BlogModel({
       title,
@@ -53,26 +47,24 @@ const handlecreateblogpost = async (req, res) => {
 
     await createdBlogpost.save();
 
-  
-
     return res.status(201).json({
       msg: "Blog created successfully",
       data: createdBlogpost,
     });
   } catch (err) {
     console.error("❌ Error creating blog post:", err);
-    return res.status(500).json({ msg: "Something went wrong", error: err.message });
+    return res
+      .status(500)
+      .json({ msg: "Something went wrong", error: err.message });
   }
 };
 
-
-
 const handlegetblogpost = async (req, res) => {
   try {
-    const getAllblogpost = await BlogModel.find({}).populate(
-      "createdBy",
-      "username email profileImg"
-    ).lean();; // Fetch only required fields
+    await dbConnect();
+    const getAllblogpost = await BlogModel.find({})
+      .populate("createdBy", "username email profileImg")
+      .lean(); // Fetch only required fields
 
     return res
       .status(200)
@@ -87,6 +79,7 @@ const handlegetblogpost = async (req, res) => {
 
 const handlegetoneblogpost = async (req, res) => {
   try {
+    await dbConnect();
     const { id } = req.params;
     const getOneblogpost = await BlogModel.findOne({ _id: id }).populate(
       "createdBy"
@@ -104,6 +97,7 @@ const handlegetoneblogpost = async (req, res) => {
 
 const handleupdateblogpost = async (req, res) => {
   try {
+    await dbConnect();
     const { id } = req.params;
     const { title, content } = req.body;
 
@@ -132,6 +126,7 @@ const handleupdateblogpost = async (req, res) => {
 
 const handledeleteblogpost = async (req, res) => {
   try {
+    await dbConnect();
     const { id } = req.params;
     const deletedpost = await BlogModel.deleteOne({ _id: id });
     return res.status(201).json({ msg: "post delete successfully" });

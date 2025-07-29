@@ -1,7 +1,9 @@
 const SaveModel = require("../model/SaveblogModel");
-
+const dbConnect = require("../connect");
 const handleSaveBlogs = async (req, res) => {
   try {
+    await dbConnect();
+
     const { userId, blogId } = req.body;
 
     const existingBlogId = await SaveModel.findOne({ blogId: blogId });
@@ -25,6 +27,8 @@ const handleSaveBlogs = async (req, res) => {
 
 const handleRemoveSaveBlogs = async (req, res) => {
   try {
+    await dbConnect();
+
     const { blogId } = req.body;
 
     await SaveModel.findOneAndDelete({ blogId });
@@ -39,8 +43,10 @@ const handleRemoveSaveBlogs = async (req, res) => {
 };
 
 const handleGetSaveBlogs = async (req, res) => {
-  const { id } = req.params;
   try {
+    await dbConnect();
+
+    const { id } = req.params;
     const saveblogs = await SaveModel.findOne({ blogId: id });
 
     return res.json({ msg: "save blogs get success", data: saveblogs });
@@ -54,6 +60,8 @@ const handleGetSaveBlogs = async (req, res) => {
 
 const handleGetSavedBlogsForUser = async (req, res) => {
   try {
+    await dbConnect();
+
     const { id } = req.params;
     console.log(id, "Hello world");
 

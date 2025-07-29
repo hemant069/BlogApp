@@ -1,7 +1,9 @@
 const ReactionModel = require("../model/reactionsModel");
-
+const dbConnect = require("../connect");
 const handleReaction = async (req, res) => {
   try {
+    await dbConnect();
+
     const { type, userId, blogId, commentId } = req.body;
     if (!commentId) {
       // Normal Post Like
@@ -35,8 +37,10 @@ const handleReaction = async (req, res) => {
 };
 
 const handlegetReactions = async (req, res) => {
-  const { id } = req.params;
   try {
+    await dbConnect();
+
+    const { id } = req.params;
     const like = await ReactionModel.find({
       blogId: id,
       commentId: null,
@@ -71,9 +75,10 @@ const handlegetReactions = async (req, res) => {
 };
 
 const handleGetCommentReaction = async (req, res) => {
-  const { blogId, commentId } = req.body;
-
   try {
+    await dbConnect();
+
+    const { blogId, commentId } = req.body;
     const commentLike = await ReactionModel.find({
       blogId,
       commentId,

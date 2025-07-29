@@ -1,8 +1,9 @@
 const CommentModel = require("../model/CommetModel");
 const ReactionModel = require("../model/reactionsModel");
-
+const dbConnect = require("../connect");
 const handleComment = async (req, res) => {
   try {
+    await dbConnect();
     const { content, userId, blogId, parentcommentId } = req.body;
 
     if (!parentcommentId) {
@@ -36,6 +37,8 @@ const handleComment = async (req, res) => {
 
 const handleGetComment = async (req, res) => {
   try {
+    await dbConnect();
+
     const { id } = req.params;
 
     const comments = await CommentModel.find({ blog: id, parentComment: null })

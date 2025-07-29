@@ -5,10 +5,12 @@ const Otpgenerate = require("../utils/generateOtp");
 const otpModel = require("../model/otpModel");
 const cloudnary = require(".././utils/cloudnary");
 const BlogModel = require("../model/blogModel");
+const dbConnect = require("../connect");
 // Signup  function
 
 const handleSignUp = async (req, res) => {
   try {
+    await dbConnect();
     const { username, email, password } = req.body;
     const existingUserByEmail = await userModel.findOne({ email });
     const existingUserByUsername = await userModel.findOne({ username });
@@ -43,6 +45,7 @@ const handleSignUp = async (req, res) => {
 
 const handleLogin = async (req, res) => {
   try {
+    await dbConnect();
     const { username, email, password, provider, profileImg } = req.body;
 
     const existingUser = await userModel.findOne({ email });
@@ -122,6 +125,7 @@ const handleLogin = async (req, res) => {
 
 const handleForgetPassword = async (req, res) => {
   try {
+    await dbConnect();
     const { email } = req.body;
     const findUser = await userModel.findOne({ email });
 
@@ -152,6 +156,7 @@ const handleForgetPassword = async (req, res) => {
 
 const handleverifyOtp = async (req, res) => {
   try {
+    await dbConnect();
     const { otp, email } = req.body;
 
     const validUser = await userModel.findOne({ email });
@@ -167,11 +172,11 @@ const handleverifyOtp = async (req, res) => {
     }
     // For Now I am  comment this code for the authentication check
 
-    // const finduserToken = await userModel.findOne({ _id: validOtp.userId });
-    // console.log(finduserToken);
-    // const getToken = getUserToken(finduserToken);
+    const finduserToken = await userModel.findOne({ _id: validOtp.userId });
+    console.log(finduserToken);
+    const getToken = getUserToken(finduserToken);
 
-    // console.log(getToken);
+    console.log(getToken);
 
     return res
       .status(200)
@@ -188,6 +193,7 @@ const handleverifyOtp = async (req, res) => {
 
 const handleresetPassword = async (req, res) => {
   try {
+    await dbConnect();
     const { userId, password } = req.body;
     const saltRound = 10;
     const findUser = await userModel.findOne({ _id: userId });
@@ -217,6 +223,7 @@ const handleresetPassword = async (req, res) => {
 
 const handleProfileUpdate = async (req, res) => {
   try {
+    await dbConnect();
     const { userId, username } = req.body;
 
     if (!req.file) {
@@ -266,6 +273,7 @@ const handleProfileUpdate = async (req, res) => {
 
 const handlegetProfileUpdate = async (req, res) => {
   try {
+    await dbConnect();
     const { id } = req.params;
 
     const Profile = await userModel.findById({ _id: id });
@@ -280,6 +288,7 @@ const handlegetProfileUpdate = async (req, res) => {
 
 const handleToggleFollow = async (req, res) => {
   try {
+    await dbConnect();
     const { userId, targetuserId } = req.body;
 
     const existinguserId = await userModel.findById(userId);
