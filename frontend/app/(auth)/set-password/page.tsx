@@ -16,6 +16,7 @@ import axios, { AxiosResponse } from "axios";
 import AuthButton from "@/app/Context/oauth";
 import { useSession } from "next-auth/react";
 import { useBlog } from "@/app/Context/BlogContext";
+import { Label } from "@/components/ui/label";
 
 
 const Page = () => {
@@ -34,10 +35,13 @@ const Page = () => {
 
     return (
         <div className="flex flex-col justify-center items-center h-screen">
-            <AuthButton />
+
             <div className="flex justify-center gap-4 flex-col shadow-xl shadow-slate-800    rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
 
-                <Input type="text" {...register("newpassword")} placeholder="Enter new password" />
+                <div className="flex flex-col gap-2">
+                    <Label className="">Enter New Password</Label>
+                    <Input type="text" {...register("newpassword")} placeholder="Enter new password" />
+                </div>
 
 
                 <Button onClick={handleSubmit(handleSetPassword)}>Set Password</Button>

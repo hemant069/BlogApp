@@ -21,9 +21,11 @@ const Page = () => {
     const { register, handleSubmit } = useForm();
     const router = useRouter()
 
-    const handleForgetPassword = () => {
+    const handleForgetPassword = (data) => {
 
-        router.push("/verify-otp")
+        console.log(data)
+
+        // router.push("/verify-otp")
 
     }
 

@@ -44,3 +44,15 @@ export interface UPDATE_PROFILE_INFO {
     userId:string,
 }
 
+
+
+export interface VERIFY_OTP{
+    email:string,
+    otp:string,
+}
+
+
+export interface SET_NEW_PASSWORD{
+    userId:string,
+    password:string,
+}

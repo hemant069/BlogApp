@@ -1,5 +1,5 @@
 import { ADD_COMMENT, ADD_REACTION, REMOVE_SAVED_BLOG, SAVE_BLOG } from "@/app/types/blog";
-import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER, UPDATE_PROFILE_INFO } from "@/app/types/user";
+import { CREATE_USER, FOLLOW_AUTHORS, LOGIN_USER, SET_NEW_PASSWORD, UPDATE_PROFILE_INFO, VERIFY_OTP } from "@/app/types/user";
 import { setupAxiosAuth } from "@/app/utils";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
@@ -318,6 +318,66 @@ export const handlegetProfile = async (id: string) => {
             await setupAxiosAuth()
         }
         const res = await axios.get(`${baseUrl}/profile/${id}`);
+        return res.data;
+
+
+    } catch (error) {
+
+        console.log(error)
+
+    }
+}
+
+
+// Forget password
+
+
+export const handleForgetPassword = async (data:string) => {
+    try {
+        if (!token) {
+            await setupAxiosAuth()
+        }
+        const res = await axios.put(`${baseUrl}/forget-password`, data)
+        return res.data;
+
+
+    } catch (error) {
+
+        console.log(error)
+
+    }
+}
+
+
+// verify Otp
+
+
+export const handleVerifyOtp = async (data:VERIFY_OTP) => {
+    try {
+        if (!token) {
+            await setupAxiosAuth()
+        }
+        const res = await axios.put(`${baseUrl}/verify-otp`, data)
+        return res.data;
+
+
+    } catch (error) {
+
+        console.log(error)
+
+    }
+}
+
+
+// set new password
+
+
+export const handleSetNewPassword = async (data:SET_NEW_PASSWORD) => {
+    try {
+        if (!token) {
+            await setupAxiosAuth()
+        }
+        const res = await axios.put(`${baseUrl}/reset-password`, data)
         return res.data;
 
 

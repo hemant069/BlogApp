@@ -90,7 +90,7 @@ const Page = () => {
 
         <Button onClick={handleSubmit(handleLogin)}>Login</Button>
         <div className="flex justify-around">
-          <Link href={"#"}>
+          <Link href={"/forget-password"}>
             <p className="text-blue-500">Forget Password</p>
           </Link>
           <Link href={"/signup"}>
