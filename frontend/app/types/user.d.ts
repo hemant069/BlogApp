@@ -19,6 +19,7 @@ export interface CREATE_USER {
 export interface LOGIN_USER {
     email: string,
     password: string,
+    newpassword:string,
 }
 
 export interface FOLLOW_AUTHORS {

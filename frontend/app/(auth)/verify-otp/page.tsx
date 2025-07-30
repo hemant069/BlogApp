@@ -26,8 +26,11 @@ import {
 const Page = () => {
     const { register, handleSubmit } = useForm();
     const [value, setValue] = React.useState("")
+    const router = useRouter();
 
     const handleVerifyOtp = () => {
+        console.log("Hello")
+        router.push("/set-password")
 
     }
 
