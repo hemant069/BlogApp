@@ -10,8 +10,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "../../Context/AuthContext";
-import { getallBlogs, loginFn } from "@/app/api/lib/api";
-import { LOGIN_USER } from "@/app/types/user";
+import { getallBlogs, handleVerifyOtp, loginFn } from "@/app/api/lib/api";
+import { LOGIN_USER, VERIFY_OTP } from "@/app/types/user";
 import axios, { AxiosResponse } from "axios";
 import AuthButton from "@/app/Context/oauth";
 import { useSession } from "next-auth/react";
@@ -28,9 +28,11 @@ const Page = () => {
     const [value, setValue] = React.useState("")
     const router = useRouter();
 
-    const handleVerifyOtp = () => {
+    const handleVerify: SubmitHandler<VERIFY_OTP> = async () => {
         console.log("Hello")
-        router.push("/set-password")
+        const otp = { value }
+        const responseData = await handleVerifyOtp(otp)
+        // router.push("/set-password")
 
     }
 
@@ -48,14 +50,13 @@ const Page = () => {
                             <InputOTPSlot index={1} />
                             <InputOTPSlot index={2} />
                             <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
+
                         </InputOTPGroup>
                     </InputOTP>
                 </div>
 
 
-                <Button onClick={handleSubmit(handleVerifyOtp)}>Verify Otp</Button>
+                <Button onClick={handleSubmit(handleVerify)}>Verify Otp</Button>
                 <div className="flex justify-around">
                     <Link href={"/login"}>
                         <p className="text-blue-500">Login</p>

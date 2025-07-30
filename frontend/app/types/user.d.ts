@@ -56,3 +56,7 @@ export interface SET_NEW_PASSWORD{
     userId:string,
     password:string,
 }
+
+export interface FORGET{
+    email:string,
+}

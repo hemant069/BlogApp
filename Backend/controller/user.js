@@ -138,9 +138,7 @@ const handleForgetPassword = async (req, res) => {
       });
       await SavegenOtp.save();
 
-      return res
-        .status(200)
-        .json({ msg: "Otp generated successfully", SavedOtp: SavegenOtp });
+      return res.status(200).json({ msg: "Otp generated successfully" });
     } else {
       return res.status(404).json({ msg: "user is not found" });
     }
