@@ -1,16 +1,18 @@
 import nodemailer from "nodemailer";
+const dotenv = require("dotenv");
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587, // or 465 for SSL
   secure: false, // true for 465
   auth: {
-    user: "your-email@gmail.com",
-    pass: "your-16-character-app-password",
+    user: "hemantprajapati7860@gmail.com",
+    pass: process.env.PASS,
   },
 });
 
-const sendMail = async (otp) => {
+const sendMail = async (otp, usermail) => {
   await transporter.sendMail({
     from: '"Your App" <your-email@gmail.com>',
     to: "recipient@example.com",
@@ -21,4 +23,4 @@ const sendMail = async (otp) => {
   console.log("Email sent!");
 };
 
-module.exports = sendMail;
+module.exports = { sendMail, transporter };

@@ -133,7 +133,7 @@ const handleForgetPassword = async (req, res) => {
     if (findUser) {
       // if user is found
       const GeneratedOtp = Otpgenerate();
-      sendmail(GeneratedOtp);
+      sendmail(GeneratedOtp, findUser.email);
       const SavegenOtp = new otpModel({
         otp: GeneratedOtp,
         userId: findUser._id,
