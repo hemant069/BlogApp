@@ -6,6 +6,7 @@ const otpModel = require("../model/otpModel");
 const cloudnary = require(".././utils/cloudnary");
 const BlogModel = require("../model/blogModel");
 const dbConnect = require("../connect");
+const sendmail = require("../utils/sendmail");
 // Signup  function
 
 const handleSignUp = async (req, res) => {
@@ -132,6 +133,7 @@ const handleForgetPassword = async (req, res) => {
     if (findUser) {
       // if user is found
       const GeneratedOtp = Otpgenerate();
+      sendmail(GeneratedOtp);
       const SavegenOtp = new otpModel({
         otp: GeneratedOtp,
         userId: findUser._id,
