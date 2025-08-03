@@ -26,6 +26,11 @@ import {
   MessageCircle,
   ThumbsDown,
   ThumbsUp,
+  Share2,
+  Clock,
+  Calendar,
+  User,
+  Eye,
 } from "lucide-react";
 import {
   Drawer,
@@ -239,9 +244,7 @@ const Page = () => {
     }
   };
 
-
   const handleFollowAuthors = async (targetUserId: string) => {
-
     console.log("targetuserId", targetUserId);
     if (!targetUserId || !user?.id) {
       throw Error;
@@ -260,6 +263,24 @@ const Page = () => {
     }
   };
 
+  // Calculate reading time
+  const calculateReadingTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const text = content.replace(/<[^>]*>/g, '');
+    const wordCount = text.split(/\s+/).length;
+    return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+  };
+
+  // Format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   useEffect(() => {
     handleBlog();
     handlegetComment();
@@ -273,237 +294,366 @@ const Page = () => {
     }
   }, [blog, user]);
 
-  if (!blog) return <div className="flex justify-center items-center h-screen"><h1 className="text-2xl">Loading...</h1></div>;
+  if (!blog) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex justify-center items-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto"></div>
+          <h1 className="text-2xl font-semibold text-gray-700">Loading amazing content...</h1>
+          <p className="text-gray-500">Please wait while we fetch the blog for you</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Author Section */}
-      <div className="flex border border-slate-300 justify-between p-4 rounded-md mb-6">
-        <div className="flex items-center gap-3">
-          <Image
-            src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
-            width={40}
-            height={40}
-            alt="Author avatar"
-            className="rounded-full"
-          />
-          <div>
-            <p className="font-semibold">{blog.createdBy.username}</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+      {/* Header with gradient overlay */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent z-10"></div>
 
-          </div>
-        </div>
-        <Button
-          variant={follow ? "secondary" : "default"}
-          onClick={() => handleFollowAuthors(blog.createdBy._id)}
-        >
-          {follow ? "Following" : "Follow"}
-        </Button>
-      </div>
-
-      {/* Blog Content */}
-      <article className="mb-8">
-        {/* Cover Image */}
-        <div className="mb-6">
+        {/* Hero Image */}
+        <div className="relative h-[60vh] overflow-hidden">
           <Image
             src={blog?.coverImgUrl || "/blog.png"}
-            width={800}
-            height={400}
+            width={1200}
+            height={600}
             alt={blog?.title || "blog image"}
             priority={true}
-            className="w-full h-64 object-cover rounded-lg"
+            className="w-full h-full object-cover"
           />
-        </div>
 
-        {/* Title */}
-        <h1 className="text-4xl font-bold mb-6 text-gray-900">{blog?.title}</h1>
+          {/* Floating content card */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-4xl px-6">
+            <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
+              <div className="text-center space-y-4">
+                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                  {blog?.title}
+                </h1>
 
-        {/* Rich Content from BlockNote */}
-        <div
-          className="prose prose-lg max-w-none mb-8
-            prose-headings:font-bold 
-            prose-h1:text-3xl prose-h1:mb-4 prose-h1:mt-8
-            prose-h2:text-2xl prose-h2:mb-3 prose-h2:mt-6
-            prose-h3:text-xl prose-h3:mb-2 prose-h3:mt-4
-            prose-p:text-gray-700 prose-p:mb-4 prose-p:leading-relaxed
-            prose-ul:list-disc prose-ul:ml-6 prose-ul:mb-4
-            prose-ol:list-decimal prose-ol:ml-6 prose-ol:mb-4
-            prose-li:mb-1
-            prose-blockquote:border-l-4 prose-blockquote:border-blue-500
-            prose-blockquote:pl-4 prose-blockquote:italic 
-            prose-blockquote:bg-gray-50 prose-blockquote:py-2
-            prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 
-            prose-code:rounded prose-code:text-sm
-            prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 
-            prose-pre:rounded-lg prose-pre:overflow-x-auto
-            prose-a:text-blue-600 prose-a:hover:text-blue-800
-            prose-strong:font-semibold prose-strong:text-gray-900
-            prose-em:italic
-            prose-img:rounded-lg prose-img:shadow-md"
-          dangerouslySetInnerHTML={{ __html: blog?.content }}
-        />
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {blog.tag &&
-            blog.tag?.map((item, ind) => (
-              <span
-                key={ind}
-                className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
-              >
-                #{item}
-              </span>
-            ))}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-6 py-4 border-t border-gray-200">
-          {/* Like Button */}
-          <div className="flex cursor-pointer items-center gap-2 hover:text-blue-600 transition-colors">
-            <ThumbsUp
-              onClick={() => handleLike(null)}
-              className="w-5 h-5"
-            />
-            <span className="text-sm font-medium">{reaction?.like || 0}</span>
-          </div>
-
-          {/* Dislike Button */}
-          <div className="flex cursor-pointer items-center gap-2 hover:text-red-600 transition-colors">
-            <ThumbsDown
-              onClick={() => handleDislike(null)}
-              className="w-5 h-5"
-            />
-            <span className="text-sm font-medium">{reaction?.dislike || 0}</span>
-          </div>
-
-          {/* Comments */}
-          <div className="flex items-center gap-2">
-            <Drawer direction="left">
-              <DrawerTrigger className="flex items-center gap-2 hover:text-blue-600 transition-colors">
-                <MessageCircle className="w-5 h-5" />
-                <span className="text-sm font-medium">{comments.length}</span>
-              </DrawerTrigger>
-              <DrawerContent className="h-screen w-1/3 max-w-md">
-                <DrawerHeader>
-                  <DrawerTitle>Comments</DrawerTitle>
-                  <DrawerDescription>
-                    Share your thoughts and engage with other comments below.
-                  </DrawerDescription>
-                  <div className="flex gap-2 items-center flex-col w-full">
-                    <Textarea
-                      className="h-[8rem] resize-none"
-                      placeholder="Write your comment here..."
-                      {...register("content")}
-                    />
-                    <Button
-                      onClick={handleSubmit(addComment)}
-                      className="w-full"
-                    >
-                      Submit Comment
-                    </Button>
+                {/* Reading metadata */}
+                <div className="flex flex-wrap justify-center items-center gap-6 text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-blue-500" />
+                    <span className="font-medium">{calculateReadingTime(blog?.content || "")} min read</span>
                   </div>
-                </DrawerHeader>
-                <DrawerFooter className="overflow-y-auto">
-                  {comments.map((el) => (
-                    <div key={el._id} className="mb-4 p-3 bg-gray-50 rounded-lg">
-                      <div className="flex gap-2">
-                        <div className="w-full">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Image
-                              alt="User avatar"
-                              width={30}
-                              height={30}
-                              src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
-                              className="rounded-full"
-                            />
-                            <p className="font-semibold">{el.user.username}</p>
-                          </div>
-                          <p className="ml-8 mb-2 text-gray-700">{el.content}</p>
-                          <div className="flex items-center gap-4 ml-8">
-                            <div className="flex items-center gap-1 cursor-pointer hover:text-blue-500 transition-colors">
-                              <ThumbsUp
-                                size={16}
-                                onClick={() => handleLike(el._id)}
-                              />
-                              <span className="text-sm">{el.reactions.like}</span>
-                            </div>
-                            <div className="flex items-center gap-1 cursor-pointer hover:text-red-500 transition-colors">
-                              <ThumbsDown
-                                size={16}
-                                onClick={() => handleDislike(el._id)}
-                              />
-                              <span className="text-sm">{el.reactions.dislike}</span>
-                            </div>
-                            <button
-                              className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer"
-                              onClick={() => handleReply(el._id)}
-                            >
-                              Reply
-                            </button>
-                          </div>
-                          {el._id === replyId && (
-                            <div className="flex gap-2 mt-3 ml-8">
-                              <Input
-                                placeholder="Write a reply..."
-                                {...register("replyContent")}
-                                className="flex-1"
-                              />
-                              <Button
-                                onClick={handleSubmit(addComment)}
-                                variant="secondary"
-                                size="sm"
-                              >
-                                Reply
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="ml-8">
-                        {el.replies && el.replies.length > 0 && (
-                          <button
-                            onClick={() => handleReply(el._id)}
-                            className="text-slate-400 hover:text-slate-600 cursor-pointer text-sm mt-2"
-                          >
-                            {el._id === replyId ? 'Hide' : 'Show'} replies ({el.replies.length})
-                          </button>
-                        )}
-                        {el._id === replyId && el.replies && (
-                          <div className="mt-2 space-y-2">
-                            {el.replies.map((reply, ind) => (
-                              <div key={ind} className="ml-4 pl-4 border-l-2 border-gray-200 bg-white rounded p-2">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <Image
-                                    alt="User avatar"
-                                    width={24}
-                                    height={24}
-                                    src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
-                                    className="rounded-full"
-                                  />
-                                  <p className="font-medium text-sm">{reply.user.username}</p>
-                                </div>
-                                <p className="ml-7 text-sm text-gray-600">{reply.content}</p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-green-500" />
+                    <span className="font-medium">{formatDate(blog?.createdAt || "")}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Eye className="w-5 h-5 text-purple-500" />
+                    <span className="font-medium">2.1k views</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
 
-          {/* Bookmark */}
-          <div className="cursor-pointer hover:text-yellow-600 transition-colors">
-            {isSavedBlog ? (
-              <BookmarkCheck onClick={handleRemoveSaveBlog} className="w-5 h-5" />
-            ) : (
-              <Bookmark onClick={handleSaveBlog} className="w-5 h-5" />
+      {/* Main content */}
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Enhanced Author Section */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-12 hover:shadow-xl transition-all duration-300">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-6">
+              <div className="relative">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
+                  <Image
+                    src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
+                    width={60}
+                    height={60}
+                    alt="Author avatar"
+                    className="rounded-full w-full h-full object-cover bg-white"
+                  />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-900">{blog.createdBy.username}</h2>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
+                    Author
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-gray-600">
+                  <span className="flex items-center gap-1">
+                    <User className="w-4 h-4" />
+                    Content Creator
+                  </span>
+                  <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                  <span>127 followers</span>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              variant={follow ? "secondary" : "default"}
+              onClick={() => handleFollowAuthors(blog.createdBy._id)}
+              className={`px-8 py-3 rounded-full font-semibold transition-all duration-200 ${follow
+                  ? "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
+                }`}
+            >
+              {follow ? "Following" : "Follow"}
+            </Button>
+          </div>
+        </div>
+
+        {/* Blog Content */}
+        <article className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-12">
+          <div className="p-12">
+            {/* Rich Content from BlockNote */}
+            <div
+              className="prose prose-xl max-w-none
+                prose-headings:font-bold prose-headings:text-gray-900
+                prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-12 prose-h1:leading-tight
+                prose-h2:text-3xl prose-h2:mb-5 prose-h2:mt-10 prose-h2:leading-tight
+                prose-h3:text-2xl prose-h3:mb-4 prose-h3:mt-8 prose-h3:leading-tight
+                prose-p:text-gray-700 prose-p:mb-6 prose-p:leading-relaxed prose-p:text-lg
+                prose-ul:list-disc prose-ul:ml-8 prose-ul:mb-6 prose-ul:space-y-2
+                prose-ol:list-decimal prose-ol:ml-8 prose-ol:mb-6 prose-ol:space-y-2
+                prose-li:text-gray-700 prose-li:leading-relaxed
+                prose-blockquote:border-l-4 prose-blockquote:border-blue-500
+                prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-600
+                prose-blockquote:bg-blue-50 prose-blockquote:py-4 prose-blockquote:rounded-r-lg
+                prose-code:bg-gray-100 prose-code:px-3 prose-code:py-1 
+                prose-code:rounded-md prose-code:text-sm prose-code:font-mono
+                prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-6 
+                prose-pre:rounded-xl prose-pre:overflow-x-auto prose-pre:shadow-lg
+                prose-a:text-blue-600 prose-a:hover:text-blue-800 prose-a:font-medium
+                prose-a:underline-offset-4 prose-a:decoration-2
+                prose-strong:font-bold prose-strong:text-gray-900
+                prose-em:italic prose-em:text-gray-700
+                prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8"
+              dangerouslySetInnerHTML={{ __html: blog?.content }}
+            />
+
+            {/* Enhanced Tags */}
+            {blog.tag && blog.tag.length > 0 && (
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Topics covered</h3>
+                <div className="flex flex-wrap gap-3">
+                  {blog.tag.map((item, ind) => (
+                    <span
+                      key={ind}
+                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 
+                               text-blue-700 rounded-full text-sm font-medium border border-blue-100
+                               hover:from-blue-100 hover:to-indigo-100 hover:border-blue-200
+                               transition-all duration-200 cursor-pointer group"
+                    >
+                      <span className="w-2 h-2 bg-blue-400 rounded-full mr-2 group-hover:scale-110 transition-transform"></span>
+                      #{item}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
-        </div>
-      </article>
+
+          {/* Enhanced Action Bar */}
+          <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-12 py-8 border-t border-gray-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                {/* Like Button */}
+                <div className="group flex cursor-pointer items-center gap-3 hover:text-blue-600 transition-all duration-200">
+                  <div className="p-3 rounded-full bg-white group-hover:bg-blue-50 shadow-md group-hover:shadow-lg transition-all duration-200">
+                    <ThumbsUp
+                      onClick={() => handleLike(null)}
+                      className="w-6 h-6"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-bold">{reaction?.like || 0}</div>
+                    <div className="text-sm text-gray-600">Likes</div>
+                  </div>
+                </div>
+
+                {/* Dislike Button */}
+                <div className="group flex cursor-pointer items-center gap-3 hover:text-red-600 transition-all duration-200">
+                  <div className="p-3 rounded-full bg-white group-hover:bg-red-50 shadow-md group-hover:shadow-lg transition-all duration-200">
+                    <ThumbsDown
+                      onClick={() => handleDislike(null)}
+                      className="w-6 h-6"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg font-bold">{reaction?.dislike || 0}</div>
+                    <div className="text-sm text-gray-600">Dislikes</div>
+                  </div>
+                </div>
+
+                {/* Comments */}
+                <Drawer direction="left">
+                  <DrawerTrigger className="group flex items-center gap-3 hover:text-blue-600 transition-all duration-200">
+                    <div className="p-3 rounded-full bg-white group-hover:bg-blue-50 shadow-md group-hover:shadow-lg transition-all duration-200">
+                      <MessageCircle className="w-6 h-6" />
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-bold">{comments.length}</div>
+                      <div className="text-sm text-gray-600">Comments</div>
+                    </div>
+                  </DrawerTrigger>
+
+                  <DrawerContent className="h-screen w-1/3 max-w-md bg-white">
+                    <DrawerHeader className="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                      <DrawerTitle className="text-2xl font-bold text-gray-900">Comments</DrawerTitle>
+                      <DrawerDescription className="text-gray-600">
+                        Share your thoughts and engage with other readers below.
+                      </DrawerDescription>
+
+                      {/* Comment Form */}
+                      <div className="flex gap-3 items-end flex-col w-full mt-6">
+                        <Textarea
+                          className="h-[8rem] resize-none border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl"
+                          placeholder="Share your thoughts on this article..."
+                          {...register("content")}
+                        />
+                        <Button
+                          onClick={handleSubmit(addComment)}
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 
+                                   text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                        >
+                          Post Comment
+                        </Button>
+                      </div>
+                    </DrawerHeader>
+
+                    <DrawerFooter className="overflow-y-auto p-6 space-y-6">
+                      {comments.map((el) => (
+                        <div key={el._id} className="bg-gray-50 rounded-2xl p-6 hover:bg-gray-100 transition-colors duration-200">
+                          <div className="flex gap-4">
+                            <div className="flex-shrink-0">
+                              <Image
+                                alt="User avatar"
+                                width={40}
+                                height={40}
+                                src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
+                                className="rounded-full ring-2 ring-white shadow-md"
+                              />
+                            </div>
+
+                            <div className="flex-1 space-y-3">
+                              <div className="flex items-center gap-3">
+                                <p className="font-bold text-gray-900">{el.user.username}</p>
+                                <span className="text-sm text-gray-500">2 hours ago</span>
+                              </div>
+
+                              <p className="text-gray-700 leading-relaxed">{el.content}</p>
+
+                              <div className="flex items-center gap-6">
+                                <div className="flex items-center gap-2 cursor-pointer hover:text-blue-500 transition-colors group">
+                                  <ThumbsUp
+                                    size={18}
+                                    onClick={() => handleLike(el._id)}
+                                    className="group-hover:scale-110 transition-transform"
+                                  />
+                                  <span className="text-sm font-medium">{el.reactions.like}</span>
+                                </div>
+
+                                <div className="flex items-center gap-2 cursor-pointer hover:text-red-500 transition-colors group">
+                                  <ThumbsDown
+                                    size={18}
+                                    onClick={() => handleDislike(el._id)}
+                                    className="group-hover:scale-110 transition-transform"
+                                  />
+                                  <span className="text-sm font-medium">{el.reactions.dislike}</span>
+                                </div>
+
+                                <button
+                                  className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                                  onClick={() => handleReply(el._id)}
+                                >
+                                  Reply
+                                </button>
+                              </div>
+
+                              {el._id === replyId && (
+                                <div className="flex gap-2 mt-4">
+                                  <Input
+                                    placeholder="Write a thoughtful reply..."
+                                    {...register("replyContent")}
+                                    className="flex-1 rounded-xl border-gray-200 focus:border-blue-500"
+                                  />
+                                  <Button
+                                    onClick={handleSubmit(addComment)}
+                                    variant="secondary"
+                                    className="px-6 rounded-xl"
+                                  >
+                                    Reply
+                                  </Button>
+                                </div>
+                              )}
+
+                              {/* Replies Section */}
+                              <div className="space-y-3">
+                                {el.replies && el.replies.length > 0 && (
+                                  <button
+                                    onClick={() => handleReply(el._id)}
+                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+                                  >
+                                    {el._id === replyId ? 'Hide' : 'Show'} {el.replies.length} {el.replies.length === 1 ? 'reply' : 'replies'}
+                                  </button>
+                                )}
+
+                                {el._id === replyId && el.replies && (
+                                  <div className="space-y-3 ml-6 border-l-2 border-blue-200 pl-6">
+                                    {el.replies.map((reply, ind) => (
+                                      <div key={ind} className="bg-white rounded-xl p-4 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-2">
+                                          <Image
+                                            alt="User avatar"
+                                            width={28}
+                                            height={28}
+                                            src="https://res.cloudinary.com/dx9q2yrz0/image/upload/v1742384485/kfrurcoihzurmai9zwpg.png"
+                                            className="rounded-full"
+                                          />
+                                          <p className="font-semibold text-sm text-gray-900">{reply.user.username}</p>
+                                          <span className="text-xs text-gray-500">1 hour ago</span>
+                                        </div>
+                                        <p className="text-sm text-gray-700 leading-relaxed">{reply.content}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </DrawerFooter>
+                  </DrawerContent>
+                </Drawer>
+              </div>
+
+              {/* Right side actions */}
+              <div className="flex items-center gap-4">
+                {/* Bookmark */}
+                <div className="group cursor-pointer hover:text-yellow-600 transition-all duration-200">
+                  <div className="p-3 rounded-full bg-white group-hover:bg-yellow-50 shadow-md group-hover:shadow-lg transition-all duration-200">
+                    {isSavedBlog ? (
+                      <BookmarkCheck onClick={handleRemoveSaveBlog} className="w-6 h-6 text-yellow-600" />
+                    ) : (
+                      <Bookmark onClick={handleSaveBlog} className="w-6 h-6" />
+                    )}
+                  </div>
+                </div>
+
+                {/* Share */}
+                <div className="group cursor-pointer hover:text-green-600 transition-all duration-200">
+                  <div className="p-3 rounded-full bg-white group-hover:bg-green-50 shadow-md group-hover:shadow-lg transition-all duration-200">
+                    <Share2 className="w-6 h-6" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
   );
 };
