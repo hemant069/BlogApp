@@ -12,6 +12,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// send mail added here
+
 const sendMail = async (otp, usermail) => {
   await transporter.sendMail({
     from: '"Your App" <your-email@gmail.com>',
