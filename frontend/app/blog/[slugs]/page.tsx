@@ -339,7 +339,7 @@ const Page = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-green-500" />
-                    <span className="font-medium">{formatDate(blog?.createdAt || "")}</span>
+                    {/* <span className="font-medium">{formatDate(blog?.createdAt || "")}</span> */}
                   </div>
                   <div className="flex items-center gap-2">
                     <Eye className="w-5 h-5 text-purple-500" />
@@ -395,8 +395,8 @@ const Page = () => {
               variant={follow ? "secondary" : "default"}
               onClick={() => handleFollowAuthors(blog.createdBy._id)}
               className={`px-8 py-3 rounded-full font-semibold transition-all duration-200 ${follow
-                  ? "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
+                ? "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
                 }`}
             >
               {follow ? "Following" : "Follow"}
