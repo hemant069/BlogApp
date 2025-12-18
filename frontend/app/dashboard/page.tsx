@@ -7,7 +7,7 @@ const Page = () => {
   const { data }: BlogContextType = useBlog();
 
   return (
-    <div className="flex flex-col gap-10 justify-center items-center ">
+    <div className="max-w-6xl mx-auto  grid grid-cols-2 gap-3 ">
       {data?.map((item) => (
         <Blogs
           key={item._id}

@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Providers } from "./ProviderLayout";
 // import { Providers } from "./Providers"; // 👈 import the new wrapper
+import { Analytics } from '@vercel/analytics/next';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +37,8 @@ export default function RootLayout({
           <Navbar />
           <main>{children}</main>
         </Providers>
+        <Analytics />
+
       </body>
     </html>
   );

@@ -68,7 +68,7 @@ const Blogs = ({
   const cleanContent = stripHtml(content);
 
   return (
-    <article className="group relative overflow-hidden">
+    <article className="group relative overflow-hidden ">
       {/* Main card container with enhanced hover effects */}
       <div
         onClick={() => handleFullBlog(newid)}
