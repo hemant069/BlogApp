@@ -69,7 +69,7 @@ const Blogs = ({
 
 
   return (
-    <article className="group relative overflow-hidden w-full   ">
+    <article className="group font-mono relative overflow-hidden w-full   ">
       {/* Main card container with enhanced hover effects */}
       <div
         onClick={() => handleFullBlog(newid)}
@@ -123,7 +123,7 @@ const Blogs = ({
 
           {/* Title with enhanced typography */}
           <div className="space-y-2">
-            <h1 className="text-2xl lg:text-3xl font-bold font-sans line-clamp-2 text-gray-900 
+            <h1 className="text-2xl lg:text-3xl font-bold font-mono line-clamp-2 text-gray-900 
                            group-hover:text-transparent group-hover:bg-clip-text 
                            group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600
                            transition-all duration-300 leading-tight">

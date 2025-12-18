@@ -35,7 +35,7 @@ const BlockNoteEditor = forwardRef<BlockNoteEditorRef>((props, ref) => {
         <BlockNoteView
             editor={editor}
             theme="light"
-            className="min-h-[400px]"
+            className="min-h-[400px] "
         />
     );
 });

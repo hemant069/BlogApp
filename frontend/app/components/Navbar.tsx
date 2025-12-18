@@ -24,13 +24,13 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between px-4 md:justify-around  border py-5 items-center ">
+    <div className="flex justify-between px-4 md:justify-around   border py-5 items-center ">
       <div>
         <h1 className="text-2xl font-medium font-mono">
           <Link href={"/"}>MindVerse</Link>
         </h1>
       </div>
-      <div className=" hidden  md:flex gap-6 font-sans items-center cursor-pointer">
+      <div className=" hidden font-mono  md:flex gap-6  items-center cursor-pointer">
         <div>
           <Link href={"/our-story"}>Our Story</Link>
         </div>

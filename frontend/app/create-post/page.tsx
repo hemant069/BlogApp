@@ -105,7 +105,7 @@ const Page = () => {
   return (
     <ProtectedRoute>
       <div className="flex flex-col gap-6 justify-center p-20 max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-6">Create New Blog Post</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 font-mono">Create New Blog Post</h1>
 
         <form onSubmit={handleSubmit(handleCreatePost)} className="space-y-6">
           {/* Cover Image */}

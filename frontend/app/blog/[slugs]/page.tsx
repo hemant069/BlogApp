@@ -296,7 +296,7 @@ const Page = () => {
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex justify-center items-center">
+      <div className="min-h-screen font-mono bg-gradient-to-br from-slate-50 to-gray-100 flex justify-center items-center">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto"></div>
           <h1 className="text-2xl font-semibold text-gray-700">Loading amazing content...</h1>
@@ -307,7 +307,7 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+    <div className="min-h-screen font-mono bg-gradient-to-br from-slate-50 via-white to-gray-50">
       {/* Header with gradient overlay */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent z-10"></div>
