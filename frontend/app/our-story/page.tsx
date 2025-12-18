@@ -4,7 +4,8 @@ import about from "../../public/robot.jpeg";
 
 const Page = () => {
   return (
-    <div>
+    <div className=" flex flex-col justify-center px-40">
+      <h1 className="text-center text-xl font-bold m-6 font-mono ">About Us</h1>
       <p>
         It all started with a simple idea—an idea to create a space where people
         could freely express their thoughts, share experiences, and inspire the
@@ -16,14 +17,15 @@ const Page = () => {
       <div className="flex flex-col justify-center items-center">
         <Image
           width={100}
-          className="w-[25rem] "
+          className="w-[25rem] rounded-lg bg-slate-50 "
           height={100}
           src={about}
           alt="about.png"
+
         />
       </div>
-      <h3>The Spark of an Idea</h3>
-      <p>
+      <h3 className="text-lg font-semibold border border-slate-50 bg-white w-[12rem] rounded-md text-center">The Spark of an Idea</h3>
+      <p className="ml-2">
         As someone who enjoyed reading blogs and exploring different
         perspectives, I realized that many platforms lacked a true sense of
         community. Some were cluttered with advertisements, while others
