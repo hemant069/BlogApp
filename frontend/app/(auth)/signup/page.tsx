@@ -33,7 +33,7 @@ const Page = () => {
 
   return (
     <div className="flex flex-col h-screen  justify-center items-center ">
-      <div className="flex flex-col justify-center w-[50rem] gap-3 p-8 md:p-24 shadow-lg shadow-slate-800  ">
+      <div className="flex flex-col justify-center w-[50rem] gap-3 p-8 md:p-24 shadow-md   ">
         <div className="flex justify-center gap-11 ">
           <Image
             className="hidden md:block   rounded-full "
@@ -41,12 +41,12 @@ const Page = () => {
             src={signup}
             alt="signup-gif"
           />
-          <Image
+          {/* <Image
             className=" rounded-full "
             width={140}
             src={typing}
             alt="typing-gif"
-          />
+          /> */}
         </div>
         <Input type="text" {...register("username")} placeholder="Enter name" />
         <Input type="email" {...register("email")} placeholder="Enter email" />

@@ -64,8 +64,8 @@ const Page = () => {
   }, [status])
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      <AuthButton />
-      <div className="flex justify-center gap-4 flex-col shadow-xl shadow-slate-800    rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
+
+      <div className="flex justify-center gap-4 flex-col shadow-md bg-neutral-100    rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
         <div className="flex justify-center gap-11 ">
           <Image
             className="  rounded-full "
@@ -89,6 +89,11 @@ const Page = () => {
         />
 
         <Button onClick={handleSubmit(handleLogin)}>Login</Button>
+
+
+        <AuthButton />
+
+
         <div className="flex justify-around">
           <Link href={"/forget-password"}>
             <p className="text-blue-500">Forget Password</p>

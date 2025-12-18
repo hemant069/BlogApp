@@ -23,6 +23,8 @@ import {
     InputOTPGroup,
     InputOTPSlot,
 } from "@/components/ui/input-otp"
+import { Label } from "@/components/ui/label";
+
 
 
 const Page = () => {
@@ -89,7 +91,7 @@ const Page = () => {
     return (
         <div className="flex flex-col justify-center items-center h-screen">
 
-            <div className="flex justify-center gap-4 flex-col shadow-xl shadow-slate-800    rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
+            <div className="flex justify-center gap-4 flex-col shadow-lg     rounded-xl p-8  md:p-24 w-full md:w-[50rem] ">
 
                 {show ? (
                     <div className="flex flex-col gap-4">
@@ -114,7 +116,8 @@ const Page = () => {
                     :
 
                     <>
-                        <Input disabled={show} type="email" {...register("email")} placeholder="Enter email" />
+                        <Label htmlFor="forget-password">Forget Password</Label>
+                        <Input disabled={show} type="email" {...register("email")} placeholder="Enter Your Email" />
                         <Button onClick={handleData}>Forget Password</Button>
                     </>
 

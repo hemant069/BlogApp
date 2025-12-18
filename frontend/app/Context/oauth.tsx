@@ -9,14 +9,14 @@ export default function AuthButton() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <Button
-        onClick={handleLogin}
-        variant="outline"
-        className="flex items-center gap-2"
-      >
-        Continue with Google
-      </Button>
-    </div>
+
+    <Button
+      onClick={handleLogin}
+      variant="default"
+      className="flex items-center gap-2"
+    >
+      Continue with Google
+    </Button>
+
   );
 }
