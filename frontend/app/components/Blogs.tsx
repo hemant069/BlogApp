@@ -67,12 +67,13 @@ const Blogs = ({
   const displayName = user || createdBy.username;
   const cleanContent = stripHtml(content);
 
+
   return (
-    <article className="group relative overflow-hidden ">
+    <article className="group relative overflow-hidden w-full   ">
       {/* Main card container with enhanced hover effects */}
       <div
         onClick={() => handleFullBlog(newid)}
-        className="flex cursor-pointer justify-between p-8 rounded-2xl w-full h-[280px]
+        className="flex cursor-pointer justify-between  p-8 rounded-2xl box-content w-[70rem] h-[250px]
                    bg-white border border-gray-100 
                    hover:border-gray-200 hover:shadow-xl hover:-translate-y-1
                    transition-all duration-300 ease-out
